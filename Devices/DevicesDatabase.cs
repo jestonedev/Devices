@@ -122,8 +122,14 @@ namespace Devices
 			string where = "";
 			if (spg.deviceName.Trim().Length > 0)
 			{
-				where = "([Device Name] LIKE '%" + spg.deviceName + "%')";
+				where += "([Device Name] LIKE '%" + spg.deviceName + "%')";
 			}
+            if (spg.serialNumber.Trim().Length > 0)
+            {
+                if (where.Trim().Length > 0)
+                    where += " AND ";
+                where += "([SerialNumber] LIKE '%" + spg.serialNumber + "%')";
+            }
 			if (spg.departmentIDs.Count > 0)
 			{
 				if (where.Trim().Length > 0)

@@ -107,11 +107,13 @@ namespace Devices
 		{
 			spgNew.deviceTypeID = ((DeviceTypeComboboxItem)comboBoxDevTypes.SelectedItem).DeviceTypeID;
 			spgNew.deviceName = textBoxDeviceName.Text.Trim();
+            spgNew.serialNumber = textBoxSerialNumber.Text.Trim();
 			FillDepartmentIDs(spgNew.departmentIDs, treeViewDepartments.Nodes);
 			spg.departmentIDs = spgNew.departmentIDs;
 			spg.deviceTypeID = spgNew.deviceTypeID;
 			spg.parameters = spgNew.parameters;
 			spg.deviceName = spgNew.deviceName;
+            spg.serialNumber = spgNew.serialNumber;
 			CancelSearch = false;
 			Close();
 		}
@@ -157,13 +159,15 @@ namespace Devices
 		public List<SearchParameter> parameters { get; set; }
 		public List<int> departmentIDs { get; set; }
 		public int deviceTypeID { get; set; }
-		public string deviceName { get; set; }
+        public string deviceName { get; set; }
+        public string serialNumber { get; set; }
 
 		public SearchParametersGroup()
 		{
 			parameters = new List<SearchParameter>();
 			departmentIDs = new List<int>();
 			deviceName = "";
+            serialNumber = "";
 		}
 	}
 }
