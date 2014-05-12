@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Devices
 {
@@ -17,7 +18,7 @@ namespace Devices
 		public Form1()
 		{
 			InitializeComponent();
-			spg = new SearchParametersGroup();
+            spg = new SearchParametersGroup();
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
