@@ -1,4 +1,3 @@
-D:\Projects\Visual Studio Projects\Devices\Devices\obj\Release\ResolveAssemblyReference.cache
 D:\Projects\Visual Studio Projects\Devices\Devices\obj\Release\Devices.AddDepartmentAndPCForm.resources
 D:\Projects\Visual Studio Projects\Devices\Devices\obj\Release\Devices.ComputerInfo.resources
 D:\Projects\Visual Studio Projects\Devices\Devices\obj\Release\Devices.ComputerParamChangeForm.resources
@@ -17,3 +16,4 @@ D:\Projects\Visual Studio Projects\Devices\Devices\bin\Release\Devices.exe
 D:\Projects\Visual Studio Projects\Devices\Devices\bin\Release\Devices.pdb
 D:\Projects\Visual Studio Projects\Devices\Devices\obj\Release\Devices.exe
 D:\Projects\Visual Studio Projects\Devices\Devices\obj\Release\Devices.pdb
+D:\Projects\Visual Studio Projects\Devices\Devices\obj\Release\Devices.csprojResolveAssemblyReference.cache
