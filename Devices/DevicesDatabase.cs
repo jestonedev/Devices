@@ -521,7 +521,7 @@ namespace Devices
 					MessageBox.Show(@"Нельзя удалить департамент, если в нем хранится информация об устройствах. Сначала удалите устройства", "Ошибка",
 									MessageBoxButtons.OK, MessageBoxIcon.Error);
 				else
-					MessageBox.Show(@"Не удалось удалить департамент. "+e.Number.ToString(), "Ошибка", 
+					MessageBox.Show(@"Не удалось удалить департамент. Подробнее: "+e.Message+". Код ошибки: "+e.Number.ToString(), "Ошибка", 
 									MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return false;
 			}
@@ -1048,62 +1048,33 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new DataView();
-			SqlCommand command = new SqlCommand(@"SELECT [ID Device],[Device Name],InventoryNumber FROM Devices WHERE [ID Device] = @DeviceID AND [ID Device Type] = 1");
+            SqlCommand command = new SqlCommand(@"SELECT [ID Installation], [ID Computer], Software, Version, InstallationDate, LicType, BuyLicenseDate, ExpireLicenseDate, LicKey, SoftMaker, Supplier, SoftType
+                                                    FROM
+                                                      dbo.SoftInstallations si
+                                                        INNER JOIN dbo.SoftLicenses sl ON sl.[ID License] = si.[ID License]
+                                                        INNER JOIN dbo.Software s ON s.[ID Software] = sl.[ID Software]
+                                                      INNER JOIN dbo.SoftSuppliers ss ON ss.[ID Supplier] = sl.[ID Supplier]
+                                                      INNER JOIN dbo.SoftTypes st ON st.[ID SoftType] = s.[ID SoftType]
+                                                      INNER JOIN dbo.SoftMakers sm ON sm.[ID SoftMaker] = s.[ID SoftMaker]
+                                                      INNER JOIN dbo.SoftLicTypes slt ON slt.[ID LicType] = sl.[ID LicType]
+                                                      LEFT JOIN dbo.SoftLicKeys slk ON si.[ID LicenseKey] = slk.[ID LicenseKey]
+                                                    WHERE
+                                                      [ID Computer] = @ComputerID");
 			command.Connection = connection;
-			command.Parameters.Add(new SqlParameter("DeviceID", ComputerID));
-			SqlDataReader reader;
-			try
-			{
-				reader = command.ExecuteReader();
-			}
-			catch (SqlException e)
-			{
-				MessageBox.Show(@"Не удалось получить информацию о компьютере. " + e.Message, "Ошибка",
-				MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return new DataView();
-			}
-			string ComputerName = "";
-			string InventoryNo = "";
-			if (reader.Read())
-			{
-				ComputerName = reader[1].ToString().Split(' ')[0];
-				InventoryNo = reader[2].ToString();
-				reader.Close();
-			}
-			else
-			{
-				reader.Close();
-				return new DataView();
-			}
-			SqlConnection connectionLiFS = new SqlConnection(Properties.Settings.Default.LiFSConnectionString);
-			try
-			{
-				connectionLiFS.Open();
-			}
-			catch
-			{
-				MessageBox.Show(@"Ошибка соединения с сервером базы данных LiFS. 
-								Проверьте правильность строки соединения в файле конфигурации и доступность сервера", "Ошибка",
-								MessageBoxButtons.OK, MessageBoxIcon.Error);
-			}
-			SqlCommand commandLiFS = new SqlCommand(@"InstallationsByComputerInfo");
-			commandLiFS.CommandType = CommandType.StoredProcedure;
-			commandLiFS.Connection = connectionLiFS;
-			commandLiFS.Parameters.Add(new SqlParameter("InventoryNo", InventoryNo));
-			commandLiFS.Parameters.Add(new SqlParameter("ComputerName", ComputerName));
-			DataSet ds = new DataSet();
-			try
-			{
-				SqlDataAdapter adapter = new SqlDataAdapter(commandLiFS);
-				adapter.Fill(ds);
-			}
-			catch (SqlException e)
-			{
-				MessageBox.Show(@"Не удалось получить детальную информацию об установках ПО. " + e.Message, "Ошибка",
-				MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return new DataView();
-			}
-			return ds.Tables[0].DefaultView;
+            command.Parameters.Add(new SqlParameter("ComputerID", ComputerID));
+            DataSet ds = new DataSet();
+            try
+            {
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(ds);
+            }
+            catch (SqlException e)
+            {
+                MessageBox.Show(@"Не удалось получить детальную информацию об установках ПО. " + e.Message, "Ошибка",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return new DataView();
+            }
+            return ds.Tables[0].DefaultView;
 		}
 
 		internal DataView GetRequestsBySerialNumber(int ComputerID)
