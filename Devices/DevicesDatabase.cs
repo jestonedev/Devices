@@ -122,13 +122,19 @@ namespace Devices
 			string where = "";
 			if (spg.deviceName.Trim().Length > 0)
 			{
-				where += "([Device Name] LIKE '%" + spg.deviceName + "%')";
+                where += "([Device Name] LIKE '%" + spg.deviceName.Trim() + "%')";
 			}
             if (spg.serialNumber.Trim().Length > 0)
             {
                 if (where.Trim().Length > 0)
                     where += " AND ";
-                where += "([SerialNumber] LIKE '%" + spg.serialNumber + "%')";
+                where += "([SerialNumber] LIKE '%" + spg.serialNumber.Trim() + "%')";
+            }
+            if (spg.inventoryNumber.Trim().Length > 0)
+            {
+                if (where.Trim().Length > 0)
+                    where += " AND ";
+                where += "([InventoryNumber] LIKE '%" + spg.inventoryNumber.Trim() + "%')";
             }
 			if (spg.departmentIDs.Count > 0)
 			{

@@ -38,6 +38,7 @@ namespace Devices
 
 		private void SearchFormSt1_Load(object sender, EventArgs e)
 		{
+            CancelSearch = true;
 			//Загрузка департаментов в дерево
 			treeViewDepartments.Nodes.Clear();
 			db = new DevicesDatabase();
@@ -89,7 +90,6 @@ namespace Devices
 
 		private void button2_Click(object sender, EventArgs e)
 		{
-			CancelSearch = true;
 			Close();
 		}
 
@@ -108,12 +108,14 @@ namespace Devices
 			spgNew.deviceTypeID = ((DeviceTypeComboboxItem)comboBoxDevTypes.SelectedItem).DeviceTypeID;
 			spgNew.deviceName = textBoxDeviceName.Text.Trim();
             spgNew.serialNumber = textBoxSerialNumber.Text.Trim();
+            spgNew.inventoryNumber = textBoxInventoryNumber.Text.Trim();
 			FillDepartmentIDs(spgNew.departmentIDs, treeViewDepartments.Nodes);
 			spg.departmentIDs = spgNew.departmentIDs;
 			spg.deviceTypeID = spgNew.deviceTypeID;
 			spg.parameters = spgNew.parameters;
 			spg.deviceName = spgNew.deviceName;
             spg.serialNumber = spgNew.serialNumber;
+            spg.inventoryNumber = spgNew.inventoryNumber;
 			CancelSearch = false;
 			Close();
 		}
@@ -161,6 +163,7 @@ namespace Devices
 		public int deviceTypeID { get; set; }
         public string deviceName { get; set; }
         public string serialNumber { get; set; }
+        public string inventoryNumber { get; set; }
 
 		public SearchParametersGroup()
 		{
@@ -168,6 +171,7 @@ namespace Devices
 			departmentIDs = new List<int>();
 			deviceName = "";
             serialNumber = "";
+            inventoryNumber = "";
 		}
 	}
 }

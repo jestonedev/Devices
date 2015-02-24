@@ -44,6 +44,8 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.label6 = new System.Windows.Forms.Label();
+            this.textBoxInventoryNumber = new System.Windows.Forms.TextBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -65,7 +67,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(0, 9);
+            this.label1.Location = new System.Drawing.Point(4, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(52, 13);
             this.label1.TabIndex = 1;
@@ -95,7 +97,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(-1, 135);
+            this.label3.Location = new System.Drawing.Point(4, 173);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(116, 13);
             this.label3.TabIndex = 4;
@@ -138,6 +140,8 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.label6);
+            this.splitContainer1.Panel2.Controls.Add(this.textBoxInventoryNumber);
             this.splitContainer1.Panel2.Controls.Add(this.label5);
             this.splitContainer1.Panel2.Controls.Add(this.textBoxSerialNumber);
             this.splitContainer1.Panel2.Controls.Add(this.label4);
@@ -168,11 +172,11 @@
             // 
             this.textBoxSerialNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxSerialNumber.Location = new System.Drawing.Point(3, 111);
+            this.textBoxSerialNumber.Location = new System.Drawing.Point(3, 108);
             this.textBoxSerialNumber.MaxLength = 100;
             this.textBoxSerialNumber.Name = "textBoxSerialNumber";
             this.textBoxSerialNumber.Size = new System.Drawing.Size(346, 20);
-            this.textBoxSerialNumber.TabIndex = 10;
+            this.textBoxSerialNumber.TabIndex = 2;
             // 
             // label4
             // 
@@ -189,11 +193,11 @@
             // 
             this.textBoxDeviceName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDeviceName.Location = new System.Drawing.Point(4, 70);
+            this.textBoxDeviceName.Location = new System.Drawing.Point(3, 68);
             this.textBoxDeviceName.MaxLength = 100;
             this.textBoxDeviceName.Name = "textBoxDeviceName";
             this.textBoxDeviceName.Size = new System.Drawing.Size(346, 20);
-            this.textBoxDeviceName.TabIndex = 8;
+            this.textBoxDeviceName.TabIndex = 1;
             // 
             // button4
             // 
@@ -202,7 +206,7 @@
             this.button4.Location = new System.Drawing.Point(275, 423);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 7;
+            this.button4.TabIndex = 6;
             this.button4.Text = "-";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
@@ -213,7 +217,7 @@
             this.button3.Location = new System.Drawing.Point(194, 423);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 6;
+            this.button3.TabIndex = 5;
             this.button3.Text = "+";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
@@ -226,14 +230,35 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(3, 151);
+            this.dataGridView1.Location = new System.Drawing.Point(3, 191);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(347, 266);
-            this.dataGridView1.TabIndex = 5;
+            this.dataGridView1.Size = new System.Drawing.Size(347, 226);
+            this.dataGridView1.TabIndex = 4;
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             this.dataGridView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(3, 134);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(111, 13);
+            this.label6.TabIndex = 13;
+            this.label6.Text = "Инвентарный номер";
+            // 
+            // textBoxInventoryNumber
+            // 
+            this.textBoxInventoryNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxInventoryNumber.Location = new System.Drawing.Point(3, 150);
+            this.textBoxInventoryNumber.MaxLength = 100;
+            this.textBoxInventoryNumber.Name = "textBoxInventoryNumber";
+            this.textBoxInventoryNumber.Size = new System.Drawing.Size(346, 20);
+            this.textBoxInventoryNumber.TabIndex = 3;
             // 
             // SearchFormSt1
             // 
@@ -276,5 +301,7 @@
 		private System.Windows.Forms.TextBox textBoxDeviceName;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBoxSerialNumber;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox textBoxInventoryNumber;
 	}
 }
