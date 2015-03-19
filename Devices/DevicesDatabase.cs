@@ -1065,7 +1065,7 @@ namespace Devices
                                                       INNER JOIN dbo.SoftLicTypes slt ON slt.[ID LicType] = sl.[ID LicType]
                                                       LEFT JOIN dbo.SoftLicKeys slk ON si.[ID LicenseKey] = slk.[ID LicenseKey]
                                                     WHERE
-                                                      [ID Computer] = @ComputerID");
+                                                      [ID Computer] = @ComputerID AND si.[Deleted] <> 1");
 			command.Connection = connection;
             command.Parameters.Add(new SqlParameter("ComputerID", ComputerID));
             DataSet ds = new DataSet();
