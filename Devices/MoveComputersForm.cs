@@ -11,7 +11,7 @@ namespace Devices
 {
 	public partial class MoveComputersForm : Form
 	{
-		public int NodeID { get; set; }
+        public NodeProperty NP { get; set; }
 		public int NewDepartmentID { get; set; }
 		public bool Moved { get; set; }
 
@@ -42,9 +42,32 @@ namespace Devices
 		private void button1_Click(object sender, EventArgs e)
 		{
 			NewDepartmentID = ((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID;
-			if (db.MoveDevice(NodeID, NewDepartmentID))
-				Moved = true;
+            if (NP.NodeType == NodeTypeEnum.DeviceNode)
+            {
+                if (db.MoveDevice(NP.NodeID, NewDepartmentID))
+                    Moved = true;
+            } else
+            if (NP.NodeType == NodeTypeEnum.DepartmentNode)
+            {
+                if (IDInSubNodes(NP.NodeID, treeViewComputers.SelectedNode))
+                {
+                    MessageBox.Show("Вы пытаетесь переместить департамент сам в себя или в дочернее подразделение, образовав циклическую зависимость", "Ошибка", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                if (db.MoveDepartment(NP.NodeID, NewDepartmentID))
+                    Moved = true;
+            }
 			Close();
 		}
+
+        private bool IDInSubNodes(int id, TreeNode node)
+        {
+            if (id == ((NodeProperty)node.Tag).NodeID)
+                return true;
+            if (node.Parent != null)
+                return IDInSubNodes(id, node.Parent);
+            return false;
+        }
 	}
 }

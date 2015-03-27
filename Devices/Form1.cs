@@ -178,7 +178,6 @@ namespace Devices
 				toolStripButton1.Enabled = true;
 				toolStripButton4.Enabled = true;
 				toolStripButton5.Enabled = true;
-				toolStripButton8.Enabled = true;
 			}
 			else
 			{
@@ -188,7 +187,6 @@ namespace Devices
 				toolStripButton1.Enabled = false;
 				toolStripButton4.Enabled = false;
 				toolStripButton5.Enabled = false;
-				toolStripButton8.Enabled = false;
 			}
 
 		}
@@ -386,7 +384,8 @@ namespace Devices
 
 		private void toolStripButton8_Click(object sender, EventArgs e)
 		{
-			if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType != NodeTypeEnum.DeviceNode)
+			if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType != NodeTypeEnum.DeviceNode &&
+                ((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType != NodeTypeEnum.DepartmentNode)
 				return;
 			if (treeViewComputers.SelectedNode.Parent == null)
 				return;
@@ -395,7 +394,7 @@ namespace Devices
 			TreeNode node = (TreeNode)treeViewComputers.SelectedNode.Clone();
 			MoveComputersForm mcf = new MoveComputersForm();
 			mcf.Text = "Перемещение узла " + treeViewComputers.SelectedNode.Text;
-			mcf.NodeID = ((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID;
+			mcf.NP = ((NodeProperty)treeViewComputers.SelectedNode.Tag);
 			mcf.ShowDialog();
 			if (mcf.Moved)
 			{

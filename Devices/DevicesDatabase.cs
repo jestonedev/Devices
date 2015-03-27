@@ -1222,5 +1222,30 @@ namespace Devices
 			}
 			return true;
 		}
-	}
+
+        internal bool MoveDepartment(int DepartmentID, int NewDepartmentID)
+        {
+            if (connection.State != ConnectionState.Open)
+                return false;
+            SqlCommand command = new SqlCommand("UPDATE Departments SET [ID Parent Department] = @NewDepartmentID WHERE [ID Department] = @DepartmentID");
+            command.Connection = connection;
+            command.Parameters.AddWithValue("@NewDepartmentID", NewDepartmentID);
+            command.Parameters.AddWithValue("@DepartmentID", DepartmentID);
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (SqlException e)
+            {
+                if (e.Number == 229)
+                    MessageBox.Show(@"У вас нет прав на перемещение подразделений", "Ошибка",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                else
+                    MessageBox.Show(@"Не удалось переместить подразделение. " + e.Message, "Ошибка",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
+        }
+    }
 }
