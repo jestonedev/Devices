@@ -31,13 +31,22 @@ namespace Devices
 			treeViewComputers.Nodes.Clear();
 			db = new DevicesDatabase();
 			List<Node> list = db.GetDepartments(spg);
-			foreach (Node department in list)
-			{
-				TreeNode node = new TreeNode();
-				node.Text = department.NodeName;
-				node.Tag = new NodeProperty(department.NodeID, NodeTypeEnum.DepartmentNode);
-				TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, department.ParentNodeID);
-			}
+            List<Node> cache = new List<Node>();
+            int cacheCount = 0;
+            do
+            {
+                cacheCount = cache.Count;
+                foreach (Node department in list)
+                {
+                    TreeNode node = new TreeNode();
+                    node.Text = department.NodeName;
+                    node.Tag = new NodeProperty(department.NodeID, NodeTypeEnum.DepartmentNode);
+                    bool inserted = TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, department.ParentNodeID);
+                    if (!inserted)
+                        cache.Add(department);
+                }
+            }
+            while (cache.Count != cacheCount);
 			list.Clear();
 			list = db.GetDevices(spg);
 			foreach (Node device in list)

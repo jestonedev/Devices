@@ -81,7 +81,7 @@ namespace Devices
 			if (where.Trim().Length > 0)
 				where = "WHERE " + where;
 			SqlCommand command = new SqlCommand(@"SELECT [ID Department], [ID Parent Department], Department
-												FROM dbo.Departments "+where);
+												FROM dbo.Departments "+where+" ORDER BY [ID Parent Department]");
 			command.Connection = connection;
 			SqlDataReader reader;
 			try
