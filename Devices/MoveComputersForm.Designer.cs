@@ -32,6 +32,7 @@
             this.treeViewComputers = new System.Windows.Forms.TreeView();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.printDialog1 = new System.Windows.Forms.PrintDialog();
             this.SuspendLayout();
             // 
             // treeViewComputers
@@ -66,6 +67,10 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // printDialog1
+            // 
+            this.printDialog1.UseEXDialog = true;
+            // 
             // MoveComputersForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -87,5 +92,6 @@
 		private System.Windows.Forms.TreeView treeViewComputers;
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.PrintDialog printDialog1;
 	}
 }

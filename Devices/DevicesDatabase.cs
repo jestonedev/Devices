@@ -1287,5 +1287,30 @@ namespace Devices
             }
             return true;
         }
+
+        internal bool MoveParameter(int NodeID, int NewDeviceID)
+        {
+            if (connection.State != ConnectionState.Open)
+                return false;
+            SqlCommand command = new SqlCommand("UPDATE Nodes SET [ID Device] = @NewDeviceID WHERE [ID Node] = @NodeID");
+            command.Connection = connection;
+            command.Parameters.AddWithValue("@NodeID", NodeID);
+            command.Parameters.AddWithValue("@NewDeviceID", NewDeviceID);
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (SqlException e)
+            {
+                if (e.Number == 229)
+                    MessageBox.Show(@"У вас нет прав на перемещение характеристики устройства", "Ошибка",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                else
+                    MessageBox.Show(@"Не удалось переместить характеристику устройства. " + e.Message, "Ошибка",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
+        }
     }
 }

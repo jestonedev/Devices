@@ -36,6 +36,7 @@ namespace Devices
             do
             {
                 cacheCount = cache.Count;
+                cache.Clear();
                 foreach (Node department in list)
                 {
                     TreeNode node = new TreeNode();
@@ -47,10 +48,8 @@ namespace Devices
                 }
                 list.Clear();
                 list.AddRange(cache);
-                cache.Clear();
             }
             while (cache.Count != cacheCount);
-			list.Clear();
 			list = db.GetDevices(spg);
 			foreach (Node device in list)
 			{
@@ -406,16 +405,15 @@ namespace Devices
 			if (((NodeProperty)treeViewComputers.SelectedNode.Parent.Tag).NodeID <= 0)
 				return;
 			TreeNode node = (TreeNode)treeViewComputers.SelectedNode.Clone();
-			MoveComputersForm mcf = new MoveComputersForm();
+			MoveComputersForm mcf = new MoveComputersForm(((NodeProperty)treeViewComputers.SelectedNode.Tag));
 			mcf.Text = "Перемещение узла " + treeViewComputers.SelectedNode.Text;
-			mcf.NP = ((NodeProperty)treeViewComputers.SelectedNode.Tag);
 			mcf.ShowDialog();
 			if (mcf.Moved)
 			{
 				//Удалить в старом департаменте узел и добавить в новый
 				treeViewComputers.SelectedNode.Remove();
 				//Добавить узел в новое место
-				TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, mcf.NewDepartmentID);
+				TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, mcf.NewID);
 				treeViewComputers.Sort();
 			}
 		}

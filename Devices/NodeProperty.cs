@@ -25,11 +25,11 @@ namespace Devices
 	{
 		public static bool AddNode(TreeNode new_node, TreeNodeCollection current, TreeNodeCollection root, int ParentNodeID)
 		{
-			/*if (ParentNodeID == 0)
+			if (ParentNodeID == 0)
 			{
 				root.Add(new_node);
-				return;
-			}*/
+				return true;
+			}
 			foreach (TreeNode node in current)
 			{
 				if ((((NodeProperty)node.Tag).NodeID == ParentNodeID) &&
@@ -53,13 +53,13 @@ namespace Devices
 					bool ok = AddNode(new_node, node.Nodes, root, ParentNodeID);
 					if (ok)
 						return true;
-				}	
+				}
 			}
-			if (current == root)
+			/*if (current == root)
 			{
 				root.Add(new_node);
 				return true;
-			}
+			}*/
 			return false;
 		}
 	}

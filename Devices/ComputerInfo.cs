@@ -93,6 +93,7 @@ namespace Devices
                 toolStripButton4.Enabled = false;
             else
                 toolStripButton4.Enabled = true;
+            toolStripButton5.Enabled = (nodeType == NodeTypeEnum.DeviceSimpleParameter);
 		}
 
 		#region IDisposable Members
@@ -259,6 +260,22 @@ namespace Devices
             rf.InitializeForm(db);
             rf.ShowDialog();
             rf.Dispose();
+        }
+
+        private void toolStripButton5_Click(object sender, EventArgs e)
+        {
+            if (((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeType != NodeTypeEnum.DeviceSimpleParameter)
+                return;
+            TreeNode node = (TreeNode)treeViewDeviceInfo.SelectedNode.Clone();
+            MoveComputersForm mcf = new MoveComputersForm(((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag));
+            mcf.Text = "Перемещение узла " + treeViewDeviceInfo.SelectedNode.Text;
+            mcf.ShowDialog();
+            if (mcf.Moved)
+            {
+                //Удалить характеристику в старом ПК, если перемещали не в него же
+                if (DeviceID != mcf.NewID)
+                    treeViewDeviceInfo.SelectedNode.Remove();
+            }
         }
 	}
 }

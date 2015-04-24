@@ -11,16 +11,17 @@ namespace Devices
 {
 	public partial class MoveComputersForm : Form
 	{
-        public NodeProperty NP { get; set; }
-		public int NewDepartmentID { get; set; }
+        private NodeProperty np;
+        public int NewID { get; set; }
 		public bool Moved { get; set; }
 
 		private DevicesDatabase db { get; set; }
 		private SearchParametersGroup spg { get; set; }
 
-		public MoveComputersForm()
+		public MoveComputersForm(NodeProperty NP)
 		{
 			InitializeComponent();
+            np = NP;
 			Moved = false;
 			spg = new SearchParametersGroup();
 			db = new DevicesDatabase();
@@ -30,6 +31,7 @@ namespace Devices
             do
             {
                 cacheCount = cache.Count;
+                cache.Clear();
                 foreach (Node department in list)
                 {
                     TreeNode node = new TreeNode();
@@ -41,9 +43,26 @@ namespace Devices
                 }
                 list.Clear();
                 list.AddRange(cache);
-                cache.Clear();
             }
             while (cache.Count != cacheCount);
+            if (NP.NodeType != NodeTypeEnum.DeviceSimpleParameter)
+            {
+                treeViewComputers.Sort();
+                if (treeViewComputers.Nodes.Count > 0)
+                    treeViewComputers.SelectedNode = treeViewComputers.Nodes[0];
+                return;
+            }
+            list = db.GetDevices(spg);
+            foreach (Node device in list)
+            {
+                TreeNode node = new TreeNode();
+                node.Text = device.NodeName;
+                node.Tag = new NodeProperty(device.NodeID, NodeTypeEnum.DeviceNode);
+                TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, device.ParentNodeID);
+            }
+            treeViewComputers.Sort();
+            if (treeViewComputers.Nodes.Count > 0)
+                treeViewComputers.SelectedNode = treeViewComputers.Nodes[0];
 		}
 
 		private void button2_Click(object sender, EventArgs e)
@@ -53,21 +72,32 @@ namespace Devices
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			NewDepartmentID = ((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID;
-            if (NP.NodeType == NodeTypeEnum.DeviceNode)
+			NewID = ((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID;
+            if (np.NodeType == NodeTypeEnum.DeviceNode)
             {
-                if (db.MoveDevice(NP.NodeID, NewDepartmentID))
+                if (db.MoveDevice(np.NodeID, NewID))
                     Moved = true;
             } else
-            if (NP.NodeType == NodeTypeEnum.DepartmentNode)
+            if (np.NodeType == NodeTypeEnum.DepartmentNode)
             {
-                if (IDInSubNodes(NP.NodeID, treeViewComputers.SelectedNode))
+                if (IDInSubNodes(np.NodeID, treeViewComputers.SelectedNode))
                 {
                     MessageBox.Show("Вы пытаетесь переместить департамент сам в себя или в дочернее подразделение, образовав циклическую зависимость", "Ошибка", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                if (db.MoveDepartment(NP.NodeID, NewDepartmentID))
+                if (db.MoveDepartment(np.NodeID, NewID))
+                    Moved = true;
+            } else
+            if (np.NodeType == NodeTypeEnum.DeviceSimpleParameter)
+            {
+                if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType != NodeTypeEnum.DeviceNode)
+                {
+                    MessageBox.Show("Для переноса характеристики устройства необходимо выбрать другое устройство, а не департамент", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                if (db.MoveParameter(np.NodeID, NewID))
                     Moved = true;
             }
 			Close();
