@@ -59,6 +59,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.treeViewDeviceInfo = new System.Windows.Forms.TreeView();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.редактированиеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.открытьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,6 +83,7 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.contextMenuStrip2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -364,11 +367,27 @@
             this.treeViewDeviceInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeViewDeviceInfo.ContextMenuStrip = this.contextMenuStrip2;
             this.treeViewDeviceInfo.Location = new System.Drawing.Point(3, 22);
             this.treeViewDeviceInfo.Name = "treeViewDeviceInfo";
             this.treeViewDeviceInfo.Size = new System.Drawing.Size(396, 342);
             this.treeViewDeviceInfo.TabIndex = 0;
             this.treeViewDeviceInfo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.splitContainer1_KeyDown);
+            // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem4});
+            this.contextMenuStrip2.Name = "contextMenuStrip1";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(203, 48);
+            this.contextMenuStrip2.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip2_Opening);
+            this.contextMenuStrip2.Click += new System.EventHandler(this.contextMenuStrip2_Click);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(202, 22);
+            this.toolStripMenuItem4.Text = "Открыть список заявок";
             // 
             // menuStrip1
             // 
@@ -536,6 +555,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
             this.splitContainer1.ResumeLayout(false);
+            this.contextMenuStrip2.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -591,6 +611,8 @@
 		private System.Windows.Forms.ToolStripButton toolStripButton7;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 		private System.Windows.Forms.ToolStripButton toolStripButton8;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
 	}
 }
 

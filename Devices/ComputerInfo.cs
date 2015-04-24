@@ -88,6 +88,11 @@ namespace Devices
 			dataGridView1.Columns["Parameter Name"].MinimumWidth = 200;
 			dataGridView1.Columns["Value"].HeaderText = "Значение";
 			dataGridView1.Columns["Value"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            if (treeViewDeviceInfo.SelectedNode.Parent == null ||
+                treeViewDeviceInfo.SelectedNode.Parent.Text != "Периферийные устройства")
+                toolStripButton4.Enabled = false;
+            else
+                toolStripButton4.Enabled = true;
 		}
 
 		#region IDisposable Members
@@ -234,5 +239,26 @@ namespace Devices
 			if (e.KeyCode == Keys.Escape)
 				Close();
 		}
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+            if (treeViewDeviceInfo.SelectedNode.Parent == null ||
+                treeViewDeviceInfo.SelectedNode.Parent.Text != "Периферийные устройства")
+                e.Cancel = true;
+        }
+
+        private void открытьСписокЗаявокToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeViewDeviceInfo.SelectedNode.Parent == null ||
+                treeViewDeviceInfo.SelectedNode.Parent.Text != "Периферийные устройства")
+                return;
+            RequestsForm rf = new RequestsForm();
+            int ID = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeID;
+            rf.SerialNumber = db.GetSerialNumberBy(ID, true);
+            rf.InventoryNumber = db.GetInventoryNumberBy(ID, true);
+            rf.InitializeForm(db);
+            rf.ShowDialog();
+            rf.Dispose();
+        }
 	}
 }

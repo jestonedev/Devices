@@ -319,7 +319,9 @@ namespace Devices
 			if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType == NodeTypeEnum.DeviceNode)
 			{
 				RequestsForm rf = new RequestsForm();
-				rf.DeviceID = ((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID;
+                int DeviceID = ((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID;
+                rf.SerialNumber = db.GetSerialNumberBy(DeviceID, false);
+                rf.InventoryNumber = db.GetInventoryNumberBy(DeviceID, false);
 				rf.InitializeForm(db);
 				rf.ShowDialog();
 				rf.Dispose();
@@ -414,6 +416,27 @@ namespace Devices
 				treeViewComputers.Sort();
 			}
 		}
+
+        private void contextMenuStrip2_Opening(object sender, CancelEventArgs e)
+        {
+            if (treeViewDeviceInfo.SelectedNode.Parent == null ||
+                treeViewDeviceInfo.SelectedNode.Parent.Text != "Периферийные устройства")
+                e.Cancel = true;
+        }
+
+        private void contextMenuStrip2_Click(object sender, EventArgs e)
+        {
+            if (treeViewDeviceInfo.SelectedNode.Parent == null ||
+                treeViewDeviceInfo.SelectedNode.Parent.Text != "Периферийные устройства")
+                return;
+            RequestsForm rf = new RequestsForm();
+            int ID = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeID;
+            rf.SerialNumber = db.GetSerialNumberBy(ID, true);
+            rf.InventoryNumber = db.GetInventoryNumberBy(ID, true);
+            rf.InitializeForm(db);
+            rf.ShowDialog();
+            rf.Dispose();
+        }
 	}
 
 	internal class Device

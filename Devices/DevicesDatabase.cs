@@ -1083,41 +1083,80 @@ namespace Devices
             return ds.Tables[0].DefaultView;
 		}
 
-		internal DataView GetRequestsBySerialNumber(int ComputerID)
-		{
-			if (connection.State != ConnectionState.Open)
-				return new DataView();
-			SqlCommand command = new SqlCommand(@"SELECT [ID Device],SerialNumber FROM Devices WHERE [ID Device] = @DeviceID AND [ID Device Type] = 1");
-			command.Connection = connection;
-			command.Parameters.Add(new SqlParameter("DeviceID", ComputerID));
-			SqlDataReader reader;
-			try
-			{
-				reader = command.ExecuteReader();
-			}
-			catch (SqlException e)
-			{
-				MessageBox.Show(@"Не удалось получить информацию о компьютере. " + e.Message, "Ошибка",
-				MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return new DataView();
-			}
-			string SerialNumber = "";
-			if (reader.Read())
-			{
-				SerialNumber = reader[1].ToString();
-				reader.Close();
-			}
-			else
-			{
-				reader.Close();
-				return new DataView();
-			}
-			if (SerialNumber.Trim() == "")
-			{
-				MessageBox.Show(@"У выбранного узла не указан серийный номер","Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return new DataView();
-			}
+        internal string GetSerialNumberBy(int ID, bool IsPeripheralDevice)
+        {
+            if (connection.State != ConnectionState.Open)
+                return "";
+            SqlCommand command = null;
+            if (IsPeripheralDevice)
+                command = new SqlCommand(@"SELECT Value FROM Nodes WHERE [ID Parent Node] =  @ID AND [ID AssocMetaNode] = 44");
+            else
+                command = new SqlCommand(@"SELECT SerialNumber FROM Devices WHERE [ID Device] = @ID");
+            command.Connection = connection;
+            command.Parameters.Add(new SqlParameter("ID", ID));
+            SqlDataReader reader;
+            try
+            {
+                reader = command.ExecuteReader();
+            }
+            catch (SqlException e)
+            {
+                MessageBox.Show(@"Не удалось получить информацию о компьютере. " + e.Message, "Ошибка",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return "";
+            }
+            string SerialNumber = "";
+            if (reader.Read())
+            {
+                SerialNumber = reader[0].ToString();
+                reader.Close();
+            }
+            else
+            {
+                reader.Close();
+                return "";
+            }
+            return SerialNumber;
+        }
 
+        internal string GetInventoryNumberBy(int ID, bool IsPeripheralDevice)
+        {
+            if (connection.State != ConnectionState.Open)
+                return "";
+            SqlCommand command = null;
+            if (IsPeripheralDevice)
+                command = new SqlCommand(@"SELECT Value FROM Nodes WHERE [ID Parent Node] =  @ID AND [ID AssocMetaNode] = 45");
+            else
+                command = new SqlCommand(@"SELECT InventoryNumber FROM Devices WHERE [ID Device] = @ID");
+            command.Connection = connection;
+            command.Parameters.Add(new SqlParameter("ID", ID));
+            SqlDataReader reader;
+            try
+            {
+                reader = command.ExecuteReader();
+            }
+            catch (SqlException e)
+            {
+                MessageBox.Show(@"Не удалось получить информацию о компьютере. " + e.Message, "Ошибка",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return "";
+            }
+            string InventoryNumber = "";
+            if (reader.Read())
+            {
+                InventoryNumber = reader[0].ToString();
+                reader.Close();
+            }
+            else
+            {
+                reader.Close();
+                return "";
+            }
+            return InventoryNumber;
+        }
+
+		internal DataView GetRequests(string SerialNumber, string InventoryNumber)
+		{
 			SqlConnection connectionAlexApplic = new SqlConnection(Properties.Settings.Default.AlexApplicConnectionString);
 			try
 			{
@@ -1132,7 +1171,8 @@ namespace Devices
 			SqlCommand commandAlexApplic = new SqlCommand(@"getDevHistory");
 			commandAlexApplic.CommandType = CommandType.StoredProcedure;
 			commandAlexApplic.Connection = connectionAlexApplic;
-			commandAlexApplic.Parameters.Add(new SqlParameter("SerialNum", SerialNumber));
+            commandAlexApplic.Parameters.Add(new SqlParameter("SerialNum", SerialNumber));
+            commandAlexApplic.Parameters.Add(new SqlParameter("InventoryNum", InventoryNumber));
 			DataSet ds = new DataSet();
 			try
 			{
