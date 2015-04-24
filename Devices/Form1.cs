@@ -45,6 +45,9 @@ namespace Devices
                     if (!inserted)
                         cache.Add(department);
                 }
+                list.Clear();
+                list.AddRange(cache);
+                cache.Clear();
             }
             while (cache.Count != cacheCount);
 			list.Clear();

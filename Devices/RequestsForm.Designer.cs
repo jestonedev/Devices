@@ -34,20 +34,21 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBoxFault = new System.Windows.Forms.GroupBox();
-            this.textBoxFault = new System.Windows.Forms.TextBox();
-            this.groupBoxRecom = new System.Windows.Forms.GroupBox();
-            this.textBoxRecom = new System.Windows.Forms.TextBox();
-            this.groupBoxActionRem = new System.Windows.Forms.GroupBox();
-            this.textBoxActionRem = new System.Windows.Forms.TextBox();
             this.groupBoxDescription = new System.Windows.Forms.GroupBox();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
+            this.groupBoxActionRem = new System.Windows.Forms.GroupBox();
+            this.textBoxActionRem = new System.Windows.Forms.TextBox();
+            this.groupBoxRecom = new System.Windows.Forms.GroupBox();
+            this.textBoxRecom = new System.Windows.Forms.TextBox();
+            this.groupBoxFault = new System.Windows.Forms.GroupBox();
+            this.textBoxFault = new System.Windows.Forms.TextBox();
             this.NumRequestColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ExecutorColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.JobTypeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FixDateColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.HoursDurColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MinutesDurColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StikerColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ActColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -55,10 +56,10 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.groupBoxFault.SuspendLayout();
-            this.groupBoxRecom.SuspendLayout();
-            this.groupBoxActionRem.SuspendLayout();
             this.groupBoxDescription.SuspendLayout();
+            this.groupBoxActionRem.SuspendLayout();
+            this.groupBoxRecom.SuspendLayout();
+            this.groupBoxFault.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -90,6 +91,7 @@
             this.FixDateColumn,
             this.HoursDurColumn,
             this.MinutesDurColumn,
+            this.StikerColumn,
             this.ActColumn});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
@@ -97,7 +99,7 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.ShowEditingIcon = false;
-            this.dataGridView1.Size = new System.Drawing.Size(784, 305);
+            this.dataGridView1.Size = new System.Drawing.Size(784, 300);
             this.dataGridView1.TabIndex = 3;
             // 
             // splitContainer1
@@ -115,7 +117,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel1);
             this.splitContainer1.Size = new System.Drawing.Size(784, 540);
-            this.splitContainer1.SplitterDistance = 305;
+            this.splitContainer1.SplitterDistance = 300;
             this.splitContainer1.TabIndex = 5;
             // 
             // tableLayoutPanel1
@@ -133,80 +135,18 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(784, 231);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(784, 236);
             this.tableLayoutPanel1.TabIndex = 0;
-            // 
-            // groupBoxFault
-            // 
-            this.groupBoxFault.Controls.Add(this.textBoxFault);
-            this.groupBoxFault.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxFault.Location = new System.Drawing.Point(3, 3);
-            this.groupBoxFault.Name = "groupBoxFault";
-            this.groupBoxFault.Size = new System.Drawing.Size(386, 109);
-            this.groupBoxFault.TabIndex = 0;
-            this.groupBoxFault.TabStop = false;
-            this.groupBoxFault.Text = "Выявленные неисправности";
-            // 
-            // textBoxFault
-            // 
-            this.textBoxFault.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxFault.Location = new System.Drawing.Point(3, 16);
-            this.textBoxFault.Multiline = true;
-            this.textBoxFault.Name = "textBoxFault";
-            this.textBoxFault.ReadOnly = true;
-            this.textBoxFault.Size = new System.Drawing.Size(380, 90);
-            this.textBoxFault.TabIndex = 0;
-            // 
-            // groupBoxRecom
-            // 
-            this.groupBoxRecom.Controls.Add(this.textBoxRecom);
-            this.groupBoxRecom.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxRecom.Location = new System.Drawing.Point(395, 3);
-            this.groupBoxRecom.Name = "groupBoxRecom";
-            this.groupBoxRecom.Size = new System.Drawing.Size(386, 109);
-            this.groupBoxRecom.TabIndex = 1;
-            this.groupBoxRecom.TabStop = false;
-            this.groupBoxRecom.Text = "Рекомендации";
-            // 
-            // textBoxRecom
-            // 
-            this.textBoxRecom.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxRecom.Location = new System.Drawing.Point(3, 16);
-            this.textBoxRecom.Multiline = true;
-            this.textBoxRecom.Name = "textBoxRecom";
-            this.textBoxRecom.ReadOnly = true;
-            this.textBoxRecom.Size = new System.Drawing.Size(380, 90);
-            this.textBoxRecom.TabIndex = 0;
-            // 
-            // groupBoxActionRem
-            // 
-            this.groupBoxActionRem.Controls.Add(this.textBoxActionRem);
-            this.groupBoxActionRem.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxActionRem.Location = new System.Drawing.Point(3, 118);
-            this.groupBoxActionRem.Name = "groupBoxActionRem";
-            this.groupBoxActionRem.Size = new System.Drawing.Size(386, 110);
-            this.groupBoxActionRem.TabIndex = 2;
-            this.groupBoxActionRem.TabStop = false;
-            this.groupBoxActionRem.Text = "Выполненные работы";
-            // 
-            // textBoxActionRem
-            // 
-            this.textBoxActionRem.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxActionRem.Location = new System.Drawing.Point(3, 16);
-            this.textBoxActionRem.Multiline = true;
-            this.textBoxActionRem.Name = "textBoxActionRem";
-            this.textBoxActionRem.ReadOnly = true;
-            this.textBoxActionRem.Size = new System.Drawing.Size(380, 91);
-            this.textBoxActionRem.TabIndex = 0;
             // 
             // groupBoxDescription
             // 
             this.groupBoxDescription.Controls.Add(this.textBoxDescription);
             this.groupBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxDescription.Location = new System.Drawing.Point(395, 118);
+            this.groupBoxDescription.Location = new System.Drawing.Point(395, 121);
             this.groupBoxDescription.Name = "groupBoxDescription";
-            this.groupBoxDescription.Size = new System.Drawing.Size(386, 110);
-            this.groupBoxDescription.TabIndex = 3;
+            this.groupBoxDescription.Size = new System.Drawing.Size(386, 112);
+            this.groupBoxDescription.TabIndex = 4;
             this.groupBoxDescription.TabStop = false;
             this.groupBoxDescription.Text = "Примечание";
             // 
@@ -217,8 +157,71 @@
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.ReadOnly = true;
-            this.textBoxDescription.Size = new System.Drawing.Size(380, 91);
+            this.textBoxDescription.Size = new System.Drawing.Size(380, 93);
             this.textBoxDescription.TabIndex = 0;
+            // 
+            // groupBoxActionRem
+            // 
+            this.groupBoxActionRem.Controls.Add(this.textBoxActionRem);
+            this.groupBoxActionRem.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxActionRem.Location = new System.Drawing.Point(3, 121);
+            this.groupBoxActionRem.Name = "groupBoxActionRem";
+            this.groupBoxActionRem.Size = new System.Drawing.Size(386, 112);
+            this.groupBoxActionRem.TabIndex = 3;
+            this.groupBoxActionRem.TabStop = false;
+            this.groupBoxActionRem.Text = "Выполненные работы";
+            // 
+            // textBoxActionRem
+            // 
+            this.textBoxActionRem.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxActionRem.Location = new System.Drawing.Point(3, 16);
+            this.textBoxActionRem.Multiline = true;
+            this.textBoxActionRem.Name = "textBoxActionRem";
+            this.textBoxActionRem.ReadOnly = true;
+            this.textBoxActionRem.Size = new System.Drawing.Size(380, 93);
+            this.textBoxActionRem.TabIndex = 0;
+            // 
+            // groupBoxRecom
+            // 
+            this.groupBoxRecom.Controls.Add(this.textBoxRecom);
+            this.groupBoxRecom.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxRecom.Location = new System.Drawing.Point(395, 3);
+            this.groupBoxRecom.Name = "groupBoxRecom";
+            this.groupBoxRecom.Size = new System.Drawing.Size(386, 112);
+            this.groupBoxRecom.TabIndex = 2;
+            this.groupBoxRecom.TabStop = false;
+            this.groupBoxRecom.Text = "Рекомендации";
+            // 
+            // textBoxRecom
+            // 
+            this.textBoxRecom.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxRecom.Location = new System.Drawing.Point(3, 16);
+            this.textBoxRecom.Multiline = true;
+            this.textBoxRecom.Name = "textBoxRecom";
+            this.textBoxRecom.ReadOnly = true;
+            this.textBoxRecom.Size = new System.Drawing.Size(380, 93);
+            this.textBoxRecom.TabIndex = 0;
+            // 
+            // groupBoxFault
+            // 
+            this.groupBoxFault.Controls.Add(this.textBoxFault);
+            this.groupBoxFault.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxFault.Location = new System.Drawing.Point(3, 3);
+            this.groupBoxFault.Name = "groupBoxFault";
+            this.groupBoxFault.Size = new System.Drawing.Size(386, 112);
+            this.groupBoxFault.TabIndex = 1;
+            this.groupBoxFault.TabStop = false;
+            this.groupBoxFault.Text = "Выявленные неисправности";
+            // 
+            // textBoxFault
+            // 
+            this.textBoxFault.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxFault.Location = new System.Drawing.Point(3, 16);
+            this.textBoxFault.Multiline = true;
+            this.textBoxFault.Name = "textBoxFault";
+            this.textBoxFault.ReadOnly = true;
+            this.textBoxFault.Size = new System.Drawing.Size(380, 93);
+            this.textBoxFault.TabIndex = 0;
             // 
             // NumRequestColumn
             // 
@@ -266,6 +269,13 @@
             this.MinutesDurColumn.Name = "MinutesDurColumn";
             this.MinutesDurColumn.ReadOnly = true;
             // 
+            // StikerColumn
+            // 
+            this.StikerColumn.HeaderText = "Стикер";
+            this.StikerColumn.Name = "StikerColumn";
+            this.StikerColumn.ReadOnly = true;
+            this.StikerColumn.Width = 68;
+            // 
             // ActColumn
             // 
             this.ActColumn.HeaderText = "№ акта";
@@ -291,14 +301,14 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
-            this.groupBoxFault.ResumeLayout(false);
-            this.groupBoxFault.PerformLayout();
-            this.groupBoxRecom.ResumeLayout(false);
-            this.groupBoxRecom.PerformLayout();
-            this.groupBoxActionRem.ResumeLayout(false);
-            this.groupBoxActionRem.PerformLayout();
             this.groupBoxDescription.ResumeLayout(false);
             this.groupBoxDescription.PerformLayout();
+            this.groupBoxActionRem.ResumeLayout(false);
+            this.groupBoxActionRem.PerformLayout();
+            this.groupBoxRecom.ResumeLayout(false);
+            this.groupBoxRecom.PerformLayout();
+            this.groupBoxFault.ResumeLayout(false);
+            this.groupBoxFault.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -325,6 +335,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn FixDateColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn HoursDurColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn MinutesDurColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn StikerColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ActColumn;
 	}
 }

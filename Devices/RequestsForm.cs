@@ -34,6 +34,7 @@ namespace Devices
             MinutesDurColumn.DataPropertyName = "mm";
             JobTypeColumn.DataPropertyName = "j_name";
             ActColumn.DataPropertyName = "act";
+            StikerColumn.DataPropertyName = "Stiker";
             textBoxFault.DataBindings.Add("Text", dv, "Fault");
             textBoxRecom.DataBindings.Add("Text", dv, "Recom");
             textBoxActionRem.DataBindings.Add("Text", dv, "Action_Rem");

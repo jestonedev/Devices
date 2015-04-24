@@ -319,7 +319,7 @@
             this.toolStripButton8.Name = "toolStripButton8";
             this.toolStripButton8.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton8.Text = "Перенести";
-            this.toolStripButton8.ToolTipText = "Перенести компьютер в другой организационный узел";
+            this.toolStripButton8.ToolTipText = "Перенести компьютер или подразделение в другой организационный узел";
             this.toolStripButton8.Click += new System.EventHandler(this.toolStripButton8_Click);
             // 
             // splitContainer1
@@ -379,7 +379,7 @@
             this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem4});
             this.contextMenuStrip2.Name = "contextMenuStrip1";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(203, 48);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(203, 26);
             this.contextMenuStrip2.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip2_Opening);
             this.contextMenuStrip2.Click += new System.EventHandler(this.contextMenuStrip2_Click);
             // 
