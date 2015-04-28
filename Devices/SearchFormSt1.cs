@@ -19,6 +19,30 @@ namespace Devices
 		{
 			InitializeComponent();
 			CancelSearch = true;
+            foreach (Control control in splitContainer1.Panel1.Controls)
+                control.KeyDown += (sender, e) =>
+                {
+                    ComboBox comboBox = sender as ComboBox;
+                    if (comboBox != null && comboBox.DroppedDown)
+                        return;
+                    if (e.KeyCode == Keys.Enter)
+                        button1_Click(sender, e);
+                    else
+                        if (e.KeyCode == Keys.Escape)
+                            button2_Click(sender, e);
+                };
+            foreach (Control control in splitContainer1.Panel2.Controls)
+                control.KeyDown += (sender, e) =>
+                {
+                    ComboBox comboBox = sender as ComboBox;
+                    if (comboBox != null && comboBox.DroppedDown)
+                        return;
+                    if (e.KeyCode == Keys.Enter)
+                        button1_Click(sender, e);
+                    else
+                        if (e.KeyCode == Keys.Escape)
+                            button2_Click(sender, e);
+                };
 		}
 
 		private void InitDataGridView(object DataSource)

@@ -13,7 +13,9 @@ namespace Devices
 	public partial class Form1 : Form, IDisposable
 	{
 		private DevicesDatabase db { get; set; }
-		private SearchParametersGroup spg { get; set; }
+        private SearchParametersGroup spg { get; set; }
+
+        private MoveComputersForm mcf;
 
 		public Form1()
 		{
@@ -405,8 +407,13 @@ namespace Devices
 			if (((NodeProperty)treeViewComputers.SelectedNode.Parent.Tag).NodeID <= 0)
 				return;
 			TreeNode node = (TreeNode)treeViewComputers.SelectedNode.Clone();
-			MoveComputersForm mcf = new MoveComputersForm(((NodeProperty)treeViewComputers.SelectedNode.Tag));
+            NodeProperty NP = ((NodeProperty)treeViewComputers.SelectedNode.Tag);
+            if (mcf == null)
+                mcf = new MoveComputersForm(NP);
+            else
+                mcf.NP = NP;
 			mcf.Text = "Перемещение узла " + treeViewComputers.SelectedNode.Text;
+            mcf.Moved = false;
 			mcf.ShowDialog();
 			if (mcf.Moved)
 			{

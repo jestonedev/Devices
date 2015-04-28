@@ -14,7 +14,8 @@ namespace Devices
 		public int DeviceID { get; set; }
 		//Если переменная установлена, то поиск производится по архиву
 		public bool searchInArchive { get; set; }
-		DevicesDatabase db = new DevicesDatabase();
+		private DevicesDatabase db = new DevicesDatabase();
+        private MoveComputersForm mcf;
 
 		/// <summary>
 		/// Заполнить дерево устройств
@@ -267,8 +268,13 @@ namespace Devices
             if (((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeType != NodeTypeEnum.DeviceSimpleParameter)
                 return;
             TreeNode node = (TreeNode)treeViewDeviceInfo.SelectedNode.Clone();
-            MoveComputersForm mcf = new MoveComputersForm(((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag));
+            NodeProperty NP = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag);
+            if (mcf == null)
+                mcf = new MoveComputersForm(NP);
+            else
+                mcf.NP = NP;
             mcf.Text = "Перемещение узла " + treeViewDeviceInfo.SelectedNode.Text;
+            mcf.Moved = false;
             mcf.ShowDialog();
             if (mcf.Moved)
             {

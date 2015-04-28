@@ -11,7 +11,7 @@ namespace Devices
 {
 	public partial class MoveComputersForm : Form
 	{
-        private NodeProperty np;
+        public NodeProperty NP;
         public int NewID { get; set; }
 		public bool Moved { get; set; }
 
@@ -21,7 +21,7 @@ namespace Devices
 		public MoveComputersForm(NodeProperty NP)
 		{
 			InitializeComponent();
-            np = NP;
+            this.NP = NP;
 			Moved = false;
 			spg = new SearchParametersGroup();
 			db = new DevicesDatabase();
@@ -73,23 +73,23 @@ namespace Devices
 		private void button1_Click(object sender, EventArgs e)
 		{
 			NewID = ((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID;
-            if (np.NodeType == NodeTypeEnum.DeviceNode)
+            if (NP.NodeType == NodeTypeEnum.DeviceNode)
             {
-                if (db.MoveDevice(np.NodeID, NewID))
+                if (db.MoveDevice(NP.NodeID, NewID))
                     Moved = true;
             } else
-            if (np.NodeType == NodeTypeEnum.DepartmentNode)
+                if (NP.NodeType == NodeTypeEnum.DepartmentNode)
             {
-                if (IDInSubNodes(np.NodeID, treeViewComputers.SelectedNode))
+                if (IDInSubNodes(NP.NodeID, treeViewComputers.SelectedNode))
                 {
                     MessageBox.Show("Вы пытаетесь переместить департамент сам в себя или в дочернее подразделение, образовав циклическую зависимость", "Ошибка", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                if (db.MoveDepartment(np.NodeID, NewID))
+                if (db.MoveDepartment(NP.NodeID, NewID))
                     Moved = true;
             } else
-            if (np.NodeType == NodeTypeEnum.DeviceSimpleParameter)
+                    if (NP.NodeType == NodeTypeEnum.DeviceSimpleParameter)
             {
                 if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType != NodeTypeEnum.DeviceNode)
                 {
@@ -97,7 +97,7 @@ namespace Devices
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                if (db.MoveParameter(np.NodeID, NewID))
+                if (db.MoveParameter(NP.NodeID, NewID))
                     Moved = true;
             }
 			Close();
