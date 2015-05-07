@@ -25,7 +25,12 @@ namespace Devices
 			Moved = false;
 			spg = new SearchParametersGroup();
 			db = new DevicesDatabase();
-			List<Node> list = db.GetDepartments(spg);
+            LoadNodes();
+		}
+
+        private void LoadNodes()
+        {
+            List<Node> list = db.GetDepartments(spg);
             List<Node> cache = new List<Node>();
             int cacheCount = 0;
             do
@@ -63,7 +68,7 @@ namespace Devices
             treeViewComputers.Sort();
             if (treeViewComputers.Nodes.Count > 0)
                 treeViewComputers.SelectedNode = treeViewComputers.Nodes[0];
-		}
+        }
 
 		private void button2_Click(object sender, EventArgs e)
 		{
@@ -109,6 +114,31 @@ namespace Devices
                 return true;
             if (node.Parent != null)
                 return IDInSubNodes(id, node.Parent);
+            return false;
+        }
+
+        private void MoveComputersForm_Shown(object sender, EventArgs e)
+        {
+            NodeProperty nodeProperty = (NodeProperty)treeViewComputers.SelectedNode.Tag;
+            treeViewComputers.Nodes.Clear();
+            LoadNodes();
+            SelectNode(treeViewComputers.Nodes, nodeProperty);
+            treeViewComputers.Focus();
+        }
+
+        private bool SelectNode(TreeNodeCollection nodes, NodeProperty nodeProperty)
+        {
+            foreach (TreeNode currentNode in nodes)
+            {
+                NodeProperty currentNodeProperty = (NodeProperty)(currentNode.Tag);
+                if (nodeProperty.NodeType == currentNodeProperty.NodeType && nodeProperty.NodeID == currentNodeProperty.NodeID)
+                {
+                    treeViewComputers.SelectedNode = currentNode;
+                    return true;
+                }
+                if (SelectNode(currentNode.Nodes, nodeProperty) == true)
+                    return true;
+            }
             return false;
         }
 	}

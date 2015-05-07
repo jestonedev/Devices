@@ -83,6 +83,7 @@
             this.Name = "MoveComputersForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Перемещение";
+            this.Shown += new System.EventHandler(this.MoveComputersForm_Shown);
             this.ResumeLayout(false);
 
 		}

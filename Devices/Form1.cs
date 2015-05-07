@@ -92,7 +92,7 @@ namespace Devices
 			else
 				addForm.parentNode = treeViewComputers.SelectedNode.Parent;
 			addForm.InitializeForm();
-			addForm.ShowDialog();
+            addForm.ShowDialog();
 		}
 
 		private void toolStripButton1_Click_1(object sender, EventArgs e)
@@ -201,7 +201,19 @@ namespace Devices
 				toolStripButton4.Enabled = false;
 				toolStripButton5.Enabled = false;
 			}
-
+            if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType == NodeTypeEnum.DepartmentNode)
+            {
+                textBoxName.Text = db.GetDepartmentInfo(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID);
+                textBoxType.Text = "Департамент (отдел)";
+            }
+            else
+            {
+                DataView dv = db.GetDeviceGeneralInfo(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID);
+                textBoxName.Text = dv[0]["Device Name"].ToString();
+                textBoxInventoryNumber.Text = dv[0]["InventoryNumber"].ToString();
+                textBoxSerialNumber.Text = dv[0]["SerialNumber"].ToString();
+                textBoxType.Text = dv[0]["Type"].ToString();
+            }
 		}
 
 		#region IDisposable Members

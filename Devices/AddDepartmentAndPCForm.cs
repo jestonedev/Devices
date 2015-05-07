@@ -112,11 +112,13 @@ namespace Devices
 				if (is_complete)
 					currentNode.Text = textBoxName.Text;
 			}
+            DialogResult = System.Windows.Forms.DialogResult.OK;
 			Close();
 		}
 
 		private void buttonCancel_Click(object sender, EventArgs e)
 		{
+            DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			Close();
 		}
 
