@@ -75,7 +75,6 @@ namespace Devices
 				node.Tag = new NodeProperty(department.NodeID, NodeTypeEnum.DepartmentNode);
 				TreeNodesHelper.AddNode(node, treeViewDepartments.Nodes, treeViewDepartments.Nodes, department.ParentNodeID);
 			}
-			treeViewDepartments.ExpandAll();
 
 			//Загрузка типов узлов в combobox
 			DataView view = db.GetDeviceTypes()	;
