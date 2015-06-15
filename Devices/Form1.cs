@@ -181,6 +181,7 @@ namespace Devices
 
 		private void treeViewComputers_AfterSelect(object sender, TreeViewEventArgs e)
 		{
+            groupBoxPereferial.Visible = false;
 			treeViewDeviceInfo.Nodes.Clear();
 			if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType == NodeTypeEnum.DeviceNode)
 			{
@@ -442,6 +443,8 @@ namespace Devices
             if (treeViewDeviceInfo.SelectedNode.Parent == null ||
                 treeViewDeviceInfo.SelectedNode.Parent.Text != "Периферийные устройства")
                 e.Cancel = true;
+            if (treeViewDeviceInfo.SelectedNode.Text == "Системный блок")
+                contextMenuStrip1.Show(Cursor.Position.X, Cursor.Position.Y);
         }
 
         private void contextMenuStrip2_Click(object sender, EventArgs e)
@@ -456,6 +459,38 @@ namespace Devices
             rf.InitializeForm(db);
             rf.ShowDialog();
             rf.Dispose();
+        }
+
+        private void treeViewDeviceInfo_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (treeViewDeviceInfo.SelectedNode.Parent == null ||
+                treeViewDeviceInfo.SelectedNode.Parent.Text != "Периферийные устройства")
+                groupBoxPereferial.Visible = false;
+            else
+            {
+                int ID = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeID;
+                NodeTypeEnum nodeType = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeType;
+                DataView dv =  db.GetDetailDeviceInfo(ID);
+                foreach (DataRowView row in dv)
+                {
+                    switch ((int)row["ID Node"])
+                    {
+                        case 25:
+                            textBoxPereferialType.Text = row["Value"].ToString();
+                            break;
+                        case 26:
+                            textBoxPereferialName.Text = row["Value"].ToString();
+                            break;
+                        case 44:
+                            textBoxPereferialSerialNumber.Text = row["Value"].ToString();
+                            break;
+                        case 45:
+                            textBoxPereferialInventoryNumber.Text = row["Value"].ToString();
+                            break;
+                    }
+                }
+                groupBoxPereferial.Visible = true;
+            }
         }
 	}
 

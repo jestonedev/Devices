@@ -66,6 +66,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.treeViewDeviceInfo.ContextMenuStrip = this.contextMenuStrip1;
+            this.treeViewDeviceInfo.HideSelection = false;
             this.treeViewDeviceInfo.Location = new System.Drawing.Point(3, 3);
             this.treeViewDeviceInfo.Name = "treeViewDeviceInfo";
             this.treeViewDeviceInfo.Size = new System.Drawing.Size(299, 409);
@@ -242,7 +243,7 @@
             // 
             this.изменитьToolStripMenuItem.Name = "изменитьToolStripMenuItem";
             this.изменитьToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F2;
-            this.изменитьToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.изменитьToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.изменитьToolStripMenuItem.Text = "Изменить";
             this.изменитьToolStripMenuItem.Click += new System.EventHandler(this.изменитьToolStripMenuItem_Click);
             // 
@@ -250,7 +251,7 @@
             // 
             this.добавитьToolStripMenuItem.Name = "добавитьToolStripMenuItem";
             this.добавитьToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.добавитьToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.добавитьToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.добавитьToolStripMenuItem.Text = "Добавить";
             this.добавитьToolStripMenuItem.Click += new System.EventHandler(this.добавитьToolStripMenuItem_Click);
             // 
@@ -265,13 +266,13 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(166, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(171, 6);
             // 
             // выходToolStripMenuItem
             // 
             this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
             this.выходToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q)));
-            this.выходToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.выходToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.выходToolStripMenuItem.Text = "Выход";
             this.выходToolStripMenuItem.Click += new System.EventHandler(this.выходToolStripMenuItem_Click);
             // 
