@@ -12,7 +12,7 @@ namespace Devices
 	public partial class ArchiveInfo : Form
 	{
 		public DisplayArchive DisplayArchiveType { get; set; }
-		public ArchiveInfo()
+		public  ArchiveInfo()
 		{
 			InitializeComponent();
 		}
