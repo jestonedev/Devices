@@ -1,7 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devices", "Devices\Devices.csproj", "{AB518B9F-E6A4-4652-8797-8D38C8489F79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reporting", "Reporting\Reporting.csproj", "{CC28B9CA-9E4D-4A52-8D54-61A8DA2263BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +17,10 @@ Global
 		{AB518B9F-E6A4-4652-8797-8D38C8489F79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB518B9F-E6A4-4652-8797-8D38C8489F79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB518B9F-E6A4-4652-8797-8D38C8489F79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC28B9CA-9E4D-4A52-8D54-61A8DA2263BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC28B9CA-9E4D-4A52-8D54-61A8DA2263BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC28B9CA-9E4D-4A52-8D54-61A8DA2263BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC28B9CA-9E4D-4A52-8D54-61A8DA2263BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

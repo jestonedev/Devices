@@ -58,7 +58,37 @@ namespace Devices
 		{
 			connection.Close();
 		}
-
+        
+        /// <summary>
+        /// Возвращает список типов периферийного оборудования
+        /// </summary>
+        public List<PeripheryType> GetPeripheryType()
+        {
+            if (connection.State != ConnectionState.Open)
+                return new List<PeripheryType>();
+            SqlCommand command = new SqlCommand(@"SELECT cv.[ID Value],cv.Value FROM dbo.ComboboxValues cv WHERE cv.[ID Node]=25");
+            command.Connection = connection;
+            SqlDataReader reader = null;
+            try
+            {
+                reader = command.ExecuteReader();
+            }
+            catch (SqlException e)
+            {
+                MessageBox.Show(@"Не удалось получить список периферийного оборудования. " + e.Message, "Ошибка",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return new List<PeripheryType>();
+            }
+            var PeripheryType = new List<PeripheryType>();            
+            while(reader.Read())
+            {
+                int Id = reader.GetInt32(0);
+                string Value = reader.GetString(1);
+                PeripheryType.Add(new PeripheryType { Id = Id, Value = Value });
+            }
+            reader.Close();
+            return PeripheryType;
+        }
 		/// <summary>
 		/// Возвращает список всех департаментов
 		/// </summary>

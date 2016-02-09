@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
+using Devices.Reporting;
+using System.IO;
 
 namespace Devices
 {
@@ -390,25 +392,25 @@ namespace Devices
 			}
 		}
 
-		private void toolStripButton7_Click(object sender, EventArgs e)
-		{
-			List<Device> list = new List<Device>();
-			TreeNodeCollection root = treeViewComputers.Nodes;
-			foreach (TreeNode node in root)
-			{
-				string Department = "";
-				if (((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DepartmentNode)
-					Department = node.Text;
-				else
-					continue;
-				GetDevicesInDepartment(node, Department, list);
-			}
-			//Получаем дополнительную информацию об устройствах
-			db.GetExInfoByDeviceIdList(list);
-			//Сгенерировать отчет
-			Reporter rep = new Reporter();
-			rep.DevicesReport(list);
-		}
+        private void toolStripButton7_Click(object sender, EventArgs e)
+        {
+            List<Device> list = new List<Device>();
+            TreeNodeCollection root = treeViewComputers.Nodes;
+            foreach (TreeNode node in root)
+            {
+                string Department = "";
+                if (((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DepartmentNode)
+                    Department = node.Text;
+                else
+                    continue;
+                GetDevicesInDepartment(node, Department, list);
+            }
+            //Получаем дополнительную информацию об устройствах
+            db.GetExInfoByDeviceIdList(list);
+            //Сгенерировать отчет
+            Reporter rep = new Reporter();
+            rep.DevicesReport(list);
+        }
 
 		private void toolStripButton8_Click(object sender, EventArgs e)
 		{
@@ -492,6 +494,41 @@ namespace Devices
                 groupBoxPereferial.Visible = true;
             }
         }
+
+        //Генерация отчета "Список компьютеров"
+        private void ComputersDevices_Click(object sender, EventArgs e)
+        {
+            List<Device> list = new List<Device>();
+            TreeNodeCollection root = treeViewComputers.Nodes;
+            foreach (TreeNode node in root)
+            {
+                string Department = "";
+                if (((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DepartmentNode)
+                    Department = node.Text;
+                else
+                    continue;
+                GetDevicesInDepartment(node, Department, list);
+            }
+            //Получаем дополнительную информацию об устройствах
+            db.GetExInfoByDeviceIdList(list);
+            //Сгенерировать отчет
+            Reporter rep = new Reporter();
+            rep.DevicesReport(list);
+        }
+
+        // Генерация отчета "Список периф. оборудования"
+        private void PeripheryDevices_Click(object sender, EventArgs e)
+        {            
+            PeripheryDevicesForm repForm2 = new PeripheryDevicesForm();            
+            if (repForm2.ShowDialog() != DialogResult.OK)
+                return;
+            var idsTypes = repForm2.GetFilterIds();           
+            PeripheryListReporter devicesRep = new PeripheryListReporter();
+            devicesRep.ReportTitle = "Список периферийных устройств";
+            devicesRep.Arguments.Add("ids_types", idsTypes);
+            devicesRep.Run();                                      
+        }      
+        
 	}
 
 	internal class Device
@@ -515,4 +552,10 @@ namespace Devices
 			this.InventoryNumber = InventoryNumber;
 		}
 	}
+
+    internal class PeripheryType
+    {
+        public int Id { get; set; }
+        public string Value { get; set; }
+    }
 }

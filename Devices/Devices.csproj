@@ -143,6 +143,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="ReportsForms\PeripheryDevicesForm.resx">
+      <DependentUpon>PeripheryDevicesForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RequestsForm.resx">
       <DependentUpon>RequestsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -166,16 +169,18 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Reporter.cs" />
+    <Compile Include="ReportsForms\PeripheryDevicesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReportsForms\PeripheryDevicesForm.Designer.cs">
+      <DependentUpon>PeripheryDevicesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="RequestsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -199,11 +204,7 @@
     <Compile Include="SearchFormSt2.Designer.cs">
       <DependentUpon>SearchFormSt2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Add_256x256.png" />
@@ -260,6 +261,12 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Reporting\Reporting.csproj">
+      <Project>{cc28b9ca-9e4d-4a52-8d54-61a8da2263bf}</Project>
+      <Name>Reporting</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
