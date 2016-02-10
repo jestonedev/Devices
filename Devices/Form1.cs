@@ -43,7 +43,7 @@ namespace Devices
                 cache.Clear();
                 foreach (Node department in list)
                 {
-                    TreeNode node = new TreeNode();
+                    TreeNode node = new TreeNode();                    
                     node.Text = department.NodeName;
                     node.Tag = new NodeProperty(department.NodeID, NodeTypeEnum.DepartmentNode);
                     bool inserted = TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, department.ParentNodeID);
@@ -522,10 +522,13 @@ namespace Devices
             PeripheryDevicesForm repForm2 = new PeripheryDevicesForm();            
             if (repForm2.ShowDialog() != DialogResult.OK)
                 return;
-            var idsTypes = repForm2.GetFilterIds();           
+            var idsTypes = repForm2.GetFilterIds();
+            var dictDeps = repForm2.GetDepartmentsId();
             PeripheryListReporter devicesRep = new PeripheryListReporter();
             devicesRep.ReportTitle = "Список периферийных устройств";
             devicesRep.Arguments.Add("ids_types", idsTypes);
+            devicesRep.Arguments.Add("DepName", dictDeps.Keys.FirstOrDefault());
+            devicesRep.Arguments.Add("ids_deps", dictDeps.Values.FirstOrDefault());
             devicesRep.Run();                                      
         }      
         

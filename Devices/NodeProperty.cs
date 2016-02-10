@@ -21,13 +21,15 @@ namespace Devices
 		}
 	}
 
+    //здесь были изменения
 	public class TreeNodesHelper
 	{
 		public static bool AddNode(TreeNode new_node, TreeNodeCollection current, TreeNodeCollection root, int ParentNodeID)
-		{
-			if (ParentNodeID == 0)
+		{           
+            //if (ParentNodeID == 0 || (root.Count == 0 || !ContainsParentAmongChilds(root, ParentNodeID)))
+            if (ParentNodeID == 0)
 			{
-				root.Add(new_node);
+				root.Add(new_node);                
 				return true;
 			}
 			foreach (TreeNode node in current)
@@ -35,7 +37,7 @@ namespace Devices
 				if ((((NodeProperty)node.Tag).NodeID == ParentNodeID) &&
 				   ((((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DepartmentNode) ||
 					(((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DeviceComplexParameter)))
-				{
+				{                    
 					node.Nodes.Add(new_node);
 					if (((NodeProperty)new_node.Tag).NodeType == NodeTypeEnum.DeviceNode)
 					{
@@ -62,5 +64,25 @@ namespace Devices
 			}*/
 			return false;
 		}
+
+        //определяет есть ли любой родительский узел для текущего узла(т.е делать ли тек. узел корневым)
+        public static bool ContainsParentAmongChilds(TreeNodeCollection roots, int ParentNodeID)
+        {
+            foreach (TreeNode node in roots)
+            {
+                if ((((NodeProperty)node.Tag).NodeID == ParentNodeID))
+                    return true;
+                else
+                {
+                    if (node.Nodes != null)
+                    {
+                        if (ContainsParentAmongChilds(node.Nodes, ParentNodeID) == true)
+                            return true;
+                    }                   
+                }
+            }
+            return false;
+        }
+         
 	}
 }

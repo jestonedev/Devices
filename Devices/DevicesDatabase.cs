@@ -92,24 +92,28 @@ namespace Devices
 		/// <summary>
 		/// Возвращает список всех департаментов
 		/// </summary>
-		public List<Node> GetDepartments(SearchParametersGroup spg)
+		public List<Node> GetDepartments(SearchParametersGroup spg = null, string Condition=null)
 		{
 			if (connection.State != ConnectionState.Open)
 				return new List<Node>();
 			string where = "";
-			if (spg.departmentIDs.Count > 0)
-			{
-				where = "[ID Department] IN (";
-				foreach (int departmentID in spg.departmentIDs)
-				{
-					where += departmentID.ToString() + ",";
-				}
-				where = where.Trim(',');
-				where += ")";
-			}
-
-			if (where.Trim().Length > 0)
-				where = "WHERE " + where;
+            if (spg != null)
+            {
+                if (spg.departmentIDs.Count > 0)
+                {
+                    where = "[ID Department] IN (";
+                    foreach (int departmentID in spg.departmentIDs)
+                    {
+                        where += departmentID.ToString() + ",";
+                    }
+                    where = where.Trim(',');
+                    where += ")";
+                }
+            }
+            if (Condition != null)
+                where = Condition;
+            if (where.Trim().Length > 0)
+                    where = "WHERE " + where;			
 			SqlCommand command = new SqlCommand(@"SELECT [ID Department], [ID Parent Department], Department
 												FROM dbo.Departments "+where+" ORDER BY [ID Parent Department]");
 			command.Connection = connection;

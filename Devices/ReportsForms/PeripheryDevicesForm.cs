@@ -19,15 +19,36 @@ namespace Devices
             peripheryTypes.DataSource = _db.GetPeripheryType();
             peripheryTypes.DisplayMember = "Value";
             peripheryTypes.ValueMember = "Id";
-            //Organizations.DataSource = new BindingSource(_db.GetRootDepartments(),null);
-            //Organizations.ValueMember = "Key";
-            //Organizations.DisplayMember = "Value";
+            var node = new Node("Все департаменты", 0, 0);
+            Organizations.DataSource = new BindingSource((new List<Node> { node}).Concat(_db.GetDepartments(null,"[ID Parent Department] IS NULL")), null);
+            Organizations.ValueMember = "NodeID";
+            Organizations.DisplayMember = "NodeName";
         }
-        
-        public CheckedListBox PeripheryTypes
+
+        public Dictionary<string,string> GetDepartmentsId()
         {
-            get { return this.peripheryTypes; }
-        }        
+            var dict = new Dictionary<string, string>();
+            string idsDeps = "";
+            if(Organizations.SelectedIndex == 0)
+            {
+                foreach(var dep in Organizations.Items)
+                {
+                    Node node = (Node)dep;
+                    if (node.NodeID == 0)
+                        continue;
+                    idsDeps += Organizations.Items.IndexOf(dep) == Organizations.Items.Count - 1 ?
+                        node.NodeID.ToString() : node.NodeID.ToString() + ", ";
+                }
+                dict.Add(((Node)Organizations.Items[0]).NodeName,  "(" + idsDeps + ")");
+                return dict;
+            }
+            else
+            {
+                Node node =(Node) Organizations.SelectedItem;
+                dict.Add(node.NodeName,"(" + node.NodeID + ")");
+                return dict;
+            }
+        }
 
         public string GetFilterIds()
         {
