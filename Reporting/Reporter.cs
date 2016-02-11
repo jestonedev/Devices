@@ -12,9 +12,6 @@ namespace Devices.Reporting
 {
     public class Reporter
     {
-        public event EventHandler<EventArgs> ReportComplete = null;
-        public event EventHandler<EventArgs> ReportCanceled = null;
-        public event EventHandler<ReportOutputStreamEventArgs> ReportOutputStreamResponse = null;
         public string ReportTitle { get; set; }
         public Dictionary<string, string> Arguments { get; set; }
         
@@ -42,46 +39,11 @@ namespace Devices.Reporting
                     ProcessStartInfo psi = new ProcessStartInfo(Reporting.Settings.Default.ActivityManagerPath,
                         GetArguments());
                     psi.CreateNoWindow = true;
-                    psi.RedirectStandardOutput = true;
-                    psi.StandardOutputEncoding = Encoding.GetEncoding(Reporting.Settings.Default.ActivityManagerOutputCodePage);
                     psi.UseShellExecute = false;
                     process.StartInfo = psi;
                     process.Start();
-                    if (ReportOutputStreamResponse != null)
-                    {
-                        StreamReader reader = process.StandardOutput;
-                        do
-                        {
-                            string line = reader.ReadLine();
-                            context.Post(
-                                _ =>
-                                {
-                                    try
-                                    {
-                                        ReportOutputStreamResponse(this, new ReportOutputStreamEventArgs(line));
-                                    }
-                                    catch (NullReferenceException)
-                                    {
-                                        //Исключение происходит, когда подписчики отписываются после проверки условия на null
-                                    }
-                                }, null);
-                        } while (!process.HasExited && ReportOutputStreamResponse != null);
-                    }
                     process.WaitForExit();
                 }
-                if (ReportComplete != null)
-                    context.Post(
-                        _ =>
-                        {
-                            try
-                            {
-                                ReportComplete(this, new EventArgs());
-                            }
-                            catch (NullReferenceException)
-                            {
-                                //Исключение происходит, когда подписчики отписываются после проверки условия на null
-                            }
-                        }, null);
             }, Arguments);
         }
 
@@ -94,19 +56,6 @@ namespace Devices.Reporting
                     argument.Value.Replace("\"", "\\\""));
             return argumentsString; ;
         }
-
-        public virtual void Cancel()
-        {
-            if (ReportCanceled != null)
-                try
-                {
-                    ReportCanceled(this, new EventArgs());
-                }
-                catch (NullReferenceException)
-                {
-                    //Исключение происходит, когда подписчики отписываются после проверки условия на null в многопоточном режиме
-                }
-        }
     }
 
     public class ReportOutputStreamEventArgs : EventArgs
@@ -115,7 +64,7 @@ namespace Devices.Reporting
 
         public ReportOutputStreamEventArgs(string text)
         {
-            this.Text = text;
+            Text = text;
         }
     }
 }

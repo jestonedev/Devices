@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using Devices.Reporting;
 using System.IO;
+using Devices.ReportsForms;
 
 namespace Devices
 {
@@ -34,44 +35,58 @@ namespace Devices
 		{
 			treeViewComputers.Nodes.Clear();
 			db = new DevicesDatabase();
-			List<Node> list = db.GetDepartments(spg);
-            List<Node> cache = new List<Node>();
-            int cacheCount = 0;
+			var list = db.GetDepartments(spg);
+		    var listFull = db.GetDepartments(new SearchParametersGroup());
+            var cache = new List<Node>();
+            int cacheCount;
             do
             {
                 cacheCount = cache.Count;
                 cache.Clear();
-                foreach (Node department in list)
+                foreach (var department in listFull)
                 {
-                    TreeNode node = new TreeNode();
-                    node.Text = department.NodeName;
-                    node.Tag = new NodeProperty(department.NodeID, NodeTypeEnum.DepartmentNode);
-                    bool inserted = TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, department.ParentNodeID);
+                    if (!HasChildDepartmentsFromActiveList(department, listFull, list))
+                        continue;
+                    var node = new TreeNode
+                    {
+                        Text = department.NodeName,
+                        Tag = new NodeProperty(department.NodeID, NodeTypeEnum.DepartmentNode)
+                    };
+                    var inserted = TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, department.ParentNodeID);
                     if (!inserted)
                         cache.Add(department);
                 }
-                list.Clear();
-                list.AddRange(cache);
+                listFull.Clear();
+                listFull.AddRange(cache);
             }
             while (cache.Count != cacheCount);
 			list = db.GetDevices(spg);
-			foreach (Node device in list)
+			foreach (var device in list)
 			{
-				TreeNode node = new TreeNode();
-				node.Text = device.NodeName;
-				node.Tag = new NodeProperty(device.NodeID, NodeTypeEnum.DeviceNode);
-				TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, device.ParentNodeID);
+			    var node = new TreeNode
+			    {
+			        Text = device.NodeName,
+			        Tag = new NodeProperty(device.NodeID, NodeTypeEnum.DeviceNode)
+			    };
+			    TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, device.ParentNodeID);
 			}
 			treeViewComputers.Sort();
 			if (treeViewComputers.Nodes.Count > 0)
 				treeViewComputers.SelectedNode = treeViewComputers.Nodes[0];
 		}
 
-		private void openDeviceInfo()
+	    private bool HasChildDepartmentsFromActiveList(Node department, List<Node> listFull, List<Node> list)
+	    {
+	        return list.Any(v => v.NodeID == department.NodeID) ||
+                   listFull.Where(v => v.ParentNodeID == department.NodeID).
+                   Any(v => HasChildDepartmentsFromActiveList(v, listFull, list));
+	    }
+
+	    private void openDeviceInfo()
 		{
 			if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType == NodeTypeEnum.DeviceNode)
 			{
-				ComputerInfo compForm = new ComputerInfo();
+				var compForm = new ComputerInfo();
 				compForm.DeviceID = ((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID;
 				compForm.FillInfoTree();
 				compForm.ShowDialog();
@@ -85,8 +100,8 @@ namespace Devices
 
 		private void toolStripButton1_Click(object sender, EventArgs e)
 		{
-			AddDepartmentAndPCForm addForm = new AddDepartmentAndPCForm();
-			TreeNode empty_node = new TreeNode();
+			var addForm = new AddDepartmentAndPCForm();
+			var empty_node = new TreeNode();
 			empty_node.Tag = new NodeProperty(-1, NodeTypeEnum.DeviceNode);
 			addForm.currentNode = empty_node;
 			if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType == NodeTypeEnum.DepartmentNode)
@@ -107,7 +122,7 @@ namespace Devices
 			if (MessageBox.Show("Вы уверены, что хотите удалить запись", "Внимание",
 				MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
 			{
-				DevicesDatabase db = new DevicesDatabase();
+				var db = new DevicesDatabase();
 				if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType == NodeTypeEnum.DepartmentNode)
 				{
 					if (db.DeleteDepartment(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID))
@@ -117,7 +132,7 @@ namespace Devices
 				{
 					if (db.DeleteDevice(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID))
 					{
-						TreeNode tmp_node = treeViewComputers.SelectedNode.Parent;
+						var tmp_node = treeViewComputers.SelectedNode.Parent;
 						if (tmp_node.Nodes.Count == 1)
 						{
 							while (tmp_node != null)
@@ -147,7 +162,7 @@ namespace Devices
 		{
 			if (treeViewComputers.SelectedNode.Index < 0)
 				return;
-			AddDepartmentAndPCForm addForm = new AddDepartmentAndPCForm();
+			var addForm = new AddDepartmentAndPCForm();
 			addForm.currentNode = treeViewComputers.SelectedNode;
 			if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType == NodeTypeEnum.DepartmentNode)
 				addForm.parentNode = treeViewComputers.SelectedNode;
@@ -159,10 +174,10 @@ namespace Devices
 
 		public void FillInfoTree(int DeviceID)
 		{
-			List<Node> list = db.GetDeviceInfoMeta(DeviceID);
-			foreach (Node DeviceInfoMeta in list)
+			var list = db.GetDeviceInfoMeta(DeviceID);
+			foreach (var DeviceInfoMeta in list)
 			{
-				TreeNode node = new TreeNode();
+				var node = new TreeNode();
 				node.Text = DeviceInfoMeta.NodeName;
 				node.Tag = new NodeProperty(DeviceInfoMeta.NodeID, NodeTypeEnum.DeviceComplexParameter);
 				TreeNodesHelper.AddNode(node, treeViewDeviceInfo.Nodes,
@@ -170,9 +185,9 @@ namespace Devices
 			}
 			list.Clear();
 			list = db.GetDeviceInfo(DeviceID);
-			foreach (Node DeviceInfo in list)
+			foreach (var DeviceInfo in list)
 			{
-				TreeNode node = new TreeNode();
+				var node = new TreeNode();
 				node.Text = DeviceInfo.NodeName;
 				node.Tag = new NodeProperty(DeviceInfo.NodeID, NodeTypeEnum.DeviceSimpleParameter);
 				TreeNodesHelper.AddNode(node, treeViewDeviceInfo.Nodes,
@@ -211,7 +226,7 @@ namespace Devices
             }
             else
             {
-                DataView dv = db.GetDeviceGeneralInfo(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID);
+                var dv = db.GetDeviceGeneralInfo(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID);
                 textBoxName.Text = dv[0]["Device Name"].ToString();
                 textBoxInventoryNumber.Text = dv[0]["InventoryNumber"].ToString();
                 textBoxSerialNumber.Text = dv[0]["SerialNumber"].ToString();
@@ -235,7 +250,7 @@ namespace Devices
 
 		private void измененияТекущеToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ArchiveInfo ai = new ArchiveInfo();
+			var ai = new ArchiveInfo();
 			ai.DisplayArchiveType = DisplayArchive.NodeChangesArchive;
 			ai.InitializeForm();
 			ai.ShowDialog();
@@ -244,7 +259,7 @@ namespace Devices
 
 		private void удаленныеКомпьютерыToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ArchiveInfo ai = new ArchiveInfo();
+			var ai = new ArchiveInfo();
 			ai.DisplayArchiveType = DisplayArchive.DeviceChangesArchive;
 			ai.InitializeForm();
 			ai.ShowDialog();
@@ -253,7 +268,7 @@ namespace Devices
 
 		private void удаленныеУстройстваToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ArchiveInfo ai = new ArchiveInfo();
+			var ai = new ArchiveInfo();
 			ai.DisplayArchiveType = DisplayArchive.DeletedDeviceArchive;
 			ai.InitializeForm();
 			ai.ShowDialog();
@@ -301,7 +316,7 @@ namespace Devices
 		{
 			if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType == NodeTypeEnum.DeviceNode)
 			{
-				InstallationsInfoForm iif = new InstallationsInfoForm();
+				var iif = new InstallationsInfoForm();
 				iif.DeviceID = ((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID;
 				iif.InitializeForm(db);
 				iif.ShowDialog();
@@ -337,8 +352,8 @@ namespace Devices
 		{
 			if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType == NodeTypeEnum.DeviceNode)
 			{
-				RequestsForm rf = new RequestsForm();
-                int DeviceID = ((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID;
+				var rf = new RequestsForm();
+                var DeviceID = ((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID;
                 rf.SerialNumber = db.GetSerialNumberBy(DeviceID, false);
                 rf.InventoryNumber = db.GetInventoryNumberBy(DeviceID, false);
 				rf.InitializeForm(db);
@@ -360,14 +375,12 @@ namespace Devices
 			}
 			else
 			{
-				SearchFormSt1 sfs = new SearchFormSt1();
-				sfs.spg = spg;
-				sfs.ShowDialog();
+			    var sfs = new SearchFormSt1 {spg = spg};
+			    sfs.ShowDialog();
 				if (!sfs.CancelSearch)
 				{
 					Reload();
 					toolStripButton6.Checked = true;
-
 				}
 				sfs.Dispose();
 			}
@@ -379,38 +392,31 @@ namespace Devices
 			{
 				if (((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DeviceNode)
 				{
-					Device dev = new Device();
+					var dev = new Device();
 					dev.DeviceID = ((NodeProperty)node.Tag).NodeID;
 					dev.Name = node.Text;
 					dev.Department = Department;
 					devices.Add(dev);
 				} else
 					if (((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DepartmentNode)
-				{
-					GetDevicesInDepartment(node, Department, devices);
-				}
+					{
+                        GetDevicesInDepartment(node, BuildDepartmentPath(node), devices);
+				    }
 			}
 		}
 
-        private void toolStripButton7_Click(object sender, EventArgs e)
-        {
-            List<Device> list = new List<Device>();
-            TreeNodeCollection root = treeViewComputers.Nodes;
-            foreach (TreeNode node in root)
-            {
-                string Department = "";
-                if (((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DepartmentNode)
-                    Department = node.Text;
-                else
-                    continue;
-                GetDevicesInDepartment(node, Department, list);
-            }
-            //Получаем дополнительную информацию об устройствах
-            db.GetExInfoByDeviceIdList(list);
-            //Сгенерировать отчет
-            Reporter rep = new Reporter();
-            rep.DevicesReport(list);
-        }
+	    private string BuildDepartmentPath(TreeNode department)
+	    {
+	        if (department == null || ((NodeProperty) department.Tag).NodeType != NodeTypeEnum.DepartmentNode)
+	            return "";
+            var departmentStr = department.Text;
+	        while (department.Parent != null)
+	        {
+	            department = department.Parent;
+	            departmentStr = department.Text + " / " + departmentStr;
+	        }
+	        return departmentStr;
+	    }
 
 		private void toolStripButton8_Click(object sender, EventArgs e)
 		{
@@ -421,8 +427,8 @@ namespace Devices
 				return;
 			if (((NodeProperty)treeViewComputers.SelectedNode.Parent.Tag).NodeID <= 0)
 				return;
-			TreeNode node = (TreeNode)treeViewComputers.SelectedNode.Clone();
-            NodeProperty NP = ((NodeProperty)treeViewComputers.SelectedNode.Tag);
+			var node = (TreeNode)treeViewComputers.SelectedNode.Clone();
+            var NP = ((NodeProperty)treeViewComputers.SelectedNode.Tag);
             if (mcf == null)
                 mcf = new MoveComputersForm(NP);
             else
@@ -454,8 +460,8 @@ namespace Devices
             if (treeViewDeviceInfo.SelectedNode.Parent == null ||
                 treeViewDeviceInfo.SelectedNode.Parent.Text != "Периферийные устройства")
                 return;
-            RequestsForm rf = new RequestsForm();
-            int ID = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeID;
+            var rf = new RequestsForm();
+            var ID = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeID;
             rf.SerialNumber = db.GetSerialNumberBy(ID, true);
             rf.InventoryNumber = db.GetInventoryNumberBy(ID, true);
             rf.InitializeForm(db);
@@ -470,9 +476,9 @@ namespace Devices
                 groupBoxPereferial.Visible = false;
             else
             {
-                int ID = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeID;
-                NodeTypeEnum nodeType = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeType;
-                DataView dv =  db.GetDetailDeviceInfo(ID);
+                var ID = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeID;
+                var nodeType = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeType;
+                var dv =  db.GetDetailDeviceInfo(ID);
                 foreach (DataRowView row in dv)
                 {
                     switch ((int)row["ID Node"])
@@ -498,11 +504,11 @@ namespace Devices
         //Генерация отчета "Список компьютеров"
         private void ComputersDevices_Click(object sender, EventArgs e)
         {
-            List<Device> list = new List<Device>();
-            TreeNodeCollection root = treeViewComputers.Nodes;
+            var list = new List<Device>();
+            var root = treeViewComputers.Nodes;
             foreach (TreeNode node in root)
             {
-                string Department = "";
+                string Department;
                 if (((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DepartmentNode)
                     Department = node.Text;
                 else
@@ -512,20 +518,38 @@ namespace Devices
             //Получаем дополнительную информацию об устройствах
             db.GetExInfoByDeviceIdList(list);
             //Сгенерировать отчет
-            Reporter rep = new Reporter();
+            var rep = new Reporter();
             rep.DevicesReport(list);
         }
 
         // Генерация отчета "Список периф. оборудования"
         private void PeripheryDevices_Click(object sender, EventArgs e)
         {            
-            PeripheryDevicesForm repForm2 = new PeripheryDevicesForm();            
+            var repForm2 = new PeripheryDevicesForm();            
             if (repForm2.ShowDialog() != DialogResult.OK)
                 return;
             var idsTypes = repForm2.GetFilterIds();           
-            PeripheryListReporter devicesRep = new PeripheryListReporter();
+            var devicesRep = new PeripheryListReporter();
             devicesRep.ReportTitle = "Список периферийных устройств";
             devicesRep.Arguments.Add("ids_types", idsTypes);
+
+            var list = new List<Device>();
+            var root = treeViewComputers.Nodes;
+            foreach (TreeNode node in root)
+            {
+                string Department;
+                if (((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DepartmentNode)
+                    Department = node.Text;
+                else
+                    continue;
+                GetDevicesInDepartment(node, Department, list);
+            }
+            var where = "";
+            foreach (var device in list)
+            {
+                where += "," + device.DeviceID;
+            }
+            devicesRep.Arguments.Add("where_devices", where);
             devicesRep.Run();                                      
         }      
         
