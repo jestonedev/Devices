@@ -555,7 +555,21 @@ namespace Devices
 
         private void ManualMenuItem_Click(object sender, EventArgs e)
         {
-
+            var fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                @"Documentation\Manual.odt");
+            if (!File.Exists(fileName))
+            {
+                MessageBox.Show(
+                    string.Format("Не удалось найти руководство пользователя по пути {0}", fileName),
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            using (var process = new Process())
+            {
+                var psi = new ProcessStartInfo(fileName);
+                process.StartInfo = psi;
+                process.Start();
+            }
         }      
         
 	}
