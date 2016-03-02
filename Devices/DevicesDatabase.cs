@@ -92,32 +92,30 @@ namespace Devices
 		/// <summary>
 		/// Возвращает список всех департаментов
 		/// </summary>
-		public List<Node> GetDepartments(SearchParametersGroup spg = null, string Condition=null)
+		public List<Node> GetDepartments(SearchParametersGroup spg)
 		{
 			if (connection.State != ConnectionState.Open)
 				return new List<Node>();
 			string where = "";
-            if (spg != null)
-            {
-                if (spg.departmentIDs.Count > 0)
-                {
-                    where = "[ID Department] IN (";
-                    foreach (int departmentID in spg.departmentIDs)
-                    {
-                        where += departmentID.ToString() + ",";
-                    }
-                    where = where.Trim(',');
-                    where += ")";
-                }
-            }
-            if (Condition != null)
-                where = Condition;
-            if (where.Trim().Length > 0)
-                    where = "WHERE " + where;			
-			SqlCommand command = new SqlCommand(@"SELECT [ID Department], [ID Parent Department], Department
-												FROM dbo.Departments "+where+" ORDER BY [ID Parent Department]");
-			command.Connection = connection;
-			SqlDataReader reader;
+			if (spg.departmentIDs.Count > 0)
+			{
+				where = "[ID Department] IN (";
+				foreach (int departmentID in spg.departmentIDs)
+				{
+					where += departmentID + ",";
+				}
+				where = where.Trim(',');
+				where += ")";
+			}
+
+			if (where.Trim().Length > 0)
+				where = "WHERE " + where;
+		    var command = new SqlCommand(@"SELECT [ID Department], [ID Parent Department], Department
+				FROM dbo.Departments " + where + " ORDER BY [ID Parent Department]")
+		    {
+		        Connection = connection
+		    };
+		    SqlDataReader reader;
 			try
 			{
 				reader = command.ExecuteReader();
@@ -170,7 +168,13 @@ namespace Devices
                     where += " AND ";
                 where += "([InventoryNumber] LIKE '%" + spg.inventoryNumber.Trim() + "%')";
             }
-			if (spg.departmentIDs.Count > 0)
+            if (spg.deviceTypeID > 0)
+		    {
+                if (where.Trim().Length > 0)
+                    where += " AND ";
+                where += "([ID Device Type] = " + spg.deviceTypeID + ")";
+		    }
+		    if (spg.departmentIDs.Count > 0)
 			{
 				if (where.Trim().Length > 0)
 					where += " AND ";
@@ -198,7 +202,7 @@ namespace Devices
 					if (i != spg.parameters.Count)
 						where += " OR ";
 				}
-				where += " group by [ID Device] having COUNT(*) >= " + spg.parameters.Count.ToString() + ")";
+				where += " group by [ID Device] having COUNT(*) >= " + spg.parameters.Count + ")";
 			}
 			if (where.Trim().Length > 0)
 				where = "WHERE " + where;
@@ -650,9 +654,9 @@ namespace Devices
 		/// </summary>
 		public bool DeleteDeviceNode(int NodeID)
 		{
-			SqlCommand command = new SqlCommand(@"DELETE FROM Nodes WHERE [ID Node] = @NodeID");
+			SqlCommand command = new SqlCommand(@"DELETE FROM Nodes WHERE [ID Node] = @nodeId");
 			command.Connection = connection;
-			command.Parameters.Add(new SqlParameter("NodeID", NodeID));
+			command.Parameters.Add(new SqlParameter("nodeId", NodeID));
 			try
 			{
 				command.ExecuteNonQuery();
@@ -675,9 +679,9 @@ namespace Devices
 		/// </summary>
 		public bool UpdateDeviceNode(int NodeID, string DeviceName)
 		{
-			SqlCommand command = new SqlCommand(@"UPDATE Nodes SET Value = @DeviceName WHERE [ID Node] = @NodeID");
+			SqlCommand command = new SqlCommand(@"UPDATE Nodes SET Value = @DeviceName WHERE [ID Node] = @nodeId");
 			command.Connection = connection;
-			command.Parameters.Add(new SqlParameter("NodeID", NodeID));
+			command.Parameters.Add(new SqlParameter("nodeId", NodeID));
 			command.Parameters.Add(new SqlParameter("DeviceName", DeviceName));
 			try
 			{
@@ -755,10 +759,10 @@ namespace Devices
 		/// </summary>
 		public bool UpdateDeviceNodeValue(int NodeID, string Value)
 		{
-			SqlCommand command = new SqlCommand(@"UPDATE Nodes SET Value = @Value WHERE [ID Node] = @NodeID");
+			SqlCommand command = new SqlCommand(@"UPDATE Nodes SET Value = @Value WHERE [ID Node] = @nodeId");
 			command.Connection = connection;
 			command.Parameters.Add(new SqlParameter("Value", Value));
-			command.Parameters.Add(new SqlParameter("NodeID", NodeID));
+			command.Parameters.Add(new SqlParameter("nodeId", NodeID));
 			try
 			{
 				command.ExecuteNonQuery();
@@ -1322,17 +1326,25 @@ namespace Devices
             return true;
         }
 
-        internal bool MoveParameter(int NodeID, int NewDeviceID)
+        internal bool MoveParameter(int nodeId, int newDeviceId)
         {
             if (connection.State != ConnectionState.Open)
                 return false;
-            SqlCommand command = new SqlCommand("UPDATE Nodes SET [ID Device] = @NewDeviceID WHERE [ID Node] = @NodeID");
-            command.Connection = connection;
-            command.Parameters.AddWithValue("@NodeID", NodeID);
-            command.Parameters.AddWithValue("@NewDeviceID", NewDeviceID);
+            var command = new SqlCommand("UPDATE Nodes SET [ID Device] = @newDeviceId WHERE [ID Node] = @nodeId")
+            {
+                Connection = connection
+            };
+            command.Parameters.AddWithValue("@nodeId", nodeId);
+            command.Parameters.AddWithValue("@newDeviceId", newDeviceId);
+            var commandCorrection = new SqlCommand(@"UPDATE n2
+                                        SET n2.[ID Device] = n1.[ID Device]
+                                        FROM Nodes n1
+	                                        INNER JOIN Nodes n2 ON n1.[ID Node] = n2.[ID Parent Node]
+                                        WHERE n1.[ID Device] <> n2.[ID Device]") {Connection = connection};
             try
             {
                 command.ExecuteNonQuery();
+                commandCorrection.ExecuteNonQuery();
             }
             catch (SqlException e)
             {

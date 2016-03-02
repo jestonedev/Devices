@@ -39,29 +39,19 @@ namespace Devices
 					(((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DeviceComplexParameter)))
 				{                    
 					node.Nodes.Add(new_node);
-					if (((NodeProperty)new_node.Tag).NodeType == NodeTypeEnum.DeviceNode)
-					{
-						TreeNode tmp_node = new_node.Parent;
-						while (tmp_node != null)
-						{
-							tmp_node.ForeColor = Color.DarkBlue;
-							tmp_node = tmp_node.Parent;
-						}
-					}
-					return true;
+				    if (((NodeProperty) new_node.Tag).NodeType != NodeTypeEnum.DeviceNode) return true;
+				    var tmp_node = new_node.Parent;
+				    while (tmp_node != null)
+				    {
+				        tmp_node.ForeColor = Color.DarkBlue;
+				        tmp_node = tmp_node.Parent;
+				    }
+				    return true;
 				}
-				else
-				{
-					bool ok = AddNode(new_node, node.Nodes, root, ParentNodeID);
-					if (ok)
-						return true;
-				}
+			    var ok = AddNode(new_node, node.Nodes, root, ParentNodeID);
+			    if (ok)
+			        return true;
 			}
-			/*if (current == root)
-			{
-				root.Add(new_node);
-				return true;
-			}*/
 			return false;
 		}
 
