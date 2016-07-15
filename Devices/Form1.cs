@@ -10,6 +10,7 @@ using System.Diagnostics;
 using Devices.Reporting;
 using System.IO;
 using Devices.ReportsForms;
+using Reporting;
 
 namespace Devices
 {
@@ -570,6 +571,30 @@ namespace Devices
                 process.StartInfo = psi;
                 process.Start();
             }
+        }
+
+        private void devicesFeaturesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var devicesRep = new DevicesFeaturesReporter {ReportTitle = "Характеристики оборудования"};
+
+            var list = new List<Device>();
+            var root = treeViewComputers.Nodes;
+            foreach (TreeNode node in root)
+            {
+                string Department;
+                if (((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DepartmentNode)
+                    Department = node.Text;
+                else
+                    continue;
+                GetDevicesInDepartment(node, Department, list);
+            }
+            var where = "";
+            foreach (var device in list)
+            {
+                where += "," + device.DeviceID;
+            }
+            devicesRep.Arguments.Add("where_devices", where);
+            devicesRep.Run();  
         }      
         
 	}

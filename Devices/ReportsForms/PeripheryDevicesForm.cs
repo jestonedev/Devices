@@ -23,7 +23,7 @@ namespace Devices.ReportsForms
             idsPerTypes = PeripheryTypes.CheckedItems.Cast<PeripheryType>().
                 Aggregate(idsPerTypes, (current, row) => current + ("," + row.Id));
             return "(0" + idsPerTypes + ")";
-        }      
+        }
             
         private void allCheck_CheckedChanged(object sender, EventArgs e)
         {
