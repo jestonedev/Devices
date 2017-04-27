@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace Devices
 {
 	public partial class SearchFormSt2 : Form
 	{
-		private DevicesDatabase db { get; set; }
-		public int DeviceTypeID { get; set; }
-		public List<SearchParameter> paramList { get; set; }
+		private DevicesDatabase Db { get; set; }
+		public int DeviceTypeId { get; set; }
+		public List<SearchParameter> ParamList { get; set; }
 
 		public SearchFormSt2()
 		{
@@ -22,16 +18,17 @@ namespace Devices
 
 		private void SearchFormSt2_Load(object sender, EventArgs e)
 		{
-			List<Node> list;
-			db = new DevicesDatabase();
-			list = db.GetDeviceInfoMetaByType(DeviceTypeID);
-			foreach (Node DeviceInfoMeta in list)
+		    Db = new DevicesDatabase();
+			var list = Db.GetDeviceInfoMetaByType(DeviceTypeId);
+			foreach (var deviceInfoMeta in list)
 			{
-				TreeNode node = new TreeNode();
-				node.Text = DeviceInfoMeta.NodeName;
-				node.Tag = new NodeProperty(DeviceInfoMeta.NodeID, NodeTypeEnum.DeviceComplexParameter);
-				TreeNodesHelper.AddNode(node, treeViewDeviceInfo.Nodes,
-					treeViewDeviceInfo.Nodes, DeviceInfoMeta.ParentNodeID);
+			    var node = new TreeNode
+			    {
+			        Text = deviceInfoMeta.NodeName,
+			        Tag = new NodeProperty(deviceInfoMeta.NodeID, NodeTypeEnum.DeviceComplexParameter)
+			    };
+			    TreeNodesHelper.AddNode(node, treeViewDeviceInfo.Nodes,
+					treeViewDeviceInfo.Nodes, deviceInfoMeta.ParentNodeID);
 			}
 			treeViewDeviceInfo.ExpandAll();
 			comboBoxDeviceParameters.DisplayMember = "ParameterName";
@@ -44,9 +41,9 @@ namespace Devices
 
 		private void treeViewDeviceInfo_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			List<DeviceParametersComboboxItem> list = db.GetDeviceParameters(((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeID);
+			var list = Db.GetDeviceParameters(((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeID);
 			comboBoxDeviceParameters.Items.Clear();
-			foreach (DeviceParametersComboboxItem item in list)
+			foreach (var item in list)
 			{
 				comboBoxDeviceParameters.Items.Add(item);
 			}
@@ -67,7 +64,7 @@ namespace Devices
 					comboBoxValue.Visible = false;
 					buttonAccept.Enabled = true;
 					comboBoxOperator.Items.Clear();
-					comboBoxOperator.Items.AddRange(new string[] { "=", "<>", ">", ">=", "<", "<=" });
+					comboBoxOperator.Items.AddRange(new object[] { "=", "<>", ">", ">=", "<", "<=" });
 					break;
 				case "float": 
 					numericUpDownValue.DecimalPlaces = 2;
@@ -76,18 +73,18 @@ namespace Devices
 					comboBoxValue.Visible = false;
 					buttonAccept.Enabled = true;
 					comboBoxOperator.Items.Clear();
-					comboBoxOperator.Items.AddRange(new string[] { "=", "<>", ">", ">=", "<", "<=" });
+					comboBoxOperator.Items.AddRange(new object[] { "=", "<>", ">", ">=", "<", "<=" });
 					break;
 				case "combobox":
-					comboBoxValue.DataSource = db.GetValuesByMetaNodeID(
-						((DeviceParametersComboboxItem)comboBoxDeviceParameters.SelectedItem).MetaNodeID);
+					comboBoxValue.DataSource = Db.GetValuesByMetaNodeID(
+						((DeviceParametersComboboxItem)comboBoxDeviceParameters.SelectedItem).MetaNodeId);
 					comboBoxValue.DisplayMember = "Value";
 					numericUpDownValue.Visible = false;
 					textBoxValue.Visible = false;
 					comboBoxValue.Visible = true;
 					buttonAccept.Enabled = true;
 					comboBoxOperator.Items.Clear();
-					comboBoxOperator.Items.AddRange(new string[] { "=", "<>" });
+					comboBoxOperator.Items.AddRange(new object[] { "=", "<>" });
 					break;
 				default:
 					numericUpDownValue.Visible = false;
@@ -95,7 +92,7 @@ namespace Devices
 					comboBoxValue.Visible = false;
 					textBoxValue_TextChanged(sender, e);
 					comboBoxOperator.Items.Clear();
-					comboBoxOperator.Items.AddRange(new string[] { "=", "<>", "Содержит", "Не содержит", "Начинается с", "Начинается не с" });
+					comboBoxOperator.Items.AddRange(new object[] { "=", "<>", "Содержит", "Не содержит", "Начинается с", "Начинается не с" });
 					break;
 			}
 			comboBoxOperator.SelectedIndex = 0;
@@ -109,96 +106,98 @@ namespace Devices
 				buttonAccept.Enabled = true;
 		}
 
-		private string ConvertOperation(string Operation)
+		private string ConvertOperation(string operation)
 		{
-			switch (Operation)
+			switch (operation)
 			{
 				case "Содержит": 
 				case "Начинается с": return "LIKE";
 				case "Не содержит": 
 				case "Начинается не с": return "NOT LIKE";
-				default: return Operation;
+				default: return operation;
 			}
 		}
 
-		private string ConvertValue(string Value, string Operation, string Type)
+		private static string ConvertValue(string value, string operation, string type)
 		{
-			switch (Operation)
+			switch (operation)
 			{
 				case "Начинается не с":
-				case "Начинается с": return "\'" + Value + "%\'";
+				case "Начинается с": return "\'" + value + "%\'";
 				case "Содержит":
-				case "Не содержит": return "\'%" + Value + "%\'"; ;
-				default: 
-					if ((Type == "int") || (Type == "float"))
-						return Value;
-					else 
-						return "\'" + Value + "\'"; ;
+				case "Не содержит": return "\'%" + value + "%\'";
+			    default: 
+					if ((type == "int") || (type == "float"))
+						return value;
+			        return "\'" + value + "\'";
 			}
 		}
 
 		private void buttonAccept_Click(object sender, EventArgs e)
 		{
-			int ParameterID = ((DeviceParametersComboboxItem)comboBoxDeviceParameters.SelectedItem).MetaNodeID;
-			string Operation = ConvertOperation(comboBoxOperator.Text);
-			string ParameterName = ((DeviceParametersComboboxItem)comboBoxDeviceParameters.SelectedItem).ParameterName;
-			string DeviceName = treeViewDeviceInfo.SelectedNode.Text;
-			string Value = "";
-			switch (((DeviceParametersComboboxItem)comboBoxDeviceParameters.SelectedItem).ParameterType.ToLower())
+			var parameterId = ((DeviceParametersComboboxItem)comboBoxDeviceParameters.SelectedItem).MetaNodeId;
+			var operation = ConvertOperation(comboBoxOperator.Text);
+			var parameterName = ((DeviceParametersComboboxItem)comboBoxDeviceParameters.SelectedItem).ParameterName;
+			var parameterType = ((DeviceParametersComboboxItem)comboBoxDeviceParameters.SelectedItem).ParameterType.ToLower();
+			var deviceName = treeViewDeviceInfo.SelectedNode.Text;
+			string value;
+            switch (parameterType)
 			{
 				case "int":
-					Value = numericUpDownValue.Value.ToString();
+					value = numericUpDownValue.Value.ToString(CultureInfo.InvariantCulture);
 					break;
 				case "float": 
-					Value = numericUpDownValue.Value.ToString();
+					value = numericUpDownValue.Value.ToString(CultureInfo.InvariantCulture);
 					break;
 				case "combobox":
-					Value = comboBoxValue.Text;
+					value = comboBoxValue.Text;
 					break;
 				default: 
-					Value = textBoxValue.Text;
+					value = textBoxValue.Text;
 					break;
 			}
-			Value = ConvertValue(Value, comboBoxOperator.Text,
+			value = ConvertValue(value, comboBoxOperator.Text,
 				((DeviceParametersComboboxItem)comboBoxDeviceParameters.SelectedItem).ParameterType.ToLower());
-			paramList.Add(new SearchParameter(ParameterID, DeviceName, ParameterName, Operation, Value));
+            ParamList.Add(new SearchParameter(parameterId, deviceName, parameterName, parameterType, operation, value));
 			Close();
 		}
 	}
 
 	public class DeviceParametersComboboxItem
 	{
-		public int MetaNodeID { get; set; }
+		public int MetaNodeId { get; set; }
 		public string ParameterName { get; set; }
 		public string ParameterType { get; set; }
 
-		public DeviceParametersComboboxItem(int MetaNodeID, string ParameterName, string ParameterType)
+		public DeviceParametersComboboxItem(int metaNodeId, string parameterName, string parameterType)
 		{
-			this.MetaNodeID = MetaNodeID;
-			this.ParameterName = ParameterName;
-			this.ParameterType = ParameterType;
+			MetaNodeId = metaNodeId;
+			ParameterName = parameterName;
+			ParameterType = parameterType;
 		}
 	}
 
 	public class SearchParameter
 	{
-		public int ParameterID { get; set; }
+		public int ParameterId { get; set; }
 		public string DeviceName { get; set; }
 		public string ParameterName { get; set; }
 		public string Operation { get; set; }
 		public string ParameterValue { get; set; }
+        public string ParameterType { get; set; }
 
 		public SearchParameter()
 		{
 		}
 
-		public SearchParameter(int ParameterID, string DeviceName, string ParameterName, string Operation, string ParameterValue)
+        public SearchParameter(int parameterId, string deviceName, string parameterName, string parameterType, string operation, string parameterValue)
 		{
-			this.ParameterID = ParameterID;
-			this.Operation = Operation;
-			this.ParameterValue = ParameterValue;
-			this.ParameterName = ParameterName;
-			this.DeviceName = DeviceName;
+			ParameterId = parameterId;
+			Operation = operation;
+			ParameterValue = parameterValue;
+			ParameterName = parameterName;
+			DeviceName = deviceName;
+		    ParameterType = parameterType;
 		}
 	}
 }

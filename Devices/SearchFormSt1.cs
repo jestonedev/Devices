@@ -22,7 +22,7 @@ namespace Devices
             foreach (Control control in splitContainer1.Panel1.Controls)
                 control.KeyDown += (sender, e) =>
                 {
-                    ComboBox comboBox = sender as ComboBox;
+                    var comboBox = sender as ComboBox;
                     if (comboBox != null && comboBox.DroppedDown)
                         return;
                     if (e.KeyCode == Keys.Enter)
@@ -34,7 +34,7 @@ namespace Devices
             foreach (Control control in splitContainer1.Panel2.Controls)
                 control.KeyDown += (sender, e) =>
                 {
-                    ComboBox comboBox = sender as ComboBox;
+                    var comboBox = sender as ComboBox;
                     if (comboBox != null && comboBox.DroppedDown)
                         return;
                     if (e.KeyCode == Keys.Enter)
@@ -47,17 +47,17 @@ namespace Devices
 
 		private void InitDataGridView(object DataSource)
 		{
-			BindingSource bs = new BindingSource();
-			bs.DataSource = spgNew.parameters;
-			dataGridView1.DataSource = bs;
+		    var bs = new BindingSource {DataSource = spgNew.parameters};
+		    dataGridView1.DataSource = bs;
 			dataGridView1.Columns[0].Visible = false;
-			dataGridView1.Columns[1].HeaderText = "Устройство";
+			dataGridView1.Columns[1].HeaderText = @"Устройство";
 			dataGridView1.Columns[1].Width = 150;
-			dataGridView1.Columns[2].HeaderText = "Параметр";
+			dataGridView1.Columns[2].HeaderText = @"Параметр";
 			dataGridView1.Columns[2].Width = 150;
-			dataGridView1.Columns[3].HeaderText = "Операция";
-			dataGridView1.Columns[4].HeaderText = "Значение";
-			dataGridView1.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+			dataGridView1.Columns[3].HeaderText = @"Операция";
+            dataGridView1.Columns[4].HeaderText = @"Значение";
+            dataGridView1.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridView1.Columns[5].HeaderText = @"Тип параметра";
 		}
 
 		private void SearchFormSt1_Load(object sender, EventArgs e)
@@ -67,19 +67,19 @@ namespace Devices
 			treeViewDepartments.Nodes.Clear();
 			db = new DevicesDatabase();
 			spgNew = new SearchParametersGroup();
-			List<Node> list = db.GetDepartments(spgNew);
-			foreach (Node department in list)
+			var list = db.GetDepartments(spgNew);
+			foreach (var department in list)
 			{
-				TreeNode node = new TreeNode();
+				var node = new TreeNode();
 				node.Text = department.NodeName;
 				node.Tag = new NodeProperty(department.NodeID, NodeTypeEnum.DepartmentNode);
 				TreeNodesHelper.AddNode(node, treeViewDepartments.Nodes, treeViewDepartments.Nodes, department.ParentNodeID);
 			}
 
 			//Загрузка типов узлов в combobox
-			DataView view = db.GetDeviceTypes()	;
+			var view = db.GetDeviceTypes()	;
 			comboBoxDevTypes.DisplayMember = "DeviceType";
-			for (int i = 0; i < view.Table.Rows.Count; i++)
+			for (var i = 0; i < view.Table.Rows.Count; i++)
 			{
 				comboBoxDevTypes.Items.Add(new DeviceTypeComboboxItem(view.Table.Rows[i]["Type"].ToString(),
 					Convert.ToInt32(view.Table.Rows[i]["ID Device Type"])));
@@ -104,9 +104,9 @@ namespace Devices
 
 		private void button3_Click(object sender, EventArgs e)
 		{
-			SearchFormSt2 sfs2 = new SearchFormSt2();
-			sfs2.DeviceTypeID = ((DeviceTypeComboboxItem)comboBoxDevTypes.SelectedItem).DeviceTypeID;
-			sfs2.paramList = spgNew.parameters;
+			var sfs2 = new SearchFormSt2();
+			sfs2.DeviceTypeId = ((DeviceTypeComboboxItem)comboBoxDevTypes.SelectedItem).DeviceTypeID;
+			sfs2.ParamList = spgNew.parameters;
 			sfs2.ShowDialog();
 			InitDataGridView(spgNew.parameters);
 		}
@@ -145,23 +145,22 @@ namespace Devices
 
 		private void button4_Click(object sender, EventArgs e)
 		{
-			if (MessageBox.Show("Вы действительно хотите удалить этот параметр?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+			if (MessageBox.Show(@"Вы действительно хотите удалить этот параметр?", @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
 				== DialogResult.No)
 				return;
 			foreach(DataGridViewRow dgvr in dataGridView1.SelectedRows)
 			{
-				for (int i = 0; i < spgNew.parameters.Count; i++)
+				for (var i = 0; i < spgNew.parameters.Count; i++)
 				{
-					SearchParameter sp = spgNew.parameters[i];
-					if ((sp.ParameterID.ToString() == dgvr.Cells[0].Value.ToString()) &&
-						(sp.ParameterName == dgvr.Cells[1].Value.ToString()) && 
-						(sp.Operation == dgvr.Cells[2].Value.ToString()) && 
-						(sp.ParameterValue == dgvr.Cells[3].Value.ToString()))
-					{
-						spgNew.parameters.RemoveAt(i);
-						InitDataGridView(spgNew.parameters);
-						return;
-					}
+					var sp = spgNew.parameters[i];
+				    if ((sp.ParameterId.ToString() != dgvr.Cells[0].Value.ToString()) ||
+				        (sp.ParameterName != dgvr.Cells[2].Value.ToString()) || 
+                        (sp.Operation != dgvr.Cells[3].Value.ToString()) ||
+				        (sp.ParameterValue != dgvr.Cells[4].Value.ToString()) ||
+                        (sp.ParameterType != dgvr.Cells[5].Value.ToString())) continue;
+				    spgNew.parameters.RemoveAt(i);
+				    InitDataGridView(spgNew.parameters);
+				    return;
 				}
 			}
 		}

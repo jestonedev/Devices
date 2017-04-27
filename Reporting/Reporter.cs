@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Globalization;
-using System.Threading;
 using System.Diagnostics;
-using System.Windows.Forms;
+using System.Globalization;
 using System.IO;
+using System.Threading;
+using System.Windows.Forms;
 
-namespace Devices.Reporting
+namespace Reporting
 {
     public class Reporter
     {
@@ -23,23 +21,24 @@ namespace Devices.Reporting
 
         public virtual void Run()
         {
-            if (!File.Exists(Reporting.Settings.Default.ActivityManagerPath))
+            if (!File.Exists(Settings.Default.ActivityManagerPath))
             {
-                MessageBox.Show(String.Format(CultureInfo.InvariantCulture,
+                MessageBox.Show(string.Format(CultureInfo.InvariantCulture,
                     "Не удалось найти генератор отчетов ActivityManager. Возможно указанный путь {0} является некорректным.",
-                    Reporting.Settings.Default.ActivityManagerPath),
+                    Settings.Default.ActivityManagerPath),
                     "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            SynchronizationContext context = SynchronizationContext.Current;
             ThreadPool.QueueUserWorkItem((args) =>
             {
-                using (Process process = new Process())
+                using (var process = new Process())
                 {
-                    ProcessStartInfo psi = new ProcessStartInfo(Reporting.Settings.Default.ActivityManagerPath,
-                        GetArguments());
-                    psi.CreateNoWindow = true;
-                    psi.UseShellExecute = false;
+                    var psi = new ProcessStartInfo(Settings.Default.ActivityManagerPath,
+                        GetArguments())
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false
+                    };
                     process.StartInfo = psi;
                     process.Start();
                     process.WaitForExit();
@@ -49,7 +48,7 @@ namespace Devices.Reporting
 
         private string GetArguments()
         {
-            string argumentsString = "";
+            var argumentsString = "";
             foreach (var argument in Arguments)
                 argumentsString += String.Format(CultureInfo.InvariantCulture, "{0}=\"{1}\" ",
                     argument.Key.Replace("\"", "\\\""),

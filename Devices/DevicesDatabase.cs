@@ -66,7 +66,7 @@ namespace Devices
         {
             if (connection.State != ConnectionState.Open)
                 return new List<PeripheryType>();
-            SqlCommand command = new SqlCommand(@"SELECT cv.[ID Value],cv.Value FROM dbo.ComboboxValues cv WHERE cv.[ID Node]=25");
+            var command = new SqlCommand(@"SELECT cv.[ID Value],cv.Value FROM dbo.ComboboxValues cv WHERE cv.[ID Node]=25");
             command.Connection = connection;
             SqlDataReader reader = null;
             try
@@ -82,8 +82,8 @@ namespace Devices
             var PeripheryType = new List<PeripheryType>();            
             while(reader.Read())
             {
-                int Id = reader.GetInt32(0);
-                string Value = reader.GetString(1);
+                var Id = reader.GetInt32(0);
+                var Value = reader.GetString(1);
                 PeripheryType.Add(new PeripheryType { Id = Id, Value = Value });
             }
             reader.Close();
@@ -96,11 +96,11 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new List<Node>();
-			string where = "";
+			var where = "";
 			if (spg.departmentIDs.Count > 0)
 			{
 				where = "[ID Department] IN (";
-				foreach (int departmentID in spg.departmentIDs)
+				foreach (var departmentID in spg.departmentIDs)
 				{
 					where += departmentID + ",";
 				}
@@ -126,11 +126,11 @@ namespace Devices
 				MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return new List<Node>();
 			}
-			List<Node> list = new List<Node>();
+			var list = new List<Node>();
 			while (reader.Read())
 			{
-				string Department = reader.GetString(2);
-				int DepartmentID = reader.GetInt32(0);
+				var Department = reader.GetString(2);
+				var DepartmentID = reader.GetInt32(0);
 				int ParentID;
 				try {
 					ParentID = reader.GetInt32(1);
@@ -151,7 +151,7 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new List<Node>();
-			string where = "";
+			var where = "";
 			if (spg.deviceName.Trim().Length > 0)
 			{
                 where += "([Device Name] LIKE '%" + spg.deviceName.Trim() + "%')";
@@ -179,9 +179,9 @@ namespace Devices
 				if (where.Trim().Length > 0)
 					where += " AND ";
 				where += "[ID Department] IN (";
-				foreach (int departmentID in spg.departmentIDs)
+				foreach (var departmentID in spg.departmentIDs)
 				{
-					where += departmentID.ToString() + ",";
+					where += departmentID + ",";
 				}
 				where = where.Trim(',');
 				where += ")";
@@ -194,10 +194,22 @@ namespace Devices
 						(select [ID Device]
 						from dbo.Nodes
 						where ";
-				int i = 0;
-				foreach (SearchParameter sp in spg.parameters)
+				var i = 0;
+				foreach (var sp in spg.parameters)
 				{
-					where += "([ID AssocMetaNode] = "+sp.ParameterID+") AND ([Value] "+sp.Operation+" "+sp.ParameterValue+")";
+                    where += "([ID AssocMetaNode] = " + sp.ParameterId + ") AND ";
+				    switch (sp.ParameterType)
+				    {
+                        case "int":
+                            where += "(CAST([Value] AS INT) " + sp.Operation + " " + "CAST(" + sp.ParameterValue + " AS INT))";
+				            break;
+                        case "float":
+                            where += "(CAST(REPLACE([Value],',','.') AS FLOAT) " + sp.Operation + " " + "(CAST(REPLACE("+sp.ParameterValue+",',','.') AS FLOAT)))";
+				            break;
+                        default:
+                            where += "([Value] " + sp.Operation + " '" + sp.ParameterValue + "')";
+				            break;
+				    }
 					i++;
 					if (i != spg.parameters.Count)
 						where += " OR ";
@@ -206,10 +218,9 @@ namespace Devices
 			}
 			if (where.Trim().Length > 0)
 				where = "WHERE " + where;
-			SqlCommand command = new SqlCommand(@"SELECT [ID Device], [ID Department], [Device Name]
-												FROM Devices "+where);
-			command.Connection = connection;
-			SqlDataReader reader;
+		    var command = new SqlCommand(@"SELECT [ID Device], [ID Department], [Device Name]
+												FROM Devices " + where) {Connection = connection};
+		    SqlDataReader reader;
 			try
 			{
 				reader = command.ExecuteReader();
@@ -220,11 +231,11 @@ namespace Devices
 				MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return new List<Node>();
 			}
-			List<Node> list = new List<Node>();
+			var list = new List<Node>();
 			while (reader.Read())
 			{
-				string Device = reader.GetString(2);
-				int DeviceID = reader.GetInt32(0);
+				var Device = reader.GetString(2);
+				var DeviceID = reader.GetInt32(0);
 				int DepartmentID;
 				try {
 					DepartmentID = reader.GetInt32(1);
@@ -247,7 +258,7 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new List<Node>();
-			SqlCommand command = new SqlCommand(@"SELECT [ID Node], [ID Parent Node], [Parameter Name]
+			var command = new SqlCommand(@"SELECT [ID Node], [ID Parent Node], [Parameter Name]
 				FROM NodeMeta
 				WHERE [Parameter Type] = 'complex' AND [ID Device Type] = @DeviceTypeID
 				ORDER BY [Order], [ID Parent Node]");
@@ -264,11 +275,11 @@ namespace Devices
 				MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return new List<Node>();
 			}
-			List<Node> list = new List<Node>();
+			var list = new List<Node>();
 			while (reader.Read())
 			{
-				string ParameterName = reader.GetString(2);
-				int NodeID = reader.GetInt32(0);
+				var ParameterName = reader.GetString(2);
+				var NodeID = reader.GetInt32(0);
 				int ParentNodeID;
 				try
 				{
@@ -291,7 +302,7 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new List<Node>();
-			SqlCommand command = new SqlCommand(@"SELECT [ID Node], [ID Parent Node], [Parameter Name]
+			var command = new SqlCommand(@"SELECT [ID Node], [ID Parent Node], [Parameter Name]
 				FROM NodeMeta
 				WHERE [Parameter Type] = 'complex' AND [ID Device Type] = (SELECT [ID Device Type]
 				FROM Devices
@@ -310,11 +321,11 @@ namespace Devices
 				MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return new List<Node>();
 			}
-			List<Node> list = new List<Node>();
+			var list = new List<Node>();
 			while (reader.Read())
 			{
-				string ParameterName = reader.GetString(2);
-				int NodeID = reader.GetInt32(0);
+				var ParameterName = reader.GetString(2);
+				var NodeID = reader.GetInt32(0);
 				int ParentNodeID;
 				try
 				{
@@ -339,7 +350,7 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new List<Node>();
-			SqlCommand command = new SqlCommand(@"SELECT Nodes.[ID Node], NodeMeta.[ID Node], [Value]
+			var command = new SqlCommand(@"SELECT Nodes.[ID Node], NodeMeta.[ID Node], [Value]
 					FROM dbo.NodeMeta LEFT JOIN dbo.Nodes ON (NodeMeta.[ID Node] = Nodes.[ID AssocMetaNode])
 					WHERE ([ID Device] = @DeviceID) AND ([Parameter Type] = 'complex')
 					ORDER BY NodeMeta.[ID Node]");
@@ -356,11 +367,11 @@ namespace Devices
 				MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return new List<Node>();
 			}
-			List<Node> list = new List<Node>();
+			var list = new List<Node>();
 			while (reader.Read())
 			{
-				string Value = reader.GetString(2);
-				int NodeID = reader.GetInt32(0);
+				var Value = reader.GetString(2);
+				var NodeID = reader.GetInt32(0);
 				int ParentNodeID;
 				try
 				{
@@ -384,7 +395,7 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new List<DeviceParametersComboboxItem>();
-			SqlCommand command = new SqlCommand(@"Select [ID Node], [Parameter Name], [Parameter Type]
+			var command = new SqlCommand(@"Select [ID Node], [Parameter Name], [Parameter Type]
 				from dbo.NodeMeta
 				where [Parameter Type] <> 'complex' AND [ID Parent Node] = @ParentNodeID
 				order by [Order]");
@@ -401,12 +412,12 @@ namespace Devices
 				MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return new List<DeviceParametersComboboxItem>();
 			}
-			List<DeviceParametersComboboxItem> list = new List<DeviceParametersComboboxItem>();
+			var list = new List<DeviceParametersComboboxItem>();
 			while (reader.Read())
 			{
-				string ParameterName = reader.GetString(1);
-				string ParameterType = reader.GetString(2);
-				int NodeID = reader.GetInt32(0);
+				var ParameterName = reader.GetString(1);
+				var ParameterType = reader.GetString(2);
+				var NodeID = reader.GetInt32(0);
 				list.Add(new DeviceParametersComboboxItem(NodeID, ParameterName, ParameterType));
 			}
 			reader.Close();
@@ -422,7 +433,7 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new DataView();
-			SqlCommand command = new SqlCommand(@"SELECT b.[ID Node] AS NodeRealID, a.[ID Node], b.[ID Parent Node], a.[Parameter Name], 
+			var command = new SqlCommand(@"SELECT b.[ID Node] AS NodeRealID, a.[ID Node], b.[ID Parent Node], a.[Parameter Name], 
 						a.[Parameter Type], b.Value
 				FROM
 				(SELECT *
@@ -435,10 +446,10 @@ namespace Devices
 				WHERE [ID Parent Node] = @DeviceNodeID) b ON (a.[ID Node] = b.[ID AssocMetaNode])");
 			command.Connection = connection;
 			command.Parameters.Add(new SqlParameter("DeviceNodeID", DeviceNodeID));
-			DataSet ds = new DataSet();
+			var ds = new DataSet();
 			try
 			{
-				SqlDataAdapter adapter = new SqlDataAdapter(command);
+				var adapter = new SqlDataAdapter(command);
 				adapter.Fill(ds);
 			}
 			catch(SqlException e)
@@ -457,12 +468,12 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new DataView();
-			SqlCommand command = new SqlCommand(@"SELECT * FROM [Device Types]");
+			var command = new SqlCommand(@"SELECT * FROM [Device Types]");
 			command.Connection = connection;
-			DataSet ds = new DataSet();
+			var ds = new DataSet();
 			try
 			{
-				SqlDataAdapter adapter = new SqlDataAdapter(command);
+				var adapter = new SqlDataAdapter(command);
 				adapter.Fill(ds);
 			}
 			catch (SqlException e)
@@ -480,10 +491,10 @@ namespace Devices
 		/// <returns>Возвращает ID добавленной ноды при успешной операции и -1 при неудаче</returns>
 		public int InsertDepartment(string Department, int ParentDepartmentID)
 		{
-			SqlCommand command = new SqlCommand(@"INSERT INTO Departments([ID Parent Department], [Department]) VALUES (@ParentDepartmentID, @Department);
+			var command = new SqlCommand(@"INSERT INTO Departments([ID Parent Department], [Department]) VALUES (@ParentDepartmentID, @Department);
 					SET @INSERTED_ID=SCOPE_IDENTITY();");
 			command.Connection = connection;
-			SqlParameter inserted_id = new SqlParameter();
+			var inserted_id = new SqlParameter();
 			inserted_id.ParameterName = "INSERTED_ID";
 			inserted_id.Direction = ParameterDirection.Output;
 			inserted_id.Size = 4;
@@ -512,10 +523,10 @@ namespace Devices
 		/// </summary>
 		public int InsertDevice(string DeviceName, string InventoryNumber, string SerialNumber, string Description, int DepartmentID, int DeviceTypeID)
 		{
-			SqlCommand command = new SqlCommand(@"INSERT INTO Devices([ID Department], [Device Name], [ID Device Type], [SerialNumber], [InventoryNumber], Description, Owner) VALUES (@DepartmentID, @DeviceName, @DeviceTypeID, @SerialNumber, @InventoryNumber, @Description, SUSER_SNAME());
+			var command = new SqlCommand(@"INSERT INTO Devices([ID Department], [Device Name], [ID Device Type], [SerialNumber], [InventoryNumber], Description, Owner) VALUES (@DepartmentID, @DeviceName, @DeviceTypeID, @SerialNumber, @InventoryNumber, @Description, SUSER_SNAME());
 					SET @INSERTED_ID=SCOPE_IDENTITY();");
 			command.Connection = connection;
-			SqlParameter inserted_id = new SqlParameter();
+			var inserted_id = new SqlParameter();
 			inserted_id.ParameterName = "INSERTED_ID";
 			inserted_id.Direction = ParameterDirection.Output;
 			inserted_id.Size = 4;
@@ -548,7 +559,7 @@ namespace Devices
 		/// </summary>
 		public bool DeleteDepartment(int DepartmentID)
 		{
-			SqlCommand command = new SqlCommand(@"DELETE FROM Departments WHERE [ID Department] = @DepartmentID");
+			var command = new SqlCommand(@"DELETE FROM Departments WHERE [ID Department] = @DepartmentID");
 			command.Connection = connection;
 			command.Parameters.Add(new SqlParameter("DepartmentID", DepartmentID));
 			try
@@ -577,7 +588,7 @@ namespace Devices
 		/// </summary>
 		public bool DeleteDevice(int DeviceID)
 		{
-			SqlCommand command = new SqlCommand(@"DELETE FROM Devices WHERE [ID Device] = @DeviceID");
+			var command = new SqlCommand(@"DELETE FROM Devices WHERE [ID Device] = @DeviceID");
 			command.Connection = connection;
 			command.Parameters.Add(new SqlParameter("DeviceID", DeviceID));
 			try
@@ -603,11 +614,11 @@ namespace Devices
 		/// <returns>Возвращает идентификатор узла</returns>
 		public int InsertDeviceNode(int AssocMetaNodeID, int DeviceID, string DeviceNode)
 		{
-			SqlCommand command = new SqlCommand(@"INSERT INTO Nodes([ID AssocMetaNode], [ID Device], [Value]) 
+			var command = new SqlCommand(@"INSERT INTO Nodes([ID AssocMetaNode], [ID Device], [Value]) 
 					VALUES (@AssocMetaNodeID, @DeviceID, @DeviceNode);
 					SET @INSERTED_ID=SCOPE_IDENTITY();");
 			command.Connection = connection;
-			SqlParameter inserted_id = new SqlParameter();
+			var inserted_id = new SqlParameter();
 			inserted_id.ParameterName = "INSERTED_ID";
 			inserted_id.Direction = ParameterDirection.Output;
 			inserted_id.Size = 8;
@@ -622,7 +633,7 @@ namespace Devices
 										where [ID Parent Node] = @AssocMetaNodeID AND [Parameter Name] = 'Модель'");
 				command.Connection = connection;
 				command.Parameters.Add(new SqlParameter("AssocMetaNodeID", AssocMetaNodeID));
-				object ChildAssocMetaNodeID = command.ExecuteScalar();
+				var ChildAssocMetaNodeID = command.ExecuteScalar();
 				if (ChildAssocMetaNodeID != null)
 				{
 					command = new SqlCommand(@"INSERT INTO Nodes([ID AssocMetaNode], [ID Parent Node], [ID Device], [Value]) 
@@ -654,7 +665,7 @@ namespace Devices
 		/// </summary>
 		public bool DeleteDeviceNode(int NodeID)
 		{
-			SqlCommand command = new SqlCommand(@"DELETE FROM Nodes WHERE [ID Node] = @nodeId");
+			var command = new SqlCommand(@"DELETE FROM Nodes WHERE [ID Node] = @nodeId");
 			command.Connection = connection;
 			command.Parameters.Add(new SqlParameter("nodeId", NodeID));
 			try
@@ -679,7 +690,7 @@ namespace Devices
 		/// </summary>
 		public bool UpdateDeviceNode(int NodeID, string DeviceName)
 		{
-			SqlCommand command = new SqlCommand(@"UPDATE Nodes SET Value = @DeviceName WHERE [ID Node] = @nodeId");
+			var command = new SqlCommand(@"UPDATE Nodes SET Value = @DeviceName WHERE [ID Node] = @nodeId");
 			command.Connection = connection;
 			command.Parameters.Add(new SqlParameter("nodeId", NodeID));
 			command.Parameters.Add(new SqlParameter("DeviceName", DeviceName));
@@ -707,13 +718,13 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new DataView();
-			SqlCommand command = new SqlCommand(@"SELECT * FROM ComboboxValues WHERE [ID Node] = @MetaNodeID");
+			var command = new SqlCommand(@"SELECT * FROM ComboboxValues WHERE [ID Node] = @MetaNodeID");
 			command.Connection = connection;
 			command.Parameters.Add(new SqlParameter("MetaNodeID", MetaNodeID));
-			DataSet ds = new DataSet();
+			var ds = new DataSet();
 			try
 			{
-				SqlDataAdapter adapter = new SqlDataAdapter(command);
+				var adapter = new SqlDataAdapter(command);
 				adapter.Fill(ds);
 			}
 			catch (SqlException e)
@@ -730,7 +741,7 @@ namespace Devices
 		/// </summary>
 		public bool InsertDeviceNodeValue(int AssocMetaNodeID, int ParentNodeID, int DeviceID, string Value)
 		{
-			SqlCommand command = new SqlCommand(@"INSERT INTO Nodes ([ID AssocMetaNode], [ID Parent Node], [ID Device], [Value])
+			var command = new SqlCommand(@"INSERT INTO Nodes ([ID AssocMetaNode], [ID Parent Node], [ID Device], [Value])
 												VALUES (@AssocMetaNodeID, @ParentNodeID, @DeviceID, @Value)");
 			command.Connection = connection;
 			command.Parameters.Add(new SqlParameter("AssocMetaNodeID", AssocMetaNodeID));
@@ -759,7 +770,7 @@ namespace Devices
 		/// </summary>
 		public bool UpdateDeviceNodeValue(int NodeID, string Value)
 		{
-			SqlCommand command = new SqlCommand(@"UPDATE Nodes SET Value = @Value WHERE [ID Node] = @nodeId");
+			var command = new SqlCommand(@"UPDATE Nodes SET Value = @Value WHERE [ID Node] = @nodeId");
 			command.Connection = connection;
 			command.Parameters.Add(new SqlParameter("Value", Value));
 			command.Parameters.Add(new SqlParameter("nodeId", NodeID));
@@ -787,15 +798,15 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new DataView();
-			SqlCommand command = new SqlCommand(@"select *
+			var command = new SqlCommand(@"select *
 							from Devices INNER JOIN [Device Types] ON (Devices.[ID Device Type] = [Device Types].[ID Device Type])
 							where [ID Device] =@DeviceID");
 			command.Connection = connection;
 			command.Parameters.Add(new SqlParameter("DeviceID", DeviceID));
-			DataSet ds = new DataSet();
+			var ds = new DataSet();
 			try
 			{
-				SqlDataAdapter adapter = new SqlDataAdapter(command);
+				var adapter = new SqlDataAdapter(command);
 				adapter.Fill(ds);
 			}
 			catch (SqlException e)
@@ -814,13 +825,13 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return "";
-			SqlCommand command = new SqlCommand(@"SELECT * FROM Departments WHERE [ID Department]=@DepartmentID");
+			var command = new SqlCommand(@"SELECT * FROM Departments WHERE [ID Department]=@DepartmentID");
 			command.Connection = connection;
 			command.Parameters.Add(new SqlParameter("DepartmentID", DepartmentID));
-			DataSet ds = new DataSet();
+			var ds = new DataSet();
 			try
 			{
-				SqlDataAdapter adapter = new SqlDataAdapter(command);
+				var adapter = new SqlDataAdapter(command);
 				adapter.Fill(ds);
 			}
 			catch (SqlException e)
@@ -837,7 +848,7 @@ namespace Devices
 		/// </summary>
 		public bool UpdateDepartment(int DepartmentID, string Department)
 		{
-			SqlCommand command = new SqlCommand(@"UPDATE Departments SET Department = @Department WHERE [ID Department] = @DepartmentID");
+			var command = new SqlCommand(@"UPDATE Departments SET Department = @Department WHERE [ID Department] = @DepartmentID");
 			command.Connection = connection;
 			command.Parameters.Add(new SqlParameter("Department", Department));
 			command.Parameters.Add(new SqlParameter("DepartmentID", DepartmentID));
@@ -863,7 +874,7 @@ namespace Devices
 		/// </summary>
 		public bool UpdateDevice(int DeviceID, string DeviceName, string InventoryNumber, string SerialNumber, string Description)
 		{
-			SqlCommand command = new SqlCommand(@"UPDATE Devices SET [Device Name] = @DeviceName, InventoryNumber = @InventoryNumber,
+			var command = new SqlCommand(@"UPDATE Devices SET [Device Name] = @DeviceName, InventoryNumber = @InventoryNumber,
 								SerialNumber = @SerialNumber, Description = @Description WHERE [ID Device] = @DeviceID");
 			command.Connection = connection;
 			command.Parameters.Add(new SqlParameter("DeviceID", DeviceID));
@@ -895,12 +906,12 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new DataView();
-			SqlCommand command = new SqlCommand(@"SELECT * FROM ArchiveDevicesInfo");
+			var command = new SqlCommand(@"SELECT * FROM ArchiveDevicesInfo");
 			command.Connection = connection;
-			DataSet ds = new DataSet();
+			var ds = new DataSet();
 			try
 			{
-				SqlDataAdapter adapter = new SqlDataAdapter(command);
+				var adapter = new SqlDataAdapter(command);
 				adapter.Fill(ds);
 			}
 			catch (SqlException e)
@@ -920,12 +931,12 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new DataView();
-			SqlCommand command = new SqlCommand(@"SELECT * FROM ArchiveNodesInfo");
+			var command = new SqlCommand(@"SELECT * FROM ArchiveNodesInfo");
 			command.Connection = connection;
-			DataSet ds = new DataSet();
+			var ds = new DataSet();
 			try
 			{
-				SqlDataAdapter adapter = new SqlDataAdapter(command);
+				var adapter = new SqlDataAdapter(command);
 				adapter.Fill(ds);
 			}
 			catch (SqlException e)
@@ -945,12 +956,12 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new DataView();
-			SqlCommand command = new SqlCommand(@"SELECT * FROM ArchiveDeletedDevicesInfo");
+			var command = new SqlCommand(@"SELECT * FROM ArchiveDeletedDevicesInfo");
 			command.Connection = connection;
-			DataSet ds = new DataSet();
+			var ds = new DataSet();
 			try
 			{
-				SqlDataAdapter adapter = new SqlDataAdapter(command);
+				var adapter = new SqlDataAdapter(command);
 				adapter.Fill(ds);
 			}
 			catch (SqlException e)
@@ -969,7 +980,7 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new List<Node>();
-			SqlCommand command = new SqlCommand(@"SELECT ArchiveNodes.[ID Node], NodeMeta.[ID Node], [Value]
+			var command = new SqlCommand(@"SELECT ArchiveNodes.[ID Node], NodeMeta.[ID Node], [Value]
 					FROM dbo.NodeMeta LEFT JOIN dbo.ArchiveNodes ON (NodeMeta.[ID Node] = ArchiveNodes.[ID AssocMetaNode])
 					WHERE ([ID Device] = @DeviceID) AND ([Parameter Type] = 'complex') AND (Operation = 'Удаление')
 					ORDER BY NodeMeta.[ID Node]");
@@ -986,11 +997,11 @@ namespace Devices
 				MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return new List<Node>();
 			}
-			List<Node> list = new List<Node>();
+			var list = new List<Node>();
 			while (reader.Read())
 			{
-				string Value = reader.GetString(2);
-				int NodeID = reader.GetInt32(0);
+				var Value = reader.GetString(2);
+				var NodeID = reader.GetInt32(0);
 				int ParentNodeID;
 				try
 				{
@@ -1013,7 +1024,7 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new DataView();
-			SqlCommand command = new SqlCommand(@"SELECT b.[ID Node] AS NodeRealID, a.[ID Node], b.[ID Parent Node], a.[Parameter Name], 
+			var command = new SqlCommand(@"SELECT b.[ID Node] AS NodeRealID, a.[ID Node], b.[ID Parent Node], a.[Parameter Name], 
 						a.[Parameter Type], b.Value
 				FROM
 				(SELECT *
@@ -1026,10 +1037,10 @@ namespace Devices
 				WHERE [ID Parent Node] = @DeviceNodeID AND Operation = 'Удаление') b ON (a.[ID Node] = b.[ID AssocMetaNode])");
 			command.Connection = connection;
 			command.Parameters.Add(new SqlParameter("DeviceNodeID", DeviceNodeID));
-			DataSet ds = new DataSet();
+			var ds = new DataSet();
 			try
 			{
-				SqlDataAdapter adapter = new SqlDataAdapter(command);
+				var adapter = new SqlDataAdapter(command);
 				adapter.Fill(ds);
 			}
 			catch (SqlException e)
@@ -1049,7 +1060,7 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new List<Node>();
-			SqlCommand command = new SqlCommand(@"SELECT [ID Node], [ID Parent Node], [Parameter Name]
+			var command = new SqlCommand(@"SELECT [ID Node], [ID Parent Node], [Parameter Name]
 				FROM NodeMeta
 				WHERE [Parameter Type] = 'complex' AND [ID Device Type] = (SELECT [ID Device Type]
 				FROM ArchiveDevices
@@ -1068,11 +1079,11 @@ namespace Devices
 				MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return new List<Node>();
 			}
-			List<Node> list = new List<Node>();
+			var list = new List<Node>();
 			while (reader.Read())
 			{
-				string ParameterName = reader.GetString(2);
-				int NodeID = reader.GetInt32(0);
+				var ParameterName = reader.GetString(2);
+				var NodeID = reader.GetInt32(0);
 				int ParentNodeID;
 				try
 				{
@@ -1092,7 +1103,7 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return new DataView();
-            SqlCommand command = new SqlCommand(@"SELECT [ID Installation], [ID Computer], Software, Version, InstallationDate, LicType, BuyLicenseDate, ExpireLicenseDate, LicKey, SoftMaker, Supplier, SoftType
+            var command = new SqlCommand(@"SELECT [ID Installation], [ID Computer], Software, Version, InstallationDate, LicType, BuyLicenseDate, ExpireLicenseDate, LicKey, SoftMaker, Supplier, SoftType
                                                     FROM
                                                       dbo.SoftInstallations si
                                                         INNER JOIN dbo.SoftLicenses sl ON sl.[ID License] = si.[ID License]
@@ -1106,10 +1117,10 @@ namespace Devices
                                                       [ID Computer] = @ComputerID AND si.[Deleted] <> 1");
 			command.Connection = connection;
             command.Parameters.Add(new SqlParameter("ComputerID", ComputerID));
-            DataSet ds = new DataSet();
+            var ds = new DataSet();
             try
             {
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                var adapter = new SqlDataAdapter(command);
                 adapter.Fill(ds);
             }
             catch (SqlException e)
@@ -1143,7 +1154,7 @@ namespace Devices
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return "";
             }
-            string SerialNumber = "";
+            var SerialNumber = "";
             if (reader.Read())
             {
                 SerialNumber = reader[0].ToString();
@@ -1179,7 +1190,7 @@ namespace Devices
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return "";
             }
-            string InventoryNumber = "";
+            var InventoryNumber = "";
             if (reader.Read())
             {
                 InventoryNumber = reader[0].ToString();
@@ -1195,7 +1206,7 @@ namespace Devices
 
 		internal DataView GetRequests(string SerialNumber, string InventoryNumber)
 		{
-			SqlConnection connectionAlexApplic = new SqlConnection(Properties.Settings.Default.AlexApplicConnectionString);
+			var connectionAlexApplic = new SqlConnection(Properties.Settings.Default.AlexApplicConnectionString);
 			try
 			{
 				connectionAlexApplic.Open();
@@ -1206,15 +1217,15 @@ namespace Devices
 								Проверьте правильность строки соединения в файле конфигурации и доступность сервера", "Ошибка",
 								MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
-			SqlCommand commandAlexApplic = new SqlCommand(@"getDevHistory");
+			var commandAlexApplic = new SqlCommand(@"getDevHistory");
 			commandAlexApplic.CommandType = CommandType.StoredProcedure;
 			commandAlexApplic.Connection = connectionAlexApplic;
             commandAlexApplic.Parameters.Add(new SqlParameter("SerialNum", SerialNumber));
             commandAlexApplic.Parameters.Add(new SqlParameter("InventoryNum", InventoryNumber));
-			DataSet ds = new DataSet();
+			var ds = new DataSet();
 			try
 			{
-				SqlDataAdapter adapter = new SqlDataAdapter(commandAlexApplic);
+				var adapter = new SqlDataAdapter(commandAlexApplic);
 				adapter.Fill(ds);
 			}
 			catch (SqlException e)
@@ -1234,20 +1245,20 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return;
-			string deviceID_list = "";
-			for (int i = 0; i < devices.Count; i++)
+			var deviceID_list = "";
+			for (var i = 0; i < devices.Count; i++)
 			{
 				deviceID_list += devices[i].DeviceID;
 				if (i < (devices.Count - 1))
 					deviceID_list += ",";
 			}
-			SqlCommand command = new SqlCommand(@"SELECT [ID Device],SerialNumber, InventoryNumber FROM Devices WHERE [ID Device] IN ("+deviceID_list+")");
+			var command = new SqlCommand(@"SELECT [ID Device],SerialNumber, InventoryNumber FROM Devices WHERE [ID Device] IN ("+deviceID_list+")");
 			command.Connection = connection;
 
-			DataSet ds = new DataSet();
+			var ds = new DataSet();
 			try
 			{
-				SqlDataAdapter adapter = new SqlDataAdapter(command);
+				var adapter = new SqlDataAdapter(command);
 				adapter.Fill(ds);
 			}
 			catch (SqlException e)
@@ -1258,10 +1269,10 @@ namespace Devices
 			}
 			foreach (DataRow row in ds.Tables[0].Rows)
 			{
-				int DeviceID = Convert.ToInt32(row["ID Device"]);
-				string SerialNumber = row["SerialNumber"].ToString();
-				string InvenotryNumber = row["InventoryNumber"].ToString();
-				foreach (Device dev in devices)
+				var DeviceID = Convert.ToInt32(row["ID Device"]);
+				var SerialNumber = row["SerialNumber"].ToString();
+				var InvenotryNumber = row["InventoryNumber"].ToString();
+				foreach (var dev in devices)
 				{
 					if (dev.DeviceID == DeviceID)
 					{
@@ -1280,7 +1291,7 @@ namespace Devices
 		{
 			if (connection.State != ConnectionState.Open)
 				return false;
-			SqlCommand command = new SqlCommand("UPDATE Devices SET [ID Department] = @NewDepartmentID WHERE [ID Device] = @DeviceID");
+			var command = new SqlCommand("UPDATE Devices SET [ID Department] = @NewDepartmentID WHERE [ID Device] = @DeviceID");
 			command.Connection = connection;
 			command.Parameters.AddWithValue("@NewDepartmentID", NewDepartmentID);
 			command.Parameters.AddWithValue("@DeviceID", DeviceID);
@@ -1305,7 +1316,7 @@ namespace Devices
         {
             if (connection.State != ConnectionState.Open)
                 return false;
-            SqlCommand command = new SqlCommand("UPDATE Departments SET [ID Parent Department] = @NewDepartmentID WHERE [ID Department] = @DepartmentID");
+            var command = new SqlCommand("UPDATE Departments SET [ID Parent Department] = @NewDepartmentID WHERE [ID Department] = @DepartmentID");
             command.Connection = connection;
             command.Parameters.AddWithValue("@NewDepartmentID", NewDepartmentID);
             command.Parameters.AddWithValue("@DepartmentID", DepartmentID);

@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Devices.Reporting;
 
 namespace Reporting
 {

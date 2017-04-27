@@ -12,16 +12,16 @@
     <Setting Name="DevicesConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=b777\\b7772000;Initial Catalog=Device;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=b777\b7772000;Initial Catalog=Device;Integrated Security=True&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=b777\\b7772000;Initial Catalog=Device;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=b777\b7772000;Initial Catalog=Device;Integrated Security=True</Value>
     </Setting>
     <Setting Name="ActivityManagerPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\\nas\media$\ActivityManager\ActivityManager.exe</Value>
+      <Value Profile="(Default)">\\mcs.br\adm\server\ActivityManager\ActivityManager.exe</Value>
     </Setting>
     <Setting Name="ActivityManagerConfigsPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\\nas\media$\ActivityManager\templates\device</Value>
+      <Value Profile="(Default)">\\mcs.br\adm\server\ActivityManager\templates\device</Value>
     </Setting>
     <Setting Name="ActivityManagerOutputCodePage" Type="System.String" Scope="User">
       <Value Profile="(Default)">cp866</Value>
