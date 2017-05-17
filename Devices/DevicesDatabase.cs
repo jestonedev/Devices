@@ -1107,7 +1107,8 @@ namespace Devices
                                                     FROM
                                                       dbo.SoftInstallations si
                                                         INNER JOIN dbo.SoftLicenses sl ON sl.[ID License] = si.[ID License]
-                                                        INNER JOIN dbo.Software s ON s.[ID Software] = sl.[ID Software]
+                                                        INNER JOIN dbo.SoftVersions sv ON sl.[ID Version] = sv.[ID Version]
+                                                        INNER JOIN dbo.Software s ON s.[ID Software] = sv.[ID Software]
                                                       INNER JOIN dbo.SoftSuppliers ss ON ss.[ID Supplier] = sl.[ID Supplier]
                                                       INNER JOIN dbo.SoftTypes st ON st.[ID SoftType] = s.[ID SoftType]
                                                       INNER JOIN dbo.SoftMakers sm ON sm.[ID SoftMaker] = s.[ID SoftMaker]
