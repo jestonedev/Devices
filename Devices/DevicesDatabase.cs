@@ -207,7 +207,7 @@ namespace Devices
                             where += "(CAST(REPLACE([Value],',','.') AS FLOAT) " + sp.Operation + " " + "(CAST(REPLACE("+sp.ParameterValue+",',','.') AS FLOAT)))";
 				            break;
                         default:
-                            where += "([Value] " + sp.Operation + " '" + sp.ParameterValue + "')";
+                            where += "([Value] " + sp.Operation + " " + sp.ParameterValue + ")";
 				            break;
 				    }
 					i++;
