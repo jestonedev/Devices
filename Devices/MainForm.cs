@@ -13,25 +13,36 @@ using Reporting;
 
 namespace Devices
 {
-	public partial class Form1 : Form, IDisposable
+	public partial class MainForm : Form, IDisposable
 	{
 		private DevicesDatabase db { get; set; }
         private SearchParametersGroup spg { get; set; }
 
         private MoveComputersForm mcf;
+        private readonly string _deviceNameCommandLineArg;
 
-		public Form1()
+		public MainForm(string[] args)
 		{
 			InitializeComponent();
             spg = new SearchParametersGroup();
+            var arguments = args.Select(r => r.Split(new[] { '=' }, 2));
+            var deviceCommandLineArg = arguments.FirstOrDefault(r => r.Length > 1 && r[0] == "--computer");
+            if (deviceCommandLineArg != null)
+		    {
+                _deviceNameCommandLineArg = deviceCommandLineArg[1];
+		    }
 		}
 
-		private void Form1_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
 		{
-			Reload();
+            if (!string.IsNullOrEmpty(_deviceNameCommandLineArg))
+            {
+                spg.deviceName = _deviceNameCommandLineArg;
+            }
+            Reload(_deviceNameCommandLineArg != null);
 		}
 
-		private void Reload()
+		private void Reload(bool autoOpenFirstFoundDevice = false)
 		{
 			treeViewComputers.Nodes.Clear();
 			db = new DevicesDatabase();
@@ -61,6 +72,7 @@ namespace Devices
             }
             while (cache.Count != cacheCount);
 			list = db.GetDevices(spg);
+		    TreeNode selectNode = null;
 			foreach (var device in list)
 			{
 			    var node = new TreeNode
@@ -69,10 +81,16 @@ namespace Devices
 			        Tag = new NodeProperty(device.NodeID, NodeTypeEnum.DeviceNode)
 			    };
 			    TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, device.ParentNodeID);
+                if (selectNode == null && autoOpenFirstFoundDevice)
+                {
+                    selectNode = node;
+			    }
 			}
 			treeViewComputers.Sort();
-			if (treeViewComputers.Nodes.Count > 0)
-				treeViewComputers.SelectedNode = treeViewComputers.Nodes[0];
+		    if (treeViewComputers.Nodes.Count > 0)
+		    {
+                treeViewComputers.SelectedNode = selectNode ?? treeViewComputers.Nodes[0];
+		    }
 		}
 
 	    private bool HasChildDepartmentsFromActiveList(Node department, List<Node> listFull, List<Node> list)
@@ -82,15 +100,12 @@ namespace Devices
                    Any(v => HasChildDepartmentsFromActiveList(v, listFull, list));
 	    }
 
-	    private void openDeviceInfo()
+	    private void OpenDeviceInfo()
 		{
-			if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType == NodeTypeEnum.DeviceNode)
-			{
-				var compForm = new ComputerInfo();
-				compForm.DeviceID = ((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID;
-				compForm.FillInfoTree();
-				compForm.ShowDialog();
-			}
+	        if (((NodeProperty) treeViewComputers.SelectedNode.Tag).NodeType != NodeTypeEnum.DeviceNode) return;
+	        var compForm = new ComputerInfo {DeviceID = ((NodeProperty) treeViewComputers.SelectedNode.Tag).NodeID};
+	        compForm.FillInfoTree();
+	        compForm.ShowDialog();
 		}
 
 		private void treeViewComputers_DoubleClick(object sender, EventArgs e)
@@ -114,7 +129,7 @@ namespace Devices
 
 		private void toolStripButton1_Click_1(object sender, EventArgs e)
 		{
-			openDeviceInfo();
+			OpenDeviceInfo();
 		}
 
 		private void toolStripButtonDelete_Click(object sender, EventArgs e)
