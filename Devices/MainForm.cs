@@ -40,6 +40,7 @@ namespace Devices
                 spg.deviceName = _deviceNameCommandLineArg;
             }
             Reload(_deviceNameCommandLineArg != null);
+            toolStripButton6.Checked = _deviceNameCommandLineArg != null;
 		}
 
 		private void Reload(bool autoOpenFirstFoundDevice = false)
@@ -260,7 +261,7 @@ namespace Devices
 
 		private void toolStripButton3_Click(object sender, EventArgs e)
 		{
-			Reload();
+			Reload(toolStripButton6.Checked);
 		}
 
 		private void измененияТекущеToolStripMenuItem_Click(object sender, EventArgs e)
@@ -394,7 +395,7 @@ namespace Devices
 			    sfs.ShowDialog();
 				if (!sfs.CancelSearch)
 				{
-					Reload();
+					Reload(true);
 					toolStripButton6.Checked = true;
 				}
 				sfs.Dispose();
