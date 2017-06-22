@@ -261,7 +261,9 @@ namespace Devices
 
 		private void toolStripButton3_Click(object sender, EventArgs e)
 		{
-			Reload(toolStripButton6.Checked);
+		    var selectedNodeProperty = (NodeProperty)treeViewComputers.SelectedNode.Tag;
+            Reload(); 
+            SelectNodeByNodeId(treeViewComputers.Nodes, selectedNodeProperty.NodeID);
 		}
 
 		private void измененияТекущеToolStripMenuItem_Click(object sender, EventArgs e)
@@ -386,8 +388,10 @@ namespace Devices
 			if (toolStripButton6.Checked)
 			{
 				toolStripButton6.Checked = false;
+			    var selectedNodeProperty = (NodeProperty)treeViewComputers.SelectedNode.Tag;
 				spg = new SearchParametersGroup();
 				Reload();
+			    SelectNodeByNodeId(treeViewComputers.Nodes, selectedNodeProperty.NodeID);
 			}
 			else
 			{
@@ -401,6 +405,24 @@ namespace Devices
 				sfs.Dispose();
 			}
 		}
+
+        private bool SelectNodeByNodeId(TreeNodeCollection nodes, int nodeId)
+        {
+            foreach (TreeNode node in nodes)
+            {
+                var nodeProperty = (NodeProperty) node.Tag;
+                if (nodeProperty.NodeID == nodeId)
+                {
+                    treeViewComputers.SelectedNode = node;
+                    return true;
+                }
+                if (SelectNodeByNodeId(node.Nodes, nodeId))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
 		private void GetDevicesInDepartment(TreeNode current_node, string Department, List<Device> devices)
 		{
