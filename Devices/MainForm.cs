@@ -632,8 +632,12 @@ namespace Devices
             }
             devicesRep.Arguments.Add("where_devices", where);
             devicesRep.Run();  
+        }
+
+        private void treeViewComputers_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right) treeViewComputers.SelectedNode = e.Node;
         }      
-        
 	}
 
 	internal class Device

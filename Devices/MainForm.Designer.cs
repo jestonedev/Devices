@@ -108,9 +108,9 @@
             this.Reports = new System.Windows.Forms.ToolStripMenuItem();
             this.Report1 = new System.Windows.Forms.ToolStripMenuItem();
             this.Report2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.DevicesFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ManualMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DevicesFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -142,9 +142,10 @@
             this.treeViewComputers.HideSelection = false;
             this.treeViewComputers.Location = new System.Drawing.Point(6, 22);
             this.treeViewComputers.Name = "treeViewComputers";
-            this.treeViewComputers.Size = new System.Drawing.Size(420, 436);
+            this.treeViewComputers.Size = new System.Drawing.Size(419, 436);
             this.treeViewComputers.TabIndex = 0;
             this.treeViewComputers.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewComputers_AfterSelect);
+            this.treeViewComputers.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewComputers_NodeMouseClick);
             this.treeViewComputers.DoubleClick += new System.EventHandler(this.treeViewComputers_DoubleClick);
             this.treeViewComputers.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewComputers_KeyDown);
             // 
@@ -380,7 +381,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.groupBoxPereferial);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Size = new System.Drawing.Size(891, 461);
-            this.splitContainer1.SplitterDistance = 429;
+            this.splitContainer1.SplitterDistance = 428;
             this.splitContainer1.TabIndex = 3;
             this.splitContainer1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.splitContainer1_KeyDown);
             // 
@@ -399,7 +400,7 @@
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(0, 210);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(458, 251);
+            this.groupBox3.Size = new System.Drawing.Size(459, 251);
             this.groupBox3.TabIndex = 4;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Дополнительные характеристики сетевого узла";
@@ -411,7 +412,7 @@
             this.treeViewDeviceInfo.HideSelection = false;
             this.treeViewDeviceInfo.Location = new System.Drawing.Point(3, 16);
             this.treeViewDeviceInfo.Name = "treeViewDeviceInfo";
-            this.treeViewDeviceInfo.Size = new System.Drawing.Size(452, 232);
+            this.treeViewDeviceInfo.Size = new System.Drawing.Size(453, 232);
             this.treeViewDeviceInfo.TabIndex = 1;
             this.treeViewDeviceInfo.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewDeviceInfo_AfterSelect);
             this.treeViewDeviceInfo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.splitContainer1_KeyDown);
@@ -438,7 +439,7 @@
             this.groupBoxPereferial.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBoxPereferial.Location = new System.Drawing.Point(0, 105);
             this.groupBoxPereferial.Name = "groupBoxPereferial";
-            this.groupBoxPereferial.Size = new System.Drawing.Size(458, 105);
+            this.groupBoxPereferial.Size = new System.Drawing.Size(459, 105);
             this.groupBoxPereferial.TabIndex = 3;
             this.groupBoxPereferial.TabStop = false;
             this.groupBoxPereferial.Text = "Характеристики переферийного устройтсва";
@@ -461,7 +462,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(452, 86);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(453, 86);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // panel5
@@ -506,7 +507,7 @@
             this.panel6.Location = new System.Drawing.Point(226, 0);
             this.panel6.Margin = new System.Windows.Forms.Padding(0);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(226, 43);
+            this.panel6.Size = new System.Drawing.Size(227, 43);
             this.panel6.TabIndex = 1;
             // 
             // label7
@@ -525,7 +526,7 @@
             this.textBoxPereferialType.Location = new System.Drawing.Point(5, 18);
             this.textBoxPereferialType.Name = "textBoxPereferialType";
             this.textBoxPereferialType.ReadOnly = true;
-            this.textBoxPereferialType.Size = new System.Drawing.Size(215, 20);
+            this.textBoxPereferialType.Size = new System.Drawing.Size(216, 20);
             this.textBoxPereferialType.TabIndex = 0;
             // 
             // panel7
@@ -570,7 +571,7 @@
             this.panel8.Location = new System.Drawing.Point(226, 43);
             this.panel8.Margin = new System.Windows.Forms.Padding(0);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(226, 43);
+            this.panel8.Size = new System.Drawing.Size(227, 43);
             this.panel8.TabIndex = 3;
             // 
             // label9
@@ -589,7 +590,7 @@
             this.textBoxPereferialInventoryNumber.Location = new System.Drawing.Point(6, 20);
             this.textBoxPereferialInventoryNumber.Name = "textBoxPereferialInventoryNumber";
             this.textBoxPereferialInventoryNumber.ReadOnly = true;
-            this.textBoxPereferialInventoryNumber.Size = new System.Drawing.Size(215, 20);
+            this.textBoxPereferialInventoryNumber.Size = new System.Drawing.Size(216, 20);
             this.textBoxPereferialInventoryNumber.TabIndex = 0;
             // 
             // groupBox1
@@ -598,7 +599,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(458, 105);
+            this.groupBox1.Size = new System.Drawing.Size(459, 105);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Основные характеристики сетевого узла";
@@ -620,7 +621,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(452, 86);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(453, 86);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // panel1
@@ -665,7 +666,7 @@
             this.panel2.Location = new System.Drawing.Point(226, 0);
             this.panel2.Margin = new System.Windows.Forms.Padding(0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(226, 43);
+            this.panel2.Size = new System.Drawing.Size(227, 43);
             this.panel2.TabIndex = 1;
             // 
             // label4
@@ -684,7 +685,7 @@
             this.textBoxType.Location = new System.Drawing.Point(5, 18);
             this.textBoxType.Name = "textBoxType";
             this.textBoxType.ReadOnly = true;
-            this.textBoxType.Size = new System.Drawing.Size(215, 20);
+            this.textBoxType.Size = new System.Drawing.Size(216, 20);
             this.textBoxType.TabIndex = 0;
             // 
             // panel3
@@ -729,7 +730,7 @@
             this.panel4.Location = new System.Drawing.Point(226, 43);
             this.panel4.Margin = new System.Windows.Forms.Padding(0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(226, 43);
+            this.panel4.Size = new System.Drawing.Size(227, 43);
             this.panel4.TabIndex = 3;
             // 
             // label6
@@ -748,7 +749,7 @@
             this.textBoxInventoryNumber.Location = new System.Drawing.Point(6, 20);
             this.textBoxInventoryNumber.Name = "textBoxInventoryNumber";
             this.textBoxInventoryNumber.ReadOnly = true;
-            this.textBoxInventoryNumber.Size = new System.Drawing.Size(215, 20);
+            this.textBoxInventoryNumber.Size = new System.Drawing.Size(216, 20);
             this.textBoxInventoryNumber.TabIndex = 0;
             // 
             // menuStrip1
@@ -920,6 +921,13 @@
             this.Report2.Text = "Периферийное оборудование по организациям";
             this.Report2.Click += new System.EventHandler(this.PeripheryDevices_Click);
             // 
+            // DevicesFeaturesToolStripMenuItem
+            // 
+            this.DevicesFeaturesToolStripMenuItem.Name = "DevicesFeaturesToolStripMenuItem";
+            this.DevicesFeaturesToolStripMenuItem.Size = new System.Drawing.Size(340, 22);
+            this.DevicesFeaturesToolStripMenuItem.Text = "Характеристики оборудования";
+            this.DevicesFeaturesToolStripMenuItem.Click += new System.EventHandler(this.devicesFeaturesToolStripMenuItem_Click);
+            // 
             // HelpMenuItem
             // 
             this.HelpMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -935,14 +943,7 @@
             this.ManualMenuItem.Text = "Руководство пользователя";
             this.ManualMenuItem.Click += new System.EventHandler(this.ManualMenuItem_Click);
             // 
-            // DevicesFeaturesToolStripMenuItem
-            // 
-            this.DevicesFeaturesToolStripMenuItem.Name = "DevicesFeaturesToolStripMenuItem";
-            this.DevicesFeaturesToolStripMenuItem.Size = new System.Drawing.Size(340, 22);
-            this.DevicesFeaturesToolStripMenuItem.Text = "Характеристики оборудования";
-            this.DevicesFeaturesToolStripMenuItem.Click += new System.EventHandler(this.devicesFeaturesToolStripMenuItem_Click);
-            // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
