@@ -109,11 +109,6 @@ namespace Devices
 	        compForm.ShowDialog();
 		}
 
-		private void treeViewComputers_DoubleClick(object sender, EventArgs e)
-		{
-			toolStripButton1_Click_1(sender, new EventArgs());
-		}
-
 		private void toolStripButton1_Click(object sender, EventArgs e)
 		{
 			var addForm = new AddDepartmentAndPCForm();
@@ -637,6 +632,14 @@ namespace Devices
         private void treeViewComputers_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button == MouseButtons.Right) treeViewComputers.SelectedNode = e.Node;
+        }
+
+        private void treeViewComputers_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (toolStripButton1.Enabled && e.Node == treeViewComputers.SelectedNode)
+            {
+                toolStripButton1_Click_1(sender, new EventArgs());
+            }
         }      
 	}
 
