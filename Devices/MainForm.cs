@@ -466,16 +466,23 @@ namespace Devices
                 mcf = new MoveComputersForm(NP);
             else
                 mcf.NP = NP;
-			mcf.Text = "Перемещение узла " + treeViewComputers.SelectedNode.Text;
+			mcf.Text = @"Перемещение узла " + treeViewComputers.SelectedNode.Text;
             mcf.Moved = false;
 			mcf.ShowDialog();
-			if (mcf.Moved)
+            if (mcf.Moved)
 			{
-				//Удалить в старом департаменте узел и добавить в новый
-				treeViewComputers.SelectedNode.Remove();
-				//Добавить узел в новое место
-				TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, mcf.NewID);
-				treeViewComputers.Sort();
+			    if (toolStripButton6.Checked)
+			    {
+                    Reload(true);
+			    }
+			    else
+			    {
+			        //Удалить в старом департаменте узел и добавить в новый
+			        treeViewComputers.SelectedNode.Remove();
+			        //Добавить узел в новое место
+			        TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, mcf.NewID);
+			        treeViewComputers.Sort();
+			    }
 			}
 		}
 
