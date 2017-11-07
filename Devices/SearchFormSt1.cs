@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Devices
@@ -21,10 +22,10 @@ namespace Devices
                     if (comboBox != null && comboBox.DroppedDown)
                         return;
                     if (e.KeyCode == Keys.Enter)
-                        button1_Click(sender, e);
+                        buttonSearch_Click(sender, e);
                     else
                         if (e.KeyCode == Keys.Escape)
-                            button2_Click(sender, e);
+                            buttonClose_Click(sender, e);
                 };
             foreach (Control control in splitContainer1.Panel2.Controls)
                 control.KeyDown += (sender, e) =>
@@ -33,26 +34,41 @@ namespace Devices
                     if (comboBox != null && comboBox.DroppedDown)
                         return;
                     if (e.KeyCode == Keys.Enter)
-                        button1_Click(sender, e);
+                        buttonSearch_Click(sender, e);
                     else
                         if (e.KeyCode == Keys.Escape)
-                            button2_Click(sender, e);
+                            buttonClose_Click(sender, e);
                 };
 		}
 
 		private void InitDataGridView()
 		{
-		    var bs = new BindingSource {DataSource = SpgNew.Parameters};
-		    dataGridView1.DataSource = bs;
-			dataGridView1.Columns[0].Visible = false;
-			dataGridView1.Columns[1].HeaderText = @"Устройство";
-			dataGridView1.Columns[1].Width = 150;
-			dataGridView1.Columns[2].HeaderText = @"Параметр";
-			dataGridView1.Columns[2].Width = 150;
-			dataGridView1.Columns[3].HeaderText = @"Операция";
-            dataGridView1.Columns[4].HeaderText = @"Значение";
-            dataGridView1.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dataGridView1.Columns[5].HeaderText = @"Тип параметра";
+		    var bs = new BindingSource {DataSource = SpgNew.NodeParameters.Distinct()};
+		    dataGridViewNodeProperties.DataSource = bs;
+		    if (bs.Count > 0)
+		    {
+		        dataGridViewNodeProperties.Columns[0].Visible = false;
+		        dataGridViewNodeProperties.Columns[1].HeaderText = @"Устройство";
+		        dataGridViewNodeProperties.Columns[1].Width = 150;
+		        dataGridViewNodeProperties.Columns[2].HeaderText = @"Параметр";
+		        dataGridViewNodeProperties.Columns[2].Width = 150;
+		        dataGridViewNodeProperties.Columns[3].HeaderText = @"Операция";
+		        dataGridViewNodeProperties.Columns[4].HeaderText = @"Значение";
+		        dataGridViewNodeProperties.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+		        dataGridViewNodeProperties.Columns[5].HeaderText = @"Тип параметра";
+		    }
+
+		    bs = new BindingSource { DataSource = SpgNew.MonitoringParameters.Distinct()};
+		    dataGridViewMonitoringProperties.DataSource = bs;
+		    if (bs.Count > 0)
+		    {
+		        dataGridViewMonitoringProperties.Columns[0].Visible = false;
+		        dataGridViewMonitoringProperties.Columns[1].HeaderText = @"Параметр";
+		        dataGridViewMonitoringProperties.Columns[1].Width = 150;
+		        dataGridViewMonitoringProperties.Columns[2].HeaderText = @"Операция";
+		        dataGridViewMonitoringProperties.Columns[3].HeaderText = @"Значение";
+		        dataGridViewMonitoringProperties.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+		    }
 		}
 
 		private void SearchFormSt1_Load(object sender, EventArgs e)
@@ -81,8 +97,6 @@ namespace Devices
 				comboBoxDevTypes.Items.Add(new DeviceTypeComboboxItem(view.Table.Rows[i]["Type"].ToString(),
 					Convert.ToInt32(view.Table.Rows[i]["ID Device Type"])));
 			}
-			comboBoxDevTypes.SelectedIndex = 0;
-			InitDataGridView();
 		}
 
 		private void treeViewDepartments_AfterCheck(object sender, TreeViewEventArgs e)
@@ -99,18 +113,18 @@ namespace Devices
 			InitDataGridView();
 		}
 
-		private void button3_Click(object sender, EventArgs e)
+		private void buttonAddNodeProperty_Click(object sender, EventArgs e)
 		{
 		    var sfs2 = new SearchFormSt2
 		    {
 		        DeviceTypeId = ((DeviceTypeComboboxItem) comboBoxDevTypes.SelectedItem).DeviceTypeId,
-		        ParamList = SpgNew.Parameters
+		        ParamList = SpgNew.NodeParameters
 		    };
 		    sfs2.ShowDialog();
 			InitDataGridView();
 		}
 
-		private void button2_Click(object sender, EventArgs e)
+		private void buttonClose_Click(object sender, EventArgs e)
 		{
 			Close();
 		}
@@ -125,7 +139,7 @@ namespace Devices
 			}
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private void buttonSearch_Click(object sender, EventArgs e)
 		{
 			SpgNew.DeviceTypeId = ((DeviceTypeComboboxItem)comboBoxDevTypes.SelectedItem).DeviceTypeId;
 			SpgNew.DeviceName = textBoxDeviceName.Text.Trim();
@@ -134,7 +148,8 @@ namespace Devices
 			FillDepartmentIDs(SpgNew.DepartmentIDs, treeViewDepartments.Nodes);
 			Spg.DepartmentIDs = SpgNew.DepartmentIDs;
 			Spg.DeviceTypeId = SpgNew.DeviceTypeId;
-			Spg.Parameters = SpgNew.Parameters;
+			Spg.NodeParameters = SpgNew.NodeParameters;
+			Spg.MonitoringParameters = SpgNew.MonitoringParameters;
 			Spg.DeviceName = SpgNew.DeviceName;
             Spg.SerialNumber = SpgNew.SerialNumber;
             Spg.InventoryNumber = SpgNew.InventoryNumber;
@@ -142,57 +157,78 @@ namespace Devices
 			Close();
 		}
 
-		private void button4_Click(object sender, EventArgs e)
+		private void buttonRemoveNodeProperty_Click(object sender, EventArgs e)
 		{
 			if (MessageBox.Show(@"Вы действительно хотите удалить этот параметр?", @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
 				== DialogResult.No)
 				return;
-			foreach(DataGridViewRow dgvr in dataGridView1.SelectedRows)
+			foreach(DataGridViewRow dgvr in dataGridViewNodeProperties.SelectedRows)
 			{
-				for (var i = 0; i < SpgNew.Parameters.Count; i++)
+				for (var i = 0; i < SpgNew.NodeParameters.Count; i++)
 				{
-					var sp = SpgNew.Parameters[i];
+					var sp = SpgNew.NodeParameters[i];
 				    if ((sp.ParameterId.ToString() != dgvr.Cells[0].Value.ToString()) ||
 				        (sp.ParameterName != dgvr.Cells[2].Value.ToString()) || 
                         (sp.Operation != dgvr.Cells[3].Value.ToString()) ||
 				        (sp.ParameterValue != dgvr.Cells[4].Value.ToString()) ||
                         (sp.ParameterType != dgvr.Cells[5].Value.ToString())) continue;
-				    SpgNew.Parameters.RemoveAt(i);
+				    SpgNew.NodeParameters.RemoveAt(i);
 				    InitDataGridView();
 				    return;
 				}
 			}
 		}
 
-		private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+		private void dataGridViewNodeProperties_SelectionChanged(object sender, EventArgs e)
 		{
-			button4.Enabled = (dataGridView1.SelectedRows.Count > 0);
-
+			buttonRemoveNodeProperty.Enabled = dataGridViewNodeProperties.SelectedRows.Count > 0;
 		}
 
-		private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
+        private void dataGridViewNodeProperties_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyCode == Keys.Delete)
-				button4_Click(sender, new EventArgs());
+				buttonRemoveNodeProperty_Click(sender, new EventArgs());
 		}
-	}
 
-	public class SearchParametersGroup
-	{
-		public List<SearchParameter> Parameters { get; set; }
-		public List<int> DepartmentIDs { get; set; }
-		public int DeviceTypeId { get; set; }
-        public string DeviceName { get; set; }
-        public string SerialNumber { get; set; }
-        public string InventoryNumber { get; set; }
+        private void dataGridViewMonitoringProperties_SelectionChanged(object sender, EventArgs e)
+        {
+            buttonRemoveMonitoringProperty.Enabled = dataGridViewMonitoringProperties.SelectedRows.Count > 0;
+        }
 
-		public SearchParametersGroup()
-		{
-			Parameters = new List<SearchParameter>();
-			DepartmentIDs = new List<int>();
-			DeviceName = "";
-            SerialNumber = "";
-            InventoryNumber = "";
-		}
+        private void buttonAddMonitoringProperty_Click(object sender, EventArgs e)
+        {
+            var sfs3 = new SearchFormSt3
+            {
+                ParamList = SpgNew.MonitoringParameters
+            };
+            sfs3.ShowDialog();
+            InitDataGridView();
+        }
+
+        private void buttonRemoveMonitoringProperty_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(@"Вы действительно хотите удалить этот параметр?", @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+                == DialogResult.No)
+                return;
+            foreach (DataGridViewRow dgvr in dataGridViewMonitoringProperties.SelectedRows)
+            {
+                for (var i = 0; i < SpgNew.MonitoringParameters.Count; i++)
+                {
+                    var sp = SpgNew.MonitoringParameters[i];
+                    if ((sp.ParameterName != dgvr.Cells[0].Value.ToString()) ||
+                        (sp.Operation != dgvr.Cells[2].Value.ToString()) ||
+                        (sp.ParameterValue != dgvr.Cells[3].Value.ToString())) continue;
+                    SpgNew.MonitoringParameters.RemoveAt(i);
+                    InitDataGridView();
+                    return;
+                }
+            }
+        }
+
+        private void SearchFormSt1_Shown(object sender, EventArgs e)
+        {
+            comboBoxDevTypes.SelectedIndex = 0;
+            InitDataGridView();
+        }
 	}
 }

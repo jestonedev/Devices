@@ -97,6 +97,7 @@
     </Compile>
     <Compile Include="ConditionType.cs" />
     <Compile Include="Device.cs" />
+    <Compile Include="DeviceParametersComboboxItem.cs" />
     <Compile Include="DevicesDatabase.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -110,6 +111,7 @@
     <Compile Include="InstallationsInfoForm.Designer.cs">
       <DependentUpon>InstallationsInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MonitoringProperty.cs" />
     <Compile Include="MonitoringWarningCondition.cs" />
     <Compile Include="MoveComputersForm.cs">
       <SubType>Form</SubType>
@@ -160,6 +162,9 @@
     <EmbeddedResource Include="SearchFormSt1.resx">
       <DependentUpon>SearchFormSt1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SearchFormSt3.resx">
+      <DependentUpon>SearchFormSt3.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SearchFormSt2.resx">
       <DependentUpon>SearchFormSt2.cs</DependentUpon>
     </EmbeddedResource>
@@ -202,12 +207,21 @@
     <Compile Include="SearchFormSt1.Designer.cs">
       <DependentUpon>SearchFormSt1.cs</DependentUpon>
     </Compile>
+    <Compile Include="SearchFormSt3.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SearchFormSt3.Designer.cs">
+      <DependentUpon>SearchFormSt3.cs</DependentUpon>
+    </Compile>
     <Compile Include="SearchFormSt2.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="SearchFormSt2.Designer.cs">
       <DependentUpon>SearchFormSt2.cs</DependentUpon>
     </Compile>
+    <Compile Include="SearchMonitoringParameter.cs" />
+    <Compile Include="SearchNodeParameter.cs" />
+    <Compile Include="SearchParametersGroup.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>

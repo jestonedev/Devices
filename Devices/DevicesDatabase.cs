@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Devices
@@ -186,36 +187,8 @@ namespace Devices
 				where = where.Trim(',');
 				where += ")";
 			}
-			if (spg.Parameters.Count > 0)
-			{
-				if (where.Trim().Length > 0)
-					where += " AND ";
-				where += @"[ID Device] IN
-						(select [ID Device]
-						from dbo.Nodes
-						where ";
-				var i = 0;
-				foreach (var sp in spg.Parameters)
-				{
-                    where += "([ID AssocMetaNode] = " + sp.ParameterId + ") AND ";
-				    switch (sp.ParameterType)
-				    {
-                        case "int":
-                            where += "(CAST([Value] AS INT) " + sp.Operation + " " + "CAST(" + sp.ParameterValue + " AS INT))";
-				            break;
-                        case "float":
-                            where += "(CAST(REPLACE([Value],',','.') AS FLOAT) " + sp.Operation + " " + "(CAST(REPLACE("+sp.ParameterValue+",',','.') AS FLOAT)))";
-				            break;
-                        default:
-                            where += "([Value] " + sp.Operation + " " + sp.ParameterValue + ")";
-				            break;
-				    }
-					i++;
-					if (i != spg.Parameters.Count)
-						where += " OR ";
-				}
-				where += " group by [ID Device] having COUNT(*) >= " + spg.Parameters.Count + ")";
-			}
+			BuildDeviceFilterByNodeParameters(spg, ref where);
+			BuildDeviceFilterByMonitoringParameters(spg, ref where);	    
 			if (where.Trim().Length > 0)
 				where = "WHERE " + where;
 		    var command = new SqlCommand(@"SELECT [ID Device], [ID Department], [Device Name]
@@ -248,6 +221,130 @@ namespace Devices
 			reader.Close();
 			return list;
 		}
+
+        private void BuildDeviceFilterByMonitoringParameters(SearchParametersGroup spg, ref string where)
+        {
+            if (spg.MonitoringParameters.Count <= 0) return;
+            var monitoringProperties = GetDeviceAllMonitoringPropertiesInfo();
+            var deviceIds = new List<int>();
+            foreach (var searchMonitoringParameter in spg.MonitoringParameters)
+            {
+                foreach (DataRowView monitoringProperty in monitoringProperties)
+                {
+                    if (monitoringProperty.Row["Property Name"] == DBNull.Value) continue;
+                    if (searchMonitoringParameter.ParameterName != (string) monitoringProperty.Row["Property Name"])
+                        continue;
+
+                    double monitoringPropertyParsed, searchMonitoringParameterParsed = 0;
+                    var doubleCorrect = 
+                        double.TryParse((string) monitoringProperty.Row["Property Value"], out monitoringPropertyParsed) &&
+                        double.TryParse(searchMonitoringParameter.ParameterValue, out searchMonitoringParameterParsed);
+                    switch (searchMonitoringParameter.Operation)
+                    {
+                        case "=":
+                            if ((string) monitoringProperty.Row["Property Value"] ==
+                                searchMonitoringParameter.ParameterValue)
+                            {
+                                deviceIds.Add((int)monitoringProperty.Row["ID Device"]);
+                            }
+                            break;
+                        case "<>":
+                            if ((string)monitoringProperty.Row["Property Value"] !=
+                                searchMonitoringParameter.ParameterValue)
+                            {
+                                deviceIds.Add((int)monitoringProperty.Row["ID Device"]);
+                            }
+                            break;
+                        case ">":
+                            if (doubleCorrect && monitoringPropertyParsed > searchMonitoringParameterParsed)
+                            {
+                                    deviceIds.Add((int)monitoringProperty.Row["ID Device"]);   
+                            }
+                            break;
+                        case ">=":
+                            if (doubleCorrect && monitoringPropertyParsed >= searchMonitoringParameterParsed)
+                            {
+                                deviceIds.Add((int)monitoringProperty.Row["ID Device"]);
+                            }
+                            break;
+                        case "<":
+                            if (doubleCorrect && monitoringPropertyParsed < searchMonitoringParameterParsed)
+                            {
+                                deviceIds.Add((int)monitoringProperty.Row["ID Device"]);
+                            }
+                            break;
+                        case "<=":
+                            if (doubleCorrect && monitoringPropertyParsed <= searchMonitoringParameterParsed)
+                            {
+                                deviceIds.Add((int)monitoringProperty.Row["ID Device"]);
+                            }
+                            break;
+                        case "Содержит":
+                            if (((string)monitoringProperty.Row["Property Value"]).Contains(searchMonitoringParameter.ParameterValue))
+                            {
+                                deviceIds.Add((int)monitoringProperty.Row["ID Device"]);
+                            }
+                            break;
+                        case "Не содержит":
+                            if (!((string)monitoringProperty.Row["Property Value"]).Contains(searchMonitoringParameter.ParameterValue))
+                            {
+                                deviceIds.Add((int)monitoringProperty.Row["ID Device"]);
+                            }
+                            break;
+                        case "Начинается с":
+                            if (((string)monitoringProperty.Row["Property Value"]).StartsWith(searchMonitoringParameter.ParameterValue))
+                            {
+                                deviceIds.Add((int)monitoringProperty.Row["ID Device"]);
+                            }
+                            break;
+                        case "Начинается не с":
+                            if (!((string)monitoringProperty.Row["Property Value"]).StartsWith(searchMonitoringParameter.ParameterValue))
+                            {
+                                deviceIds.Add((int)monitoringProperty.Row["ID Device"]);
+                            }
+                            break;
+                    }
+                }
+                if (where.Trim().Length > 0 && deviceIds.Count > 0)
+                    where += " AND [ID Device] IN (";
+                where += deviceIds.Select(r => r.ToString()).Aggregate((acc, v) => acc + "," + v);
+                where += ")";
+                deviceIds.Clear();
+            }
+        }
+
+	    private static void BuildDeviceFilterByNodeParameters(SearchParametersGroup spg, ref string where)
+	    {
+	        if (spg.NodeParameters.Count <= 0) return;
+	        if (where.Trim().Length > 0)
+	            where += " AND ";
+	        where += @"[ID Device] IN
+						(select [ID Device]
+						from dbo.Nodes
+						where ";
+	        var i = 0;
+	        foreach (var sp in spg.NodeParameters)
+	        {
+	            where += "([ID AssocMetaNode] = " + sp.ParameterId + ") AND ";
+	            switch (sp.ParameterType)
+	            {
+	                case "int":
+	                    where += "(CAST([Value] AS INT) " + sp.Operation + " " + "CAST(" + sp.ParameterValue + " AS INT))";
+	                    break;
+	                case "float":
+	                    where += "(CAST(REPLACE([Value],',','.') AS FLOAT) " + sp.Operation + " " + "(CAST(REPLACE(" +
+	                             sp.ParameterValue + ",',','.') AS FLOAT)))";
+	                    break;
+	                default:
+	                    where += "([Value] " + sp.Operation + " " + sp.ParameterValue + ")";
+	                    break;
+	            }
+	            i++;
+	            if (i != spg.NodeParameters.Count)
+	                where += " OR ";
+	        }
+	        where += " group by [ID Device] having COUNT(*) >= " + spg.NodeParameters.Count + ")";
+	    }
 
 	    /// <summary>
 	    /// Возвращает список всех характеристик устройств по типу устройства
@@ -854,6 +951,77 @@ namespace Devices
             }
             return ds.Tables[0].DefaultView;
         }
+
+        public DataView GetDeviceAllMonitoringPropertiesInfo()
+        {
+            if (_connection.State != ConnectionState.Open)
+                return new DataView();
+            var command = new SqlCommand(@"SELECT 
+                      mp.[ID Device],
+                      mp.[Property Name],
+                      mp.[Property Value]
+                    FROM MonitoringProperties mp
+                      LEFT JOIN MonitoringPropertiesMeta mpm ON mp.[Property Name] = mpm.[Property Name]
+                    WHERE (mpm.Invisible IS NULL OR mpm.Invisible = 0)") { Connection = _connection };
+            var ds = new DataSet();
+            try
+            {
+                var adapter = new SqlDataAdapter(command);
+                adapter.Fill(ds);
+            }
+            catch (SqlException e)
+            {
+                MessageBox.Show(@"Не удалось получить информацию из базы данных. " + e.Message, @"Ошибка",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return new DataView();
+            }
+            return ds.Tables[0].DefaultView;
+        }
+
+        /// <summary>
+        /// Возвращает все отображаемые свойства из мониторинга
+        /// </summary>
+        public IEnumerable<MonitoringProperty> GetMonitoringExistsProperties()
+        {
+            if (_connection.State != ConnectionState.Open)
+                return new List<MonitoringProperty>();
+            var command =
+                new SqlCommand(@"SELECT 
+                      DISTINCT mp.[Property Name],
+                      CASE WHEN mpm.[Display Name] IS NOT NULL THEN mpm.[Display Name] 
+                      ELSE mp.[Property Name] END AS [Display Name]
+                    FROM MonitoringProperties mp
+                      LEFT JOIN MonitoringPropertiesMeta mpm ON mp.[Property Name] = mpm.[Property Name]
+                    WHERE (mpm.Invisible IS NULL OR mpm.Invisible = 0) AND mp.[Property Name] IS NOT NULL")
+                {
+                    Connection = _connection
+                };
+            SqlDataReader reader;
+            try
+            {
+                reader = command.ExecuteReader();
+            }
+            catch (SqlException e)
+            {
+                MessageBox.Show(@"Не удалось получить список warning-условий мониторинга. " + e.Message, @"Ошибка",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return new List<MonitoringProperty>();
+            }
+            var monitoringProperties = new List<MonitoringProperty>();
+            while (reader.Read())
+            {
+                var propertyName = reader.GetString(0);
+                var displayName = reader.GetString(1);
+                monitoringProperties.Add(new MonitoringProperty
+                {
+                    Name = propertyName,
+                    DisplayName = displayName
+                });
+            }
+            reader.Close();
+            return monitoringProperties;
+        }
+
 
         /// <summary>
         /// Получить warning-условия свойств мониторинга

@@ -33,23 +33,32 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.treeViewDepartments = new System.Windows.Forms.TreeView();
-            this.label3 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.buttonSearch = new System.Windows.Forms.Button();
+            this.buttonCancel = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPageNodeProperties = new System.Windows.Forms.TabPage();
+            this.buttonAddNodeProperty = new System.Windows.Forms.Button();
+            this.dataGridViewNodeProperties = new System.Windows.Forms.DataGridView();
+            this.buttonRemoveNodeProperty = new System.Windows.Forms.Button();
+            this.tabPageMonitoringProperties = new System.Windows.Forms.TabPage();
+            this.buttonAddMonitoringProperty = new System.Windows.Forms.Button();
+            this.dataGridViewMonitoringProperties = new System.Windows.Forms.DataGridView();
+            this.buttonRemoveMonitoringProperty = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.textBoxInventoryNumber = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.textBoxSerialNumber = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.textBoxDeviceName = new System.Windows.Forms.TextBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.label6 = new System.Windows.Forms.Label();
-            this.textBoxInventoryNumber = new System.Windows.Forms.TextBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.tabControl1.SuspendLayout();
+            this.tabPageNodeProperties.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewNodeProperties)).BeginInit();
+            this.tabPageMonitoringProperties.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMonitoringProperties)).BeginInit();
             this.SuspendLayout();
             // 
             // comboBoxDevTypes
@@ -94,36 +103,27 @@
             this.treeViewDepartments.TabIndex = 3;
             this.treeViewDepartments.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewDepartments_AfterCheck);
             // 
-            // label3
+            // buttonSearch
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(4, 173);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(116, 13);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Характеристики узла";
+            this.buttonSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSearch.Location = new System.Drawing.Point(563, 465);
+            this.buttonSearch.Name = "buttonSearch";
+            this.buttonSearch.Size = new System.Drawing.Size(75, 23);
+            this.buttonSearch.TabIndex = 6;
+            this.buttonSearch.Text = "Поиск";
+            this.buttonSearch.UseVisualStyleBackColor = true;
+            this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
             // 
-            // button1
+            // buttonCancel
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(563, 465);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Поиск";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(644, 465);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 7;
-            this.button2.Text = "Отмена";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCancel.Location = new System.Drawing.Point(644, 465);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancel.TabIndex = 7;
+            this.buttonCancel.Text = "Отмена";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonClose_Click);
             // 
             // splitContainer1
             // 
@@ -140,22 +140,158 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
             this.splitContainer1.Panel2.Controls.Add(this.label6);
             this.splitContainer1.Panel2.Controls.Add(this.textBoxInventoryNumber);
             this.splitContainer1.Panel2.Controls.Add(this.label5);
             this.splitContainer1.Panel2.Controls.Add(this.textBoxSerialNumber);
             this.splitContainer1.Panel2.Controls.Add(this.label4);
             this.splitContainer1.Panel2.Controls.Add(this.textBoxDeviceName);
-            this.splitContainer1.Panel2.Controls.Add(this.button4);
-            this.splitContainer1.Panel2.Controls.Add(this.button3);
-            this.splitContainer1.Panel2.Controls.Add(this.dataGridView1);
             this.splitContainer1.Panel2.Controls.Add(this.comboBoxDevTypes);
             this.splitContainer1.Panel2.Controls.Add(this.label1);
-            this.splitContainer1.Panel2.Controls.Add(this.label3);
             this.splitContainer1.Size = new System.Drawing.Size(714, 452);
             this.splitContainer1.SplitterDistance = 357;
             this.splitContainer1.TabIndex = 8;
             this.splitContainer1.TabStop = false;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Controls.Add(this.tabPageNodeProperties);
+            this.tabControl1.Controls.Add(this.tabPageMonitoringProperties);
+            this.tabControl1.Location = new System.Drawing.Point(3, 176);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(347, 273);
+            this.tabControl1.TabIndex = 14;
+            // 
+            // tabPageNodeProperties
+            // 
+            this.tabPageNodeProperties.Controls.Add(this.buttonAddNodeProperty);
+            this.tabPageNodeProperties.Controls.Add(this.dataGridViewNodeProperties);
+            this.tabPageNodeProperties.Controls.Add(this.buttonRemoveNodeProperty);
+            this.tabPageNodeProperties.Location = new System.Drawing.Point(4, 22);
+            this.tabPageNodeProperties.Name = "tabPageNodeProperties";
+            this.tabPageNodeProperties.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageNodeProperties.Size = new System.Drawing.Size(339, 247);
+            this.tabPageNodeProperties.TabIndex = 0;
+            this.tabPageNodeProperties.Text = "Характеристики";
+            this.tabPageNodeProperties.UseVisualStyleBackColor = true;
+            // 
+            // buttonAddNodeProperty
+            // 
+            this.buttonAddNodeProperty.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAddNodeProperty.Location = new System.Drawing.Point(179, 218);
+            this.buttonAddNodeProperty.Name = "buttonAddNodeProperty";
+            this.buttonAddNodeProperty.Size = new System.Drawing.Size(75, 23);
+            this.buttonAddNodeProperty.TabIndex = 5;
+            this.buttonAddNodeProperty.Text = "+";
+            this.buttonAddNodeProperty.UseVisualStyleBackColor = true;
+            this.buttonAddNodeProperty.Click += new System.EventHandler(this.buttonAddNodeProperty_Click);
+            // 
+            // dataGridViewNodeProperties
+            // 
+            this.dataGridViewNodeProperties.AllowUserToAddRows = false;
+            this.dataGridViewNodeProperties.AllowUserToDeleteRows = false;
+            this.dataGridViewNodeProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewNodeProperties.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewNodeProperties.Location = new System.Drawing.Point(3, 3);
+            this.dataGridViewNodeProperties.Name = "dataGridViewNodeProperties";
+            this.dataGridViewNodeProperties.ReadOnly = true;
+            this.dataGridViewNodeProperties.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewNodeProperties.Size = new System.Drawing.Size(333, 211);
+            this.dataGridViewNodeProperties.TabIndex = 4;
+            this.dataGridViewNodeProperties.SelectionChanged += new System.EventHandler(this.dataGridViewNodeProperties_SelectionChanged);
+            this.dataGridViewNodeProperties.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridViewNodeProperties_KeyDown);
+            // 
+            // buttonRemoveNodeProperty
+            // 
+            this.buttonRemoveNodeProperty.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRemoveNodeProperty.Enabled = false;
+            this.buttonRemoveNodeProperty.Location = new System.Drawing.Point(258, 218);
+            this.buttonRemoveNodeProperty.Name = "buttonRemoveNodeProperty";
+            this.buttonRemoveNodeProperty.Size = new System.Drawing.Size(75, 23);
+            this.buttonRemoveNodeProperty.TabIndex = 6;
+            this.buttonRemoveNodeProperty.Text = "-";
+            this.buttonRemoveNodeProperty.UseVisualStyleBackColor = true;
+            this.buttonRemoveNodeProperty.Click += new System.EventHandler(this.buttonRemoveNodeProperty_Click);
+            // 
+            // tabPageMonitoringProperties
+            // 
+            this.tabPageMonitoringProperties.Controls.Add(this.buttonAddMonitoringProperty);
+            this.tabPageMonitoringProperties.Controls.Add(this.dataGridViewMonitoringProperties);
+            this.tabPageMonitoringProperties.Controls.Add(this.buttonRemoveMonitoringProperty);
+            this.tabPageMonitoringProperties.Location = new System.Drawing.Point(4, 22);
+            this.tabPageMonitoringProperties.Name = "tabPageMonitoringProperties";
+            this.tabPageMonitoringProperties.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageMonitoringProperties.Size = new System.Drawing.Size(339, 247);
+            this.tabPageMonitoringProperties.TabIndex = 1;
+            this.tabPageMonitoringProperties.Text = "Мониторинг";
+            this.tabPageMonitoringProperties.UseVisualStyleBackColor = true;
+            // 
+            // buttonAddMonitoringProperty
+            // 
+            this.buttonAddMonitoringProperty.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAddMonitoringProperty.Location = new System.Drawing.Point(179, 218);
+            this.buttonAddMonitoringProperty.Name = "buttonAddMonitoringProperty";
+            this.buttonAddMonitoringProperty.Size = new System.Drawing.Size(75, 23);
+            this.buttonAddMonitoringProperty.TabIndex = 8;
+            this.buttonAddMonitoringProperty.Text = "+";
+            this.buttonAddMonitoringProperty.UseVisualStyleBackColor = true;
+            this.buttonAddMonitoringProperty.Click += new System.EventHandler(this.buttonAddMonitoringProperty_Click);
+            // 
+            // dataGridViewMonitoringProperties
+            // 
+            this.dataGridViewMonitoringProperties.AllowUserToAddRows = false;
+            this.dataGridViewMonitoringProperties.AllowUserToDeleteRows = false;
+            this.dataGridViewMonitoringProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewMonitoringProperties.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewMonitoringProperties.Location = new System.Drawing.Point(3, 3);
+            this.dataGridViewMonitoringProperties.Name = "dataGridViewMonitoringProperties";
+            this.dataGridViewMonitoringProperties.ReadOnly = true;
+            this.dataGridViewMonitoringProperties.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewMonitoringProperties.Size = new System.Drawing.Size(333, 211);
+            this.dataGridViewMonitoringProperties.TabIndex = 7;
+            this.dataGridViewMonitoringProperties.SelectionChanged += new System.EventHandler(this.dataGridViewMonitoringProperties_SelectionChanged);
+            // 
+            // buttonRemoveMonitoringProperty
+            // 
+            this.buttonRemoveMonitoringProperty.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRemoveMonitoringProperty.Enabled = false;
+            this.buttonRemoveMonitoringProperty.Location = new System.Drawing.Point(258, 218);
+            this.buttonRemoveMonitoringProperty.Name = "buttonRemoveMonitoringProperty";
+            this.buttonRemoveMonitoringProperty.Size = new System.Drawing.Size(75, 23);
+            this.buttonRemoveMonitoringProperty.TabIndex = 9;
+            this.buttonRemoveMonitoringProperty.Text = "-";
+            this.buttonRemoveMonitoringProperty.UseVisualStyleBackColor = true;
+            this.buttonRemoveMonitoringProperty.Click += new System.EventHandler(this.buttonRemoveMonitoringProperty_Click);
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(3, 134);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(111, 13);
+            this.label6.TabIndex = 13;
+            this.label6.Text = "Инвентарный номер";
+            // 
+            // textBoxInventoryNumber
+            // 
+            this.textBoxInventoryNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxInventoryNumber.Location = new System.Drawing.Point(3, 150);
+            this.textBoxInventoryNumber.MaxLength = 100;
+            this.textBoxInventoryNumber.Name = "textBoxInventoryNumber";
+            this.textBoxInventoryNumber.Size = new System.Drawing.Size(346, 20);
+            this.textBoxInventoryNumber.TabIndex = 3;
             // 
             // label5
             // 
@@ -199,87 +335,31 @@
             this.textBoxDeviceName.Size = new System.Drawing.Size(346, 20);
             this.textBoxDeviceName.TabIndex = 1;
             // 
-            // button4
-            // 
-            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(275, 423);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 6;
-            this.button4.Text = "-";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // button3
-            // 
-            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(194, 423);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 5;
-            this.button3.Text = "+";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(3, 191);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(347, 226);
-            this.dataGridView1.TabIndex = 4;
-            this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
-            this.dataGridView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
-            // 
-            // label6
-            // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(3, 134);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(111, 13);
-            this.label6.TabIndex = 13;
-            this.label6.Text = "Инвентарный номер";
-            // 
-            // textBoxInventoryNumber
-            // 
-            this.textBoxInventoryNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxInventoryNumber.Location = new System.Drawing.Point(3, 150);
-            this.textBoxInventoryNumber.MaxLength = 100;
-            this.textBoxInventoryNumber.Name = "textBoxInventoryNumber";
-            this.textBoxInventoryNumber.Size = new System.Drawing.Size(346, 20);
-            this.textBoxInventoryNumber.TabIndex = 3;
-            // 
             // SearchFormSt1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(731, 500);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.buttonSearch);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SearchFormSt1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Поиск";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.SearchFormSt1_Load);
+            this.Shown += new System.EventHandler(this.SearchFormSt1_Shown);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPageNodeProperties.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewNodeProperties)).EndInit();
+            this.tabPageMonitoringProperties.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMonitoringProperties)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -289,19 +369,24 @@
 		private System.Windows.Forms.ComboBox comboBoxDevTypes;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.TreeView treeViewDepartments;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TreeView treeViewDepartments;
+		private System.Windows.Forms.Button buttonSearch;
+		private System.Windows.Forms.Button buttonCancel;
 		private System.Windows.Forms.SplitContainer splitContainer1;
-		private System.Windows.Forms.Button button4;
-		private System.Windows.Forms.Button button3;
-		private System.Windows.Forms.DataGridView dataGridView1;
+		private System.Windows.Forms.Button buttonRemoveNodeProperty;
+		private System.Windows.Forms.Button buttonAddNodeProperty;
+		private System.Windows.Forms.DataGridView dataGridViewNodeProperties;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.TextBox textBoxDeviceName;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBoxSerialNumber;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBoxInventoryNumber;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPageNodeProperties;
+        private System.Windows.Forms.TabPage tabPageMonitoringProperties;
+        private System.Windows.Forms.Button buttonAddMonitoringProperty;
+        private System.Windows.Forms.DataGridView dataGridViewMonitoringProperties;
+        private System.Windows.Forms.Button buttonRemoveMonitoringProperty;
 	}
 }

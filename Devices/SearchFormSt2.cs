@@ -9,7 +9,7 @@ namespace Devices
 	{
 		private DevicesDatabase Db { get; set; }
 		public int DeviceTypeId { get; set; }
-		public List<SearchParameter> ParamList { get; set; }
+		public List<SearchNodeParameter> ParamList { get; set; }
 
 		public SearchFormSt2()
 		{
@@ -158,46 +158,8 @@ namespace Devices
 			}
 			value = ConvertValue(value, comboBoxOperator.Text,
 				((DeviceParametersComboboxItem)comboBoxDeviceParameters.SelectedItem).ParameterType.ToLower());
-            ParamList.Add(new SearchParameter(parameterId, deviceName, parameterName, parameterType, operation, value));
+            ParamList.Add(new SearchNodeParameter(parameterId, deviceName, parameterName, parameterType, operation, value));
 			Close();
-		}
-	}
-
-	public class DeviceParametersComboboxItem
-	{
-		public int MetaNodeId { get; set; }
-		public string ParameterName { get; set; }
-		public string ParameterType { get; set; }
-
-		public DeviceParametersComboboxItem(int metaNodeId, string parameterName, string parameterType)
-		{
-			MetaNodeId = metaNodeId;
-			ParameterName = parameterName;
-			ParameterType = parameterType;
-		}
-	}
-
-	public class SearchParameter
-	{
-		public int ParameterId { get; set; }
-		public string DeviceName { get; set; }
-		public string ParameterName { get; set; }
-		public string Operation { get; set; }
-		public string ParameterValue { get; set; }
-        public string ParameterType { get; set; }
-
-		public SearchParameter()
-		{
-		}
-
-        public SearchParameter(int parameterId, string deviceName, string parameterName, string parameterType, string operation, string parameterValue)
-		{
-			ParameterId = parameterId;
-			Operation = operation;
-			ParameterValue = parameterValue;
-			ParameterName = parameterName;
-			DeviceName = deviceName;
-		    ParameterType = parameterType;
 		}
 	}
 }

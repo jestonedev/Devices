@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
-using System.Text.RegularExpressions;
+using System.Text;
 
 namespace MonitoringUpdater
 {
@@ -63,7 +62,7 @@ namespace MonitoringUpdater
         private static IEnumerable<MonitoringProperty> LoadProperties(string fileName)
         {
             var properties = new List<MonitoringProperty>();
-            using (var reader = new StreamReader(fileName))
+            using (var reader = new StreamReader(fileName, Encoding.GetEncoding(866)))
             {
                 while (!reader.EndOfStream)
                 {
