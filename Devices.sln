@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reporting", "Reporting\Repo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launcher", "Launcher\Launcher.csproj", "{34274E4E-6DBB-4B1F-8C73-F355C9BA63C4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonitoringUpdater", "MonitoringUpdater\MonitoringUpdater.csproj", "{C0947B8E-AADD-4A3F-8EAC-638EE5071685}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{34274E4E-6DBB-4B1F-8C73-F355C9BA63C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34274E4E-6DBB-4B1F-8C73-F355C9BA63C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34274E4E-6DBB-4B1F-8C73-F355C9BA63C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0947B8E-AADD-4A3F-8EAC-638EE5071685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0947B8E-AADD-4A3F-8EAC-638EE5071685}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0947B8E-AADD-4A3F-8EAC-638EE5071685}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0947B8E-AADD-4A3F-8EAC-638EE5071685}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

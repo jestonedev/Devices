@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using System.Drawing;
 
 namespace Devices
@@ -24,31 +20,31 @@ namespace Devices
     //здесь были изменения
 	public class TreeNodesHelper
 	{
-		public static bool AddNode(TreeNode new_node, TreeNodeCollection current, TreeNodeCollection root, int ParentNodeID)
+		public static bool AddNode(TreeNode newNode, TreeNodeCollection current, TreeNodeCollection root, int parentNodeId)
 		{           
             //if (ParentNodeID == 0 || (root.Count == 0 || !ContainsParentAmongChilds(root, ParentNodeID)))
-            if (ParentNodeID == 0)
+            if (parentNodeId == 0)
 			{
-				root.Add(new_node);                
+				root.Add(newNode);                
 				return true;
 			}
 			foreach (TreeNode node in current)
 			{
-				if ((((NodeProperty)node.Tag).NodeID == ParentNodeID) &&
+				if ((((NodeProperty)node.Tag).NodeID == parentNodeId) &&
 				   ((((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DepartmentNode) ||
 					(((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DeviceComplexParameter)))
 				{                    
-					node.Nodes.Add(new_node);
-				    if (((NodeProperty) new_node.Tag).NodeType != NodeTypeEnum.DeviceNode) return true;
-				    var tmp_node = new_node.Parent;
-				    while (tmp_node != null)
+					node.Nodes.Add(newNode);
+				    if (((NodeProperty) newNode.Tag).NodeType != NodeTypeEnum.DeviceNode) return true;
+				    var tmpNode = newNode.Parent;
+				    while (tmpNode != null)
 				    {
-				        tmp_node.ForeColor = Color.DarkBlue;
-				        tmp_node = tmp_node.Parent;
+				        tmpNode.ForeColor = Color.DarkBlue;
+				        tmpNode = tmpNode.Parent;
 				    }
 				    return true;
 				}
-			    var ok = AddNode(new_node, node.Nodes, root, ParentNodeID);
+			    var ok = AddNode(newNode, node.Nodes, root, parentNodeId);
 			    if (ok)
 			        return true;
 			}
@@ -62,13 +58,10 @@ namespace Devices
             {
                 if ((((NodeProperty)node.Tag).NodeID == ParentNodeID))
                     return true;
-                else
+                if (node.Nodes != null)
                 {
-                    if (node.Nodes != null)
-                    {
-                        if (ContainsParentAmongChilds(node.Nodes, ParentNodeID) == true)
-                            return true;
-                    }                   
+                    if (ContainsParentAmongChilds(node.Nodes, ParentNodeID) == true)
+                        return true;
                 }
             }
             return false;

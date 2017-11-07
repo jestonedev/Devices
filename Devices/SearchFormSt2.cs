@@ -25,10 +25,10 @@ namespace Devices
 			    var node = new TreeNode
 			    {
 			        Text = deviceInfoMeta.NodeName,
-			        Tag = new NodeProperty(deviceInfoMeta.NodeID, NodeTypeEnum.DeviceComplexParameter)
+			        Tag = new NodeProperty(deviceInfoMeta.NodeId, NodeTypeEnum.DeviceComplexParameter)
 			    };
 			    TreeNodesHelper.AddNode(node, treeViewDeviceInfo.Nodes,
-					treeViewDeviceInfo.Nodes, deviceInfoMeta.ParentNodeID);
+					treeViewDeviceInfo.Nodes, deviceInfoMeta.ParentNodeId);
 			}
 			treeViewDeviceInfo.ExpandAll();
 			comboBoxDeviceParameters.DisplayMember = "ParameterName";
@@ -76,7 +76,7 @@ namespace Devices
 					comboBoxOperator.Items.AddRange(new object[] { "=", "<>", ">", ">=", "<", "<=" });
 					break;
 				case "combobox":
-					comboBoxValue.DataSource = Db.GetValuesByMetaNodeID(
+					comboBoxValue.DataSource = Db.GetValuesByMetaNodeId(
 						((DeviceParametersComboboxItem)comboBoxDeviceParameters.SelectedItem).MetaNodeId);
 					comboBoxValue.DisplayMember = "Value";
 					numericUpDownValue.Visible = false;

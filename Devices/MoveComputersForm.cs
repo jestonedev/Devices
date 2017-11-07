@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Devices
@@ -41,8 +36,8 @@ namespace Devices
                 {
                     TreeNode node = new TreeNode();
                     node.Text = department.NodeName;
-                    node.Tag = new NodeProperty(department.NodeID, NodeTypeEnum.DepartmentNode);
-                    bool inserted = TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, department.ParentNodeID);
+                    node.Tag = new NodeProperty(department.NodeId, NodeTypeEnum.DepartmentNode);
+                    bool inserted = TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, department.ParentNodeId);
                     if (!inserted)
                         cache.Add(department);
                 }
@@ -62,8 +57,8 @@ namespace Devices
             {
                 TreeNode node = new TreeNode();
                 node.Text = device.NodeName;
-                node.Tag = new NodeProperty(device.NodeID, NodeTypeEnum.DeviceNode);
-                TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, device.ParentNodeID);
+                node.Tag = new NodeProperty(device.NodeId, NodeTypeEnum.DeviceNode);
+                TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, device.ParentNodeId);
             }
             treeViewComputers.Sort();
             if (treeViewComputers.Nodes.Count > 0)

@@ -95,6 +95,8 @@
     <Compile Include="ComputerParamChangeForm.Designer.cs">
       <DependentUpon>ComputerParamChangeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConditionType.cs" />
+    <Compile Include="Device.cs" />
     <Compile Include="DevicesDatabase.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -108,6 +110,7 @@
     <Compile Include="InstallationsInfoForm.Designer.cs">
       <DependentUpon>InstallationsInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MonitoringWarningCondition.cs" />
     <Compile Include="MoveComputersForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +118,7 @@
       <DependentUpon>MoveComputersForm.cs</DependentUpon>
     </Compile>
     <Compile Include="NodeProperty.cs" />
+    <Compile Include="PeripheryType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AddDepartmentAndPCForm.resx">

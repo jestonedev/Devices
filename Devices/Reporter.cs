@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
@@ -31,34 +29,34 @@ namespace Devices
 				"</table:table-row>";
 		}
 
-		private bool CopyDirectory(string DirectoryFrom, string DirectoryTo)
+		private bool CopyDirectory(string directoryFrom, string directoryTo)
 		{
-			string[] files = Directory.GetFiles(DirectoryFrom);
-			string[] direcotries = Directory.GetDirectories(DirectoryFrom);
-			for (int i = 0; i < files.Length; i++)
+			var files = Directory.GetFiles(directoryFrom);
+			var direcotries = Directory.GetDirectories(directoryFrom);
+			for (var i = 0; i < files.Length; i++)
 			{
-				string fileName = Path.GetFileName(files[i]);
-				File.Copy(DirectoryFrom + "\\" + fileName, DirectoryTo + "\\" + fileName);
+				var fileName = Path.GetFileName(files[i]);
+				File.Copy(directoryFrom + "\\" + fileName, directoryTo + "\\" + fileName);
 			}
-			for (int i = 0; i < direcotries.Length; i++)
+			for (var i = 0; i < direcotries.Length; i++)
 			{
-				string directoryName = Path.GetFileName(direcotries[i]);
-				Directory.CreateDirectory(DirectoryTo + "\\" + directoryName);
-				CopyDirectory(DirectoryFrom + "\\" + directoryName, DirectoryTo + "\\" + directoryName);
+				var directoryName = Path.GetFileName(direcotries[i]);
+				Directory.CreateDirectory(directoryTo + "\\" + directoryName);
+				CopyDirectory(directoryFrom + "\\" + directoryName, directoryTo + "\\" + directoryName);
 			}
 			return true;
 		}
 
-		private bool DeleteDirectory(string DirectoryName)
+		private bool DeleteDirectory(string directoryName)
 		{
-			Directory.Delete(DirectoryName, true);
+			Directory.Delete(directoryName, true);
 			return true;
 		}
 
 		public void DevicesReport(List<Device> devices)
 		{
-			string rows = "";
-			for (int i = 0; i < devices.Count; i++)
+			var rows = "";
+			for (var i = 0; i < devices.Count; i++)
 			{
 				rows += GetOdtDeviceReportRow();
 				rows = rows.Replace("${n}", (i+1).ToString());
@@ -69,34 +67,40 @@ namespace Devices
 			}
 
 			//Скопировать папку отчета во временную папку
-			string TempDirecotry = Path.GetTempPath() + Guid.NewGuid().ToString();
-			Directory.CreateDirectory(TempDirecotry);
-			string ReportDirecotry = Application.StartupPath + "\\dev_report";
-			if (!CopyDirectory(ReportDirecotry, TempDirecotry))
+			var tempDirecotry = Path.GetTempPath() + Guid.NewGuid();
+			Directory.CreateDirectory(tempDirecotry);
+			var reportDirecotry = Application.StartupPath + "\\dev_report";
+			if (!CopyDirectory(reportDirecotry, tempDirecotry))
 				throw new ApplicationException("Не удалось скопировать каталог отчета во временную папку");
 			//Произвести замену шаблона
-			string xml_path = TempDirecotry+"\\content.xml";
-			StreamReader sr = new StreamReader(xml_path);
-			string xml = sr.ReadToEnd();
+			var xmlPath = tempDirecotry+"\\content.xml";
+			var sr = new StreamReader(xmlPath);
+			var xml = sr.ReadToEnd();
 			xml = xml.Replace("${row}", rows);
 			sr.Close();
-			StreamWriter sw = new StreamWriter(xml_path, false);
+			var sw = new StreamWriter(xmlPath, false);
 			sw.Write(xml);
 			sw.Flush();
 			sw.Close();
-			ProcessStartInfo psi = new ProcessStartInfo(Application.StartupPath + "\\7z.exe");
-			psi.Arguments = "a -tzip -r \""+TempDirecotry+".odt\" \""+TempDirecotry+"\\*\"";
-			psi.UseShellExecute = false;
-			psi.CreateNoWindow = true;
-			Process proc = Process.Start(psi);
+		    var psi = new ProcessStartInfo(Application.StartupPath + "\\7z.exe")
+		    {
+		        Arguments = "a -tzip -r \"" + tempDirecotry + ".odt\" \"" + tempDirecotry + "\\*\"",
+		        UseShellExecute = false,
+		        CreateNoWindow = true
+		    };
+		    var proc = Process.Start(psi);
+		    if (proc == null)
+		        throw new ApplicationException("Не удалость запустить процесс формирования отчета");
 			if (!proc.WaitForExit(20000))
 				throw new ApplicationException("Время генерации отчета истекло");
-			if (!DeleteDirectory(TempDirecotry))
+			if (!DeleteDirectory(tempDirecotry))
 				throw new ApplicationException("Не удалось очистить временные файлы");
-			ProcessStartInfo psi2 = new ProcessStartInfo("explorer.exe");
-			psi2.Arguments = "\""+TempDirecotry+".odt\"";
-			psi2.UseShellExecute = true;
-			Process.Start(psi2);
+		    var psi2 = new ProcessStartInfo("explorer.exe")
+		    {
+		        Arguments = "\"" + tempDirecotry + ".odt\"",
+		        UseShellExecute = true
+		    };
+		    Process.Start(psi2);
 		}
 	}
 }

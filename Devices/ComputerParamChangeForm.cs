@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Devices
@@ -39,7 +33,7 @@ namespace Devices
 				case "combobox": 
 					comboBoxParam.Visible = true;
 					DevicesDatabase db = new DevicesDatabase();
-					comboBoxParam.DataSource = db.GetValuesByMetaNodeID(AssocMetaNodeID);
+					comboBoxParam.DataSource = db.GetValuesByMetaNodeId(AssocMetaNodeID);
 					comboBoxParam.DisplayMember = "Value";
 					if (NodeRealID != -1)
 						comboBoxParam.SelectedIndex = comboBoxParam.FindString(Value.ToString());

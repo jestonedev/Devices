@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Devices
@@ -37,9 +34,9 @@ namespace Devices
 			{
 				TreeNode node = new TreeNode();
 				node.Text = DeviceInfoMeta.NodeName;
-				node.Tag = new NodeProperty(DeviceInfoMeta.NodeID, NodeTypeEnum.DeviceComplexParameter);
+				node.Tag = new NodeProperty(DeviceInfoMeta.NodeId, NodeTypeEnum.DeviceComplexParameter);
 				TreeNodesHelper.AddNode(node, treeViewDeviceInfo.Nodes,
-					treeViewDeviceInfo.Nodes, DeviceInfoMeta.ParentNodeID);
+					treeViewDeviceInfo.Nodes, DeviceInfoMeta.ParentNodeId);
 			}
 			list.Clear();	
 			if (searchInArchive)
@@ -50,9 +47,9 @@ namespace Devices
 			{
 				TreeNode node = new TreeNode();
 				node.Text = DeviceInfo.NodeName;
-				node.Tag = new NodeProperty(DeviceInfo.NodeID, NodeTypeEnum.DeviceSimpleParameter);
+				node.Tag = new NodeProperty(DeviceInfo.NodeId, NodeTypeEnum.DeviceSimpleParameter);
 				TreeNodesHelper.AddNode(node, treeViewDeviceInfo.Nodes,
-					treeViewDeviceInfo.Nodes, DeviceInfo.ParentNodeID);
+					treeViewDeviceInfo.Nodes, DeviceInfo.ParentNodeId);
 			}
 			treeViewDeviceInfo.ExpandAll();
 		}

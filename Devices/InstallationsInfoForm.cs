@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+﻿using System.Data;
 using System.Windows.Forms;
 
 namespace Devices
@@ -20,7 +14,7 @@ namespace Devices
 
 		internal void InitializeForm(DevicesDatabase db)
 		{	
-			DataView dv = db.GetInstallationsByComputerID(DeviceID);
+			DataView dv = db.GetInstallationsByComputerId(DeviceID);
 			if (dv.Table == null)
 				return;
 			dataGridView1.DataSource = dv;

@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Devices
 {
 	public partial class SearchFormSt1 : Form
 	{
-		private DevicesDatabase db { get; set; }
-		public SearchParametersGroup spg { get; set; }
+		private DevicesDatabase Db { get; set; }
+		public SearchParametersGroup Spg { get; set; }
 		public bool CancelSearch { get; set; }
-		private SearchParametersGroup spgNew { get; set; }
+		private SearchParametersGroup SpgNew { get; set; }
 		public SearchFormSt1()
 		{
 			InitializeComponent();
@@ -45,9 +40,9 @@ namespace Devices
                 };
 		}
 
-		private void InitDataGridView(object DataSource)
+		private void InitDataGridView()
 		{
-		    var bs = new BindingSource {DataSource = spgNew.parameters};
+		    var bs = new BindingSource {DataSource = SpgNew.Parameters};
 		    dataGridView1.DataSource = bs;
 			dataGridView1.Columns[0].Visible = false;
 			dataGridView1.Columns[1].HeaderText = @"Устройство";
@@ -65,19 +60,21 @@ namespace Devices
             CancelSearch = true;
 			//Загрузка департаментов в дерево
 			treeViewDepartments.Nodes.Clear();
-			db = new DevicesDatabase();
-			spgNew = new SearchParametersGroup();
-			var list = db.GetDepartments(spgNew);
+			Db = new DevicesDatabase();
+			SpgNew = new SearchParametersGroup();
+			var list = Db.GetDepartments(SpgNew);
 			foreach (var department in list)
 			{
-				var node = new TreeNode();
-				node.Text = department.NodeName;
-				node.Tag = new NodeProperty(department.NodeID, NodeTypeEnum.DepartmentNode);
-				TreeNodesHelper.AddNode(node, treeViewDepartments.Nodes, treeViewDepartments.Nodes, department.ParentNodeID);
+			    var node = new TreeNode
+			    {
+			        Text = department.NodeName,
+			        Tag = new NodeProperty(department.NodeId, NodeTypeEnum.DepartmentNode)
+			    };
+			    TreeNodesHelper.AddNode(node, treeViewDepartments.Nodes, treeViewDepartments.Nodes, department.ParentNodeId);
 			}
 
 			//Загрузка типов узлов в combobox
-			var view = db.GetDeviceTypes()	;
+			var view = Db.GetDeviceTypes()	;
 			comboBoxDevTypes.DisplayMember = "DeviceType";
 			for (var i = 0; i < view.Table.Rows.Count; i++)
 			{
@@ -85,7 +82,7 @@ namespace Devices
 					Convert.ToInt32(view.Table.Rows[i]["ID Device Type"])));
 			}
 			comboBoxDevTypes.SelectedIndex = 0;
-			InitDataGridView(spgNew.parameters);
+			InitDataGridView();
 		}
 
 		private void treeViewDepartments_AfterCheck(object sender, TreeViewEventArgs e)
@@ -98,17 +95,19 @@ namespace Devices
 
 		private void comboBoxDevTypes_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			spgNew = new SearchParametersGroup();
-			InitDataGridView(spgNew.parameters);
+			SpgNew = new SearchParametersGroup();
+			InitDataGridView();
 		}
 
 		private void button3_Click(object sender, EventArgs e)
 		{
-			var sfs2 = new SearchFormSt2();
-			sfs2.DeviceTypeId = ((DeviceTypeComboboxItem)comboBoxDevTypes.SelectedItem).DeviceTypeID;
-			sfs2.ParamList = spgNew.parameters;
-			sfs2.ShowDialog();
-			InitDataGridView(spgNew.parameters);
+		    var sfs2 = new SearchFormSt2
+		    {
+		        DeviceTypeId = ((DeviceTypeComboboxItem) comboBoxDevTypes.SelectedItem).DeviceTypeId,
+		        ParamList = SpgNew.Parameters
+		    };
+		    sfs2.ShowDialog();
+			InitDataGridView();
 		}
 
 		private void button2_Click(object sender, EventArgs e)
@@ -128,17 +127,17 @@ namespace Devices
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			spgNew.deviceTypeID = ((DeviceTypeComboboxItem)comboBoxDevTypes.SelectedItem).DeviceTypeID;
-			spgNew.deviceName = textBoxDeviceName.Text.Trim();
-            spgNew.serialNumber = textBoxSerialNumber.Text.Trim();
-            spgNew.inventoryNumber = textBoxInventoryNumber.Text.Trim();
-			FillDepartmentIDs(spgNew.departmentIDs, treeViewDepartments.Nodes);
-			spg.departmentIDs = spgNew.departmentIDs;
-			spg.deviceTypeID = spgNew.deviceTypeID;
-			spg.parameters = spgNew.parameters;
-			spg.deviceName = spgNew.deviceName;
-            spg.serialNumber = spgNew.serialNumber;
-            spg.inventoryNumber = spgNew.inventoryNumber;
+			SpgNew.DeviceTypeId = ((DeviceTypeComboboxItem)comboBoxDevTypes.SelectedItem).DeviceTypeId;
+			SpgNew.DeviceName = textBoxDeviceName.Text.Trim();
+            SpgNew.SerialNumber = textBoxSerialNumber.Text.Trim();
+            SpgNew.InventoryNumber = textBoxInventoryNumber.Text.Trim();
+			FillDepartmentIDs(SpgNew.DepartmentIDs, treeViewDepartments.Nodes);
+			Spg.DepartmentIDs = SpgNew.DepartmentIDs;
+			Spg.DeviceTypeId = SpgNew.DeviceTypeId;
+			Spg.Parameters = SpgNew.Parameters;
+			Spg.DeviceName = SpgNew.DeviceName;
+            Spg.SerialNumber = SpgNew.SerialNumber;
+            Spg.InventoryNumber = SpgNew.InventoryNumber;
 			CancelSearch = false;
 			Close();
 		}
@@ -150,16 +149,16 @@ namespace Devices
 				return;
 			foreach(DataGridViewRow dgvr in dataGridView1.SelectedRows)
 			{
-				for (var i = 0; i < spgNew.parameters.Count; i++)
+				for (var i = 0; i < SpgNew.Parameters.Count; i++)
 				{
-					var sp = spgNew.parameters[i];
+					var sp = SpgNew.Parameters[i];
 				    if ((sp.ParameterId.ToString() != dgvr.Cells[0].Value.ToString()) ||
 				        (sp.ParameterName != dgvr.Cells[2].Value.ToString()) || 
                         (sp.Operation != dgvr.Cells[3].Value.ToString()) ||
 				        (sp.ParameterValue != dgvr.Cells[4].Value.ToString()) ||
                         (sp.ParameterType != dgvr.Cells[5].Value.ToString())) continue;
-				    spgNew.parameters.RemoveAt(i);
-				    InitDataGridView(spgNew.parameters);
+				    SpgNew.Parameters.RemoveAt(i);
+				    InitDataGridView();
 				    return;
 				}
 			}
@@ -180,20 +179,20 @@ namespace Devices
 
 	public class SearchParametersGroup
 	{
-		public List<SearchParameter> parameters { get; set; }
-		public List<int> departmentIDs { get; set; }
-		public int deviceTypeID { get; set; }
-        public string deviceName { get; set; }
-        public string serialNumber { get; set; }
-        public string inventoryNumber { get; set; }
+		public List<SearchParameter> Parameters { get; set; }
+		public List<int> DepartmentIDs { get; set; }
+		public int DeviceTypeId { get; set; }
+        public string DeviceName { get; set; }
+        public string SerialNumber { get; set; }
+        public string InventoryNumber { get; set; }
 
 		public SearchParametersGroup()
 		{
-			parameters = new List<SearchParameter>();
-			departmentIDs = new List<int>();
-			deviceName = "";
-            serialNumber = "";
-            inventoryNumber = "";
+			Parameters = new List<SearchParameter>();
+			DepartmentIDs = new List<int>();
+			DeviceName = "";
+            SerialNumber = "";
+            InventoryNumber = "";
 		}
 	}
 }

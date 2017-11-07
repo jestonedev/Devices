@@ -1,6 +1,6 @@
 ﻿namespace Devices
 {
-	partial class AddDepartmentAndPCForm
+	partial class AddDepartmentAndPcForm
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -188,7 +188,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBoxDevType);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "AddDepartmentAndPCForm";
+            this.Name = "AddDepartmentAndPcForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Добавить";
             this.ResumeLayout(false);
