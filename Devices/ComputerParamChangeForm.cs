@@ -6,18 +6,18 @@ namespace Devices
 	public partial class ComputerParamChangeForm : Form
 	{
 		public string ParamType { get; set; }
-		public int AssocMetaNodeID { get; set; }
-		public int NodeRealID { get; set; }
+		public int AssocMetaNodeId { get; set; }
+		public int NodeRealId { get; set; }
 		public object Value { get; set; }
 		public string ParamName { get; set; }
-		public bool isChanged { get; set; }
-		public int ParentNodeID { get; set; }
-		public int DeviceID { get; set; }
+		public bool IsChanged { get; set; }
+		public int ParentNodeId { get; set; }
+		public int DeviceId { get; set; }
 
 		public ComputerParamChangeForm()
 		{
 			InitializeComponent();
-			isChanged = false;
+			IsChanged = false;
 		}
 
 		public void InitForm()
@@ -27,31 +27,31 @@ namespace Devices
 			{
 				case "text":
 					textBoxParam.Visible = true;
-					if (NodeRealID != -1)
+					if (NodeRealId != -1)
 						textBoxParam.Text = (string)Value;
 					break;
 				case "combobox": 
 					comboBoxParam.Visible = true;
-					DevicesDatabase db = new DevicesDatabase();
-					comboBoxParam.DataSource = db.GetValuesByMetaNodeId(AssocMetaNodeID);
+					var db = new DevicesDatabase();
+					comboBoxParam.DataSource = db.GetValuesByMetaNodeId(AssocMetaNodeId);
 					comboBoxParam.DisplayMember = "Value";
-					if (NodeRealID != -1)
+					if (NodeRealId != -1)
 						comboBoxParam.SelectedIndex = comboBoxParam.FindString(Value.ToString());
 					break;
 				case "int":
 					numericUpDownParam.Visible = true;
-					if (NodeRealID != -1)
+					if (NodeRealId != -1)
 						numericUpDownParam.Value = Convert.ToInt32(Value);
 					break;
 				case "float":
 					numericUpDownParam.Visible = true;
 					numericUpDownParam.DecimalPlaces = 2;
-					if (NodeRealID != -1)
+					if (NodeRealId != -1)
 						numericUpDownParam.Value = Convert.ToDecimal(Value);
 					break;
 				default:
 					textBoxParam.Visible = true;
-					if (NodeRealID != -1)
+					if (NodeRealId != -1)
 						textBoxParam.Text = (string)Value;
 					break;
 			}
@@ -64,7 +64,7 @@ namespace Devices
 
 		private void buttonSave_Click(object sender, EventArgs e)
 		{
-			DevicesDatabase db = new DevicesDatabase();
+			var db = new DevicesDatabase();
 			switch (ParamType)
 			{
 				case "text":
@@ -79,15 +79,13 @@ namespace Devices
 				case "float":
 					Value = numericUpDownParam.Value;
 					break;
-				default: ;
-					break;
 			}
-			if (NodeRealID == -1)
-				db.InsertDeviceNodeValue(AssocMetaNodeID, ParentNodeID, DeviceID, Value.ToString());
+			if (NodeRealId == -1)
+				db.InsertDeviceNodeValue(AssocMetaNodeId, ParentNodeId, DeviceId, Value.ToString());
 			else
-				db.UpdateDeviceNodeValue(NodeRealID, Value.ToString());
+				db.UpdateDeviceNodeValue(NodeRealId, Value.ToString());
 			db.Dispose();
-			isChanged = true;
+			IsChanged = true;
 			Close();
 		}
 

@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace Devices
 {
@@ -15,7 +14,7 @@ namespace Devices
 
 		internal void InitializeForm(DevicesDatabase db)
 		{
-			DataView dv = db.GetRequests(SerialNumber, InventoryNumber);
+			var dv = db.GetRequests(SerialNumber, InventoryNumber);
 			if (dv.Table == null)
 				return;
             dataGridView1.AutoGenerateColumns = false;
@@ -35,7 +34,7 @@ namespace Devices
             textBoxDescription.DataBindings.Add("Text", dv, "Prim");
 
 			dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-			toolStripStatusLabel1.Text = "Всего заявок: " + dataGridView1.RowCount.ToString();
+			toolStripStatusLabel1.Text = @"Всего заявок: " + dataGridView1.RowCount;
 		}
 	}
 }

@@ -103,7 +103,7 @@ namespace Devices
 	    private void OpenDeviceInfo()
 		{
 	        if (((NodeProperty) treeViewComputers.SelectedNode.Tag).NodeType != NodeTypeEnum.DeviceNode) return;
-	        var compForm = new ComputerInfo {DeviceID = ((NodeProperty) treeViewComputers.SelectedNode.Tag).NodeID};
+	        var compForm = new ComputerInfo {DeviceId = ((NodeProperty) treeViewComputers.SelectedNode.Tag).NodeId};
 	        compForm.FillInfoTree();
 	        compForm.ShowDialog();
 		}
@@ -132,12 +132,12 @@ namespace Devices
 				var db = new DevicesDatabase();
 				if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType == NodeTypeEnum.DepartmentNode)
 				{
-					if (db.DeleteDepartment(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID))
+					if (db.DeleteDepartment(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeId))
 						treeViewComputers.SelectedNode.Remove();
 				}
 				else
 				{
-					if (db.DeleteDevice(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID))
+					if (db.DeleteDevice(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeId))
 					{
 						var tmpNode = treeViewComputers.SelectedNode.Parent;
 						if (tmpNode.Nodes.Count == 1)
@@ -215,7 +215,7 @@ namespace Devices
             dataGridViewMonitoring.Rows.Clear();
 			if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType == NodeTypeEnum.DeviceNode)
 			{
-				FillInfoTree(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID);
+				FillInfoTree(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeId);
 				открытьToolStripMenuItem.Enabled = true;
 				открытьСписокУстановленногоПОToolStripMenuItem.Enabled = true;
 				открытьСписокЗаявокToolStripMenuItem.Enabled = true;
@@ -234,19 +234,19 @@ namespace Devices
 			}
             if (((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeType == NodeTypeEnum.DepartmentNode)
             {
-                textBoxName.Text = Db.GetDepartmentInfo(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID);
+                textBoxName.Text = Db.GetDepartmentInfo(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeId);
                 textBoxType.Text = @"Департамент (отдел)";
             }
             else
             {
-                var dv = Db.GetDeviceGeneralInfo(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeID);
+                var dv = Db.GetDeviceGeneralInfo(((NodeProperty)treeViewComputers.SelectedNode.Tag).NodeId);
                 textBoxName.Text = dv[0]["Device Name"].ToString();
                 textBoxInventoryNumber.Text = dv[0]["InventoryNumber"].ToString();
                 textBoxSerialNumber.Text = dv[0]["SerialNumber"].ToString();
                 textBoxType.Text = dv[0]["Type"].ToString();
 
                 var monitoring =
-                    Db.GetDeviceMonitoringPropertiesInfo(((NodeProperty) treeViewComputers.SelectedNode.Tag).NodeID);
+                    Db.GetDeviceMonitoringPropertiesInfo(((NodeProperty) treeViewComputers.SelectedNode.Tag).NodeId);
                 var monitoringConditions = Db.GetMonitoringWarningConditions().ToList();
                 for (var i = 0; i < monitoring.Count; i++)
                 {
@@ -328,7 +328,7 @@ namespace Devices
 	    {
 	        var selectedNodeProperty = (NodeProperty) treeViewComputers.SelectedNode.Tag;
 	        Reload();
-	        SelectNodeByNodeId(treeViewComputers.Nodes, selectedNodeProperty.NodeID);
+	        SelectNodeByNodeId(treeViewComputers.Nodes, selectedNodeProperty.NodeId);
 	    }
 
 	    private void измененияТекущеToolStripMenuItem_Click(object sender, EventArgs e)
@@ -396,7 +396,7 @@ namespace Devices
 	    {
 	        if (((NodeProperty) treeViewComputers.SelectedNode.Tag).NodeType == NodeTypeEnum.DeviceNode)
 	        {
-	            var iif = new InstallationsInfoForm {DeviceID = ((NodeProperty) treeViewComputers.SelectedNode.Tag).NodeID};
+	            var iif = new InstallationsInfoForm {DeviceId = ((NodeProperty) treeViewComputers.SelectedNode.Tag).NodeId};
 	            iif.InitializeForm(Db);
 	            iif.ShowDialog();
 	            iif.Dispose();
@@ -431,7 +431,7 @@ namespace Devices
 	        if (((NodeProperty) treeViewComputers.SelectedNode.Tag).NodeType == NodeTypeEnum.DeviceNode)
 	        {
 	            var rf = new RequestsForm();
-	            var deviceId = ((NodeProperty) treeViewComputers.SelectedNode.Tag).NodeID;
+	            var deviceId = ((NodeProperty) treeViewComputers.SelectedNode.Tag).NodeId;
 	            rf.SerialNumber = Db.GetSerialNumberBy(deviceId, false);
 	            rf.InventoryNumber = Db.GetInventoryNumberBy(deviceId, false);
 	            rf.InitializeForm(Db);
@@ -450,7 +450,7 @@ namespace Devices
 	            var selectedNodeProperty = (NodeProperty) treeViewComputers.SelectedNode.Tag;
 	            Spg = new SearchParametersGroup();
 	            Reload();
-	            SelectNodeByNodeId(treeViewComputers.Nodes, selectedNodeProperty.NodeID);
+	            SelectNodeByNodeId(treeViewComputers.Nodes, selectedNodeProperty.NodeId);
 	        }
 	        else
 	        {
@@ -470,7 +470,7 @@ namespace Devices
 	        foreach (TreeNode node in nodes)
 	        {
 	            var nodeProperty = (NodeProperty) node.Tag;
-	            if (nodeProperty.NodeID == nodeId)
+	            if (nodeProperty.NodeId == nodeId)
 	            {
 	                treeViewComputers.SelectedNode = node;
 	                return true;
@@ -491,7 +491,7 @@ namespace Devices
 	            {
 	                var dev = new Device
 	                {
-	                    DeviceId = ((NodeProperty) node.Tag).NodeID, Name = node.Text, Department = department
+	                    DeviceId = ((NodeProperty) node.Tag).NodeId, Name = node.Text, Department = department
 	                };
 	                devices.Add(dev);
 	            }
@@ -521,14 +521,14 @@ namespace Devices
 	            return;
 	        if (treeViewComputers.SelectedNode.Parent == null)
 	            return;
-	        if (((NodeProperty) treeViewComputers.SelectedNode.Parent.Tag).NodeID <= 0)
+	        if (((NodeProperty) treeViewComputers.SelectedNode.Parent.Tag).NodeId <= 0)
 	            return;
 	        var node = (TreeNode) treeViewComputers.SelectedNode.Clone();
 	        var np = ((NodeProperty) treeViewComputers.SelectedNode.Tag);
 	        if (_mcf == null)
 	            _mcf = new MoveComputersForm(np);
 	        else
-	            _mcf.NP = np;
+	            _mcf.Np = np;
 	        _mcf.Text = @"Перемещение узла " + treeViewComputers.SelectedNode.Text;
 	        _mcf.Moved = false;
 	        _mcf.ShowDialog();
@@ -543,7 +543,7 @@ namespace Devices
 	                //Удалить в старом департаменте узел и добавить в новый
 	                treeViewComputers.SelectedNode.Remove();
 	                //Добавить узел в новое место
-	                TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, _mcf.NewID);
+	                TreeNodesHelper.AddNode(node, treeViewComputers.Nodes, treeViewComputers.Nodes, _mcf.NewId);
 	                treeViewComputers.Sort();
 	            }
 	        }
@@ -562,7 +562,7 @@ namespace Devices
 	        if (treeViewDeviceInfo.SelectedNode.Parent == null || treeViewDeviceInfo.SelectedNode.Parent.Text != @"Периферийные устройства")
 	            return;
 	        var rf = new RequestsForm();
-	        var id = ((NodeProperty) treeViewDeviceInfo.SelectedNode.Tag).NodeID;
+	        var id = ((NodeProperty) treeViewDeviceInfo.SelectedNode.Tag).NodeId;
 	        rf.SerialNumber = Db.GetSerialNumberBy(id, true);
 	        rf.InventoryNumber = Db.GetInventoryNumberBy(id, true);
 	        rf.InitializeForm(Db);
@@ -576,7 +576,7 @@ namespace Devices
 	            groupBoxPereferial.Visible = false;
 	        else
 	        {
-	            var id = ((NodeProperty) treeViewDeviceInfo.SelectedNode.Tag).NodeID;
+	            var id = ((NodeProperty) treeViewDeviceInfo.SelectedNode.Tag).NodeId;
 	            var dv = Db.GetDetailDeviceInfo(id);
 	            foreach (DataRowView row in dv)
 	            {

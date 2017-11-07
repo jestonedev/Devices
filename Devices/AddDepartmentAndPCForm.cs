@@ -26,17 +26,17 @@ namespace Devices
 			}
 			comboBoxDevType.SelectedIndex = 0;
 			//Инициализация формы на проведение изменений данных
-		    if (((NodeProperty) CurrentNode.Tag).NodeID < 0) return;
+		    if (((NodeProperty) CurrentNode.Tag).NodeId < 0) return;
 		    Text = @"Изменить";
 		    buttonAdd.Text = @"Изменить";
 		    if (((NodeProperty)CurrentNode.Tag).NodeType == NodeTypeEnum.DepartmentNode)
 		    {
-		        textBoxName.Text = _db.GetDepartmentInfo(((NodeProperty)CurrentNode.Tag).NodeID);
+		        textBoxName.Text = _db.GetDepartmentInfo(((NodeProperty)CurrentNode.Tag).NodeId);
 		        comboBoxDevType.SelectedIndex = 0;
 		    }
 		    else
 		    {
-		        var dv = _db.GetDeviceGeneralInfo(((NodeProperty)CurrentNode.Tag).NodeID);
+		        var dv = _db.GetDeviceGeneralInfo(((NodeProperty)CurrentNode.Tag).NodeId);
 		        textBoxName.Text = dv[0]["Device Name"].ToString();
 		        textBoxDescription.Text = dv[0]["Description"].ToString();
 		        textBoxInvenotryNumber.Text = dv[0]["InventoryNumber"].ToString();
@@ -65,16 +65,16 @@ namespace Devices
 
 		private void buttonAdd_Click(object sender, EventArgs e)
 		{
-			if (((NodeProperty)CurrentNode.Tag).NodeID == -1)
+			if (((NodeProperty)CurrentNode.Tag).NodeId == -1)
 			{
 				//Добавление нового узла
 			    var node = new TreeNode {Text = textBoxName.Text};
 			    int id;
 				if (ConvertNodeTypeIDToEnumID(((DeviceTypeComboboxItem)comboBoxDevType.SelectedItem).DeviceTypeId) == NodeTypeEnum.DepartmentNode)
-					id = _db.InsertDepartment(textBoxName.Text, ((NodeProperty)ParentNode.Tag).NodeID);
+					id = _db.InsertDepartment(textBoxName.Text, ((NodeProperty)ParentNode.Tag).NodeId);
 				else
 					id = _db.InsertDevice(textBoxName.Text, textBoxInvenotryNumber.Text, textBoxSerialNumber.Text, textBoxDescription.Text,
-						((NodeProperty)ParentNode.Tag).NodeID, ((DeviceTypeComboboxItem)comboBoxDevType.SelectedItem).DeviceTypeId);
+						((NodeProperty)ParentNode.Tag).NodeId, ((DeviceTypeComboboxItem)comboBoxDevType.SelectedItem).DeviceTypeId);
 				if (id == -1)
 				{
 					return;
@@ -97,9 +97,9 @@ namespace Devices
 				//Обновление существующего узла
 				bool isComplete;
 				if (ConvertNodeTypeIDToEnumID(((DeviceTypeComboboxItem)comboBoxDevType.SelectedItem).DeviceTypeId) == NodeTypeEnum.DepartmentNode)
-					isComplete = _db.UpdateDepartment(((NodeProperty)CurrentNode.Tag).NodeID, textBoxName.Text);
+					isComplete = _db.UpdateDepartment(((NodeProperty)CurrentNode.Tag).NodeId, textBoxName.Text);
 				else
-					isComplete = _db.UpdateDevice(((NodeProperty)CurrentNode.Tag).NodeID, textBoxName.Text,
+					isComplete = _db.UpdateDevice(((NodeProperty)CurrentNode.Tag).NodeId, textBoxName.Text,
 						textBoxInvenotryNumber.Text, textBoxSerialNumber.Text, textBoxDescription.Text);
 				if (isComplete)
 					CurrentNode.Text = textBoxName.Text;

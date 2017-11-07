@@ -120,7 +120,7 @@ namespace Devices
 			foreach (TreeNode node in currentNode)
 			{
 				if (node.Checked)
-					departmentsIDs.Add(((NodeProperty)node.Tag).NodeID);
+					departmentsIDs.Add(((NodeProperty)node.Tag).NodeId);
 				FillDepartmentIDs(departmentsIDs, node.Nodes);
 			}
 		}

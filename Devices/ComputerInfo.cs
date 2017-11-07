@@ -8,11 +8,11 @@ namespace Devices
 {
 	public partial class ComputerInfo : Form, IDisposable
 	{
-		public int DeviceID { get; set; }
+		public int DeviceId { get; set; }
 		//Если переменная установлена, то поиск производится по архиву
-		public bool searchInArchive { get; set; }
-		private DevicesDatabase db = new DevicesDatabase();
-        private MoveComputersForm mcf;
+		public bool SearchInArchive { get; set; }
+		private readonly DevicesDatabase _db = new DevicesDatabase();
+        private MoveComputersForm _mcf;
 
 		/// <summary>
 		/// Заполнить дерево устройств
@@ -20,36 +20,37 @@ namespace Devices
 		public void FillInfoTree()
 		{
 			List<Node> list;
-			if (searchInArchive)
+			if (SearchInArchive)
 			{
-				list = db.GetDeviceInfoMetaInArchive(DeviceID);
+				list = _db.GetDeviceInfoMetaInArchive(DeviceId);
 				toolStrip1.Enabled = false;
 				добавитьToolStripMenuItem.Enabled = false;
 				изменитьToolStripMenuItem.Enabled = false;
 				удалитьToolStripMenuItem.Enabled = false;
 			}
 			else
-				list = db.GetDeviceInfoMeta(DeviceID);
-			foreach (Node DeviceInfoMeta in list)
+				list = _db.GetDeviceInfoMeta(DeviceId);
+			foreach (var deviceInfoMeta in list)
 			{
-				TreeNode node = new TreeNode();
-				node.Text = DeviceInfoMeta.NodeName;
-				node.Tag = new NodeProperty(DeviceInfoMeta.NodeId, NodeTypeEnum.DeviceComplexParameter);
-				TreeNodesHelper.AddNode(node, treeViewDeviceInfo.Nodes,
-					treeViewDeviceInfo.Nodes, DeviceInfoMeta.ParentNodeId);
+			    var node = new TreeNode
+			    {
+			        Text = deviceInfoMeta.NodeName,
+			        Tag = new NodeProperty(deviceInfoMeta.NodeId, NodeTypeEnum.DeviceComplexParameter)
+			    };
+			    TreeNodesHelper.AddNode(node, treeViewDeviceInfo.Nodes,
+					treeViewDeviceInfo.Nodes, deviceInfoMeta.ParentNodeId);
 			}
 			list.Clear();	
-			if (searchInArchive)
-				list = db.GetDeviceInfoFromArchive(DeviceID);
-			else
-				list = db.GetDeviceInfo(DeviceID);
-			foreach (Node DeviceInfo in list)
+			list = SearchInArchive ? _db.GetDeviceInfoFromArchive(DeviceId) : _db.GetDeviceInfo(DeviceId);
+			foreach (var deviceInfo in list)
 			{
-				TreeNode node = new TreeNode();
-				node.Text = DeviceInfo.NodeName;
-				node.Tag = new NodeProperty(DeviceInfo.NodeId, NodeTypeEnum.DeviceSimpleParameter);
-				TreeNodesHelper.AddNode(node, treeViewDeviceInfo.Nodes,
-					treeViewDeviceInfo.Nodes, DeviceInfo.ParentNodeId);
+			    var node = new TreeNode
+			    {
+			        Text = deviceInfo.NodeName,
+			        Tag = new NodeProperty(deviceInfo.NodeId, NodeTypeEnum.DeviceSimpleParameter)
+			    };
+			    TreeNodesHelper.AddNode(node, treeViewDeviceInfo.Nodes,
+					treeViewDeviceInfo.Nodes, deviceInfo.ParentNodeId);
 			}
 			treeViewDeviceInfo.ExpandAll();
 		}
@@ -60,34 +61,31 @@ namespace Devices
 		public ComputerInfo()
 		{
 			InitializeComponent();
-			searchInArchive = false;
+			SearchInArchive = false;
 		}
 
 		private void treeViewDeviceInfo_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			int ID = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeID;
-			NodeTypeEnum nodeType = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeType;
+			var id = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeId;
+			var nodeType = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeType;
 			DataView dv;
 			if (nodeType == NodeTypeEnum.DeviceSimpleParameter)
 			{
-				if (!searchInArchive)
-					dv = db.GetDetailDeviceInfo(ID);
-				else
-					dv = db.GetDetailDeviceInfoFromArchive(ID);
+				dv = !SearchInArchive ? _db.GetDetailDeviceInfo(id) : _db.GetDetailDeviceInfoFromArchive(id);
 			}
 			else
-				dv = db.GetDetailDeviceInfo(-1);
+				dv = _db.GetDetailDeviceInfo(-1);
 			dataGridView1.DataSource = dv;
 			dataGridView1.Columns["ID Node"].Visible = false;
 			dataGridView1.Columns["ID Parent Node"].Visible = false;
 			dataGridView1.Columns["Parameter Type"].Visible = false;
 			dataGridView1.Columns["NodeRealID"].Visible = false;
-			dataGridView1.Columns["Parameter Name"].HeaderText = "Характеристика";
+			dataGridView1.Columns["Parameter Name"].HeaderText = @"Характеристика";
 			dataGridView1.Columns["Parameter Name"].MinimumWidth = 200;
-			dataGridView1.Columns["Value"].HeaderText = "Значение";
+			dataGridView1.Columns["Value"].HeaderText = @"Значение";
 			dataGridView1.Columns["Value"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             if (treeViewDeviceInfo.SelectedNode.Parent == null ||
-                treeViewDeviceInfo.SelectedNode.Parent.Text != "Периферийные устройства")
+                treeViewDeviceInfo.SelectedNode.Parent.Text != @"Периферийные устройства")
                 toolStripButton4.Enabled = false;
             else
                 toolStripButton4.Enabled = true;
@@ -98,27 +96,26 @@ namespace Devices
 
 		void IDisposable.Dispose()
 		{
-			db.Dispose();
+			_db.Dispose();
 		}
 
 		#endregion
 
 		private void toolStripButton1_Click(object sender, EventArgs e)
 		{
-			TreeNode empty_node = new TreeNode();
-			empty_node.Tag = new NodeProperty(0, NodeTypeEnum.DeviceSimpleParameter);
-			if (((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeType == NodeTypeEnum.DeviceComplexParameter)
+		    var emptyNode = new TreeNode {Tag = new NodeProperty(0, NodeTypeEnum.DeviceSimpleParameter)};
+		    if (((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeType == NodeTypeEnum.DeviceComplexParameter)
 			{
-				empty_node.Text = treeViewDeviceInfo.SelectedNode.Text;
-				treeViewDeviceInfo.SelectedNode.Nodes.Add(empty_node);
-				treeViewDeviceInfo.SelectedNode = empty_node;
+				emptyNode.Text = treeViewDeviceInfo.SelectedNode.Text;
+				treeViewDeviceInfo.SelectedNode.Nodes.Add(emptyNode);
+				treeViewDeviceInfo.SelectedNode = emptyNode;
 			}
 			else
 				if (((NodeProperty)treeViewDeviceInfo.SelectedNode.Parent.Tag).NodeType == NodeTypeEnum.DeviceComplexParameter)
 				{
-					empty_node.Text = treeViewDeviceInfo.SelectedNode.Parent.Text;
-					treeViewDeviceInfo.SelectedNode.Parent.Nodes.Add(empty_node);
-					treeViewDeviceInfo.SelectedNode = empty_node;
+					emptyNode.Text = treeViewDeviceInfo.SelectedNode.Parent.Text;
+					treeViewDeviceInfo.SelectedNode.Parent.Nodes.Add(emptyNode);
+					treeViewDeviceInfo.SelectedNode = emptyNode;
 				}
 				else
 					throw new Exception();
@@ -129,19 +126,19 @@ namespace Devices
 		private void treeViewDeviceInfo_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
 		{
 			//Сохранить информацию об изменениях узла дерева в БД
-			if (((NodeProperty)e.Node.Tag).NodeID != 0)
+			if (((NodeProperty)e.Node.Tag).NodeId != 0)
 			{
-				if (!db.UpdateDeviceNode(((NodeProperty)e.Node.Tag).NodeID, e.Label == null ? e.Node.Text : e.Label))
+				if (!_db.UpdateDeviceNode(((NodeProperty)e.Node.Tag).NodeId, e.Label ?? e.Node.Text))
 					e.CancelEdit = true;
 				treeViewDeviceInfo.LabelEdit = false;
 			}
 			else
 			{
-				int NodeID = db.InsertDeviceNode(((NodeProperty)e.Node.Parent.Tag).NodeID, DeviceID, e.Label == null ? e.Node.Text : e.Label);
-				if (NodeID == -1)
+				var nodeId = _db.InsertDeviceNode(((NodeProperty)e.Node.Parent.Tag).NodeId, DeviceId, e.Label ?? e.Node.Text);
+				if (nodeId == -1)
 					e.Node.Remove();
 				else
-					((NodeProperty)e.Node.Tag).NodeID = NodeID;
+					((NodeProperty)e.Node.Tag).NodeId = nodeId;
 				treeViewDeviceInfo.LabelEdit = false;
 			}
 			treeViewDeviceInfo_AfterSelect(treeViewDeviceInfo, new TreeViewEventArgs(treeViewDeviceInfo.SelectedNode));
@@ -151,15 +148,15 @@ namespace Devices
 		{
 			if (((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeType == NodeTypeEnum.DeviceComplexParameter)
 			{
-				MessageBox.Show("Вы не можете удалить группу", "Внимание",
+				MessageBox.Show(@"Вы не можете удалить группу", @"Внимание",
 					MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 
-			if (MessageBox.Show("Вы уверены, что хотите удалить запись", "Внимание",
+			if (MessageBox.Show(@"Вы уверены, что хотите удалить запись", @"Внимание",
 				MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
 			{
-				if (db.DeleteDeviceNode(((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeID))
+				if (_db.DeleteDeviceNode(((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeId))
 					treeViewDeviceInfo.SelectedNode.Remove();
 			}
 		}
@@ -168,7 +165,7 @@ namespace Devices
 		{
 			if (((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeType == NodeTypeEnum.DeviceComplexParameter)
 			{
-				MessageBox.Show("Вы не можете менять название группы параметров", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(@"Вы не можете менять название группы параметров", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 			treeViewDeviceInfo.LabelEdit = true;
@@ -177,26 +174,28 @@ namespace Devices
 
 		private void dataGridView1_DoubleClick(object sender, EventArgs e)
 		{
-			if (searchInArchive)
+			if (SearchInArchive)
 				return;
 			//Отобразить форму редактирования выбранного параметра
-			ComputerParamChangeForm cpcf = new ComputerParamChangeForm();
-			cpcf.AssocMetaNodeID = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["ID Node"].Value.ToString());
-			int NodeRealID = -1;
-			if (!Int32.TryParse(dataGridView1.SelectedRows[0].Cells["NodeRealID"].Value.ToString(), out NodeRealID))
-				cpcf.NodeRealID = -1;
+		    var cpcf = new ComputerParamChangeForm
+		    {
+		        AssocMetaNodeId = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["ID Node"].Value.ToString())
+		    };
+		    int nodeRealId;
+			if (!int.TryParse(dataGridView1.SelectedRows[0].Cells["NodeRealID"].Value.ToString(), out nodeRealId))
+				cpcf.NodeRealId = -1;
 			else
 			{
 				cpcf.Value = dataGridView1.SelectedRows[0].Cells["Value"].Value;
-				cpcf.NodeRealID = NodeRealID;
+				cpcf.NodeRealId = nodeRealId;
 			}
 			cpcf.ParamType = dataGridView1.SelectedRows[0].Cells["Parameter Type"].Value.ToString();
 			cpcf.ParamName = dataGridView1.SelectedRows[0].Cells["Parameter Name"].Value.ToString();
-			cpcf.ParentNodeID = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeID;
-			cpcf.DeviceID = DeviceID;
+			cpcf.ParentNodeId = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeId;
+			cpcf.DeviceId = DeviceId;
 			cpcf.InitForm();
 			cpcf.ShowDialog();
-			if (cpcf.isChanged)
+			if (cpcf.IsChanged)
 				treeViewDeviceInfo_AfterSelect(dataGridView1, new TreeViewEventArgs(treeViewDeviceInfo.SelectedNode));
 			cpcf.Dispose();
 		}
@@ -242,20 +241,20 @@ namespace Devices
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             if (treeViewDeviceInfo.SelectedNode.Parent == null ||
-                treeViewDeviceInfo.SelectedNode.Parent.Text != "Периферийные устройства")
+                treeViewDeviceInfo.SelectedNode.Parent.Text != @"Периферийные устройства")
                 e.Cancel = true;
         }
 
         private void открытьСписокЗаявокToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (treeViewDeviceInfo.SelectedNode.Parent == null ||
-                treeViewDeviceInfo.SelectedNode.Parent.Text != "Периферийные устройства")
+                treeViewDeviceInfo.SelectedNode.Parent.Text != @"Периферийные устройства")
                 return;
-            RequestsForm rf = new RequestsForm();
-            int ID = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeID;
-            rf.SerialNumber = db.GetSerialNumberBy(ID, true);
-            rf.InventoryNumber = db.GetInventoryNumberBy(ID, true);
-            rf.InitializeForm(db);
+            var rf = new RequestsForm();
+            var id = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeId;
+            rf.SerialNumber = _db.GetSerialNumberBy(id, true);
+            rf.InventoryNumber = _db.GetInventoryNumberBy(id, true);
+            rf.InitializeForm(_db);
             rf.ShowDialog();
             rf.Dispose();
         }
@@ -264,21 +263,18 @@ namespace Devices
         {
             if (((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeType != NodeTypeEnum.DeviceSimpleParameter)
                 return;
-            TreeNode node = (TreeNode)treeViewDeviceInfo.SelectedNode.Clone();
-            NodeProperty NP = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag);
-            if (mcf == null)
-                mcf = new MoveComputersForm(NP);
+            var np = ((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag);
+            if (_mcf == null)
+                _mcf = new MoveComputersForm(np);
             else
-                mcf.NP = NP;
-            mcf.Text = "Перемещение узла " + treeViewDeviceInfo.SelectedNode.Text;
-            mcf.Moved = false;
-            mcf.ShowDialog();
-            if (mcf.Moved)
-            {
-                //Удалить характеристику в старом ПК, если перемещали не в него же
-                if (DeviceID != mcf.NewID)
-                    treeViewDeviceInfo.SelectedNode.Remove();
-            }
+                _mcf.Np = np;
+            _mcf.Text = @"Перемещение узла " + treeViewDeviceInfo.SelectedNode.Text;
+            _mcf.Moved = false;
+            _mcf.ShowDialog();
+            if (!_mcf.Moved) return;
+            //Удалить характеристику в старом ПК, если перемещали не в него же
+            if (DeviceId != _mcf.NewId)
+                treeViewDeviceInfo.SelectedNode.Remove();
         }
 	}
 }

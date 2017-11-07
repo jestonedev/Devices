@@ -13,54 +13,54 @@ namespace Devices
 
 		public void InitializeForm()
 		{
-			toolStripStatusLabel1.Text = "Загрузка данных...";
+			toolStripStatusLabel1.Text = @"Загрузка данных...";
 			statusStrip1.Refresh();
-			DevicesDatabase dd = new DevicesDatabase();
+			var dd = new DevicesDatabase();
 			switch (DisplayArchiveType)
 			{
 				case DisplayArchive.DeviceChangesArchive:
 					dataGridView1.DataSource = dd.GetArchiveDeviceInfo();
 					dataGridView1.Columns["ID Device"].Visible = false;
-					dataGridView1.Columns["Department"].HeaderText = "Подразделение";
-					dataGridView1.Columns["Type"].HeaderText = "Тип устройства";
-					dataGridView1.Columns["Device Name"].HeaderText = "Системное имя";
-					dataGridView1.Columns["SerialNumber"].HeaderText = "Серийный номер";
-					dataGridView1.Columns["InventoryNumber"].HeaderText = "Инвентарный номер";
-					dataGridView1.Columns["Description"].HeaderText = "Комментарий";
-					dataGridView1.Columns["Owner"].HeaderText = "Оператор, добавивший устройство";
-					dataGridView1.Columns["Operation"].HeaderText = "Операция";
-					dataGridView1.Columns["Date"].HeaderText = "Дата операции";
-					dataGridView1.Columns["Operator"].HeaderText = "Оператор, внесший изменения";
+					dataGridView1.Columns["Department"].HeaderText = @"Подразделение";
+					dataGridView1.Columns["Type"].HeaderText = @"Тип устройства";
+					dataGridView1.Columns["Device Name"].HeaderText = @"Системное имя";
+					dataGridView1.Columns["SerialNumber"].HeaderText = @"Серийный номер";
+					dataGridView1.Columns["InventoryNumber"].HeaderText = @"Инвентарный номер";
+					dataGridView1.Columns["Description"].HeaderText = @"Комментарий";
+					dataGridView1.Columns["Owner"].HeaderText = @"Оператор, добавивший устройство";
+					dataGridView1.Columns["Operation"].HeaderText = @"Операция";
+					dataGridView1.Columns["Date"].HeaderText = @"Дата операции";
+					dataGridView1.Columns["Operator"].HeaderText = @"Оператор, внесший изменения";
 					dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
 					break;
 				case DisplayArchive.NodeChangesArchive:
 					dataGridView1.DataSource = dd.GetArchiveNodesInfo();
 					dataGridView1.Columns["ID Node"].Visible = false;
-					dataGridView1.Columns["Device Name"].HeaderText = "Системное имя";
-					dataGridView1.Columns["Parameter Name"].HeaderText = "Характеристика";
-					dataGridView1.Columns["Value"].HeaderText = "Значение";
-					dataGridView1.Columns["Operation"].HeaderText = "Операция";
-					dataGridView1.Columns["Date"].HeaderText = "Дата операции";
-					dataGridView1.Columns["Operator"].HeaderText = "Оператор, внесший изменения";
+					dataGridView1.Columns["Device Name"].HeaderText = @"Системное имя";
+					dataGridView1.Columns["Parameter Name"].HeaderText = @"Характеристика";
+					dataGridView1.Columns["Value"].HeaderText = @"Значение";
+					dataGridView1.Columns["Operation"].HeaderText = @"Операция";
+					dataGridView1.Columns["Date"].HeaderText = @"Дата операции";
+					dataGridView1.Columns["Operator"].HeaderText = @"Оператор, внесший изменения";
 					dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
 					break;
 				case DisplayArchive.DeletedDeviceArchive:
 					dataGridView1.DataSource = dd.GetArchiveDeletedDevicesInfoInfo();
 					dataGridView1.Columns["ID Device"].Visible = false;
-					dataGridView1.Columns["Department"].HeaderText = "Подразделение";
-					dataGridView1.Columns["Type"].HeaderText = "Тип устройства";
-					dataGridView1.Columns["Device Name"].HeaderText = "Системное имя";
-					dataGridView1.Columns["SerialNumber"].HeaderText = "Серийный номер";
-					dataGridView1.Columns["InventoryNumber"].HeaderText = "Инвентарный номер";
-					dataGridView1.Columns["Description"].HeaderText = "Комментарий";
-					dataGridView1.Columns["Owner"].HeaderText = "Оператор, добавивший устройство";
-					dataGridView1.Columns["Date"].HeaderText = "Дата операции";
-					dataGridView1.Columns["Operator"].HeaderText = "Оператор, внесший изменения";
+					dataGridView1.Columns["Department"].HeaderText = @"Подразделение";
+					dataGridView1.Columns["Type"].HeaderText = @"Тип устройства";
+					dataGridView1.Columns["Device Name"].HeaderText = @"Системное имя";
+					dataGridView1.Columns["SerialNumber"].HeaderText = @"Серийный номер";
+					dataGridView1.Columns["InventoryNumber"].HeaderText = @"Инвентарный номер";
+					dataGridView1.Columns["Description"].HeaderText = @"Комментарий";
+					dataGridView1.Columns["Owner"].HeaderText = @"Оператор, добавивший устройство";
+					dataGridView1.Columns["Date"].HeaderText = @"Дата операции";
+					dataGridView1.Columns["Operator"].HeaderText = @"Оператор, внесший изменения";
 					dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
 					break;
 			}
 			dd.Dispose();
-			toolStripStatusLabel1.Text = "Выполнено";
+			toolStripStatusLabel1.Text = @"Выполнено";
 		}
 
 		private void toolStripButton1_Click(object sender, EventArgs e)
@@ -72,10 +72,12 @@ namespace Devices
 		{
 			if (DisplayArchiveType == DisplayArchive.DeletedDeviceArchive)
 			{
-				ComputerInfo compForm = new ComputerInfo();
-				compForm.DeviceID = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["ID Device"].Value.ToString());
-				compForm.searchInArchive = true;
-				compForm.FillInfoTree();
+			    ComputerInfo compForm = new ComputerInfo
+			    {
+			        DeviceId = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["ID Device"].Value.ToString()),
+			        SearchInArchive = true
+			    };
+			    compForm.FillInfoTree();
 				compForm.ShowDialog();
 			}
 		}

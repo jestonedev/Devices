@@ -41,7 +41,7 @@ namespace Devices
 
 		private void treeViewDeviceInfo_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			var list = Db.GetDeviceParameters(((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeID);
+			var list = Db.GetDeviceParameters(((NodeProperty)treeViewDeviceInfo.SelectedNode.Tag).NodeId);
 			comboBoxDeviceParameters.Items.Clear();
 			foreach (var item in list)
 			{

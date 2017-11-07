@@ -7,13 +7,13 @@ namespace Devices
 	
 	public class NodeProperty
 	{
-		public int NodeID { get; set; }
+		public int NodeId { get; set; }
 		public NodeTypeEnum NodeType { get; set; }
 
-		public NodeProperty(int NodeID, NodeTypeEnum NodeType)
+		public NodeProperty(int nodeId, NodeTypeEnum nodeType)
 		{
-			this.NodeID = NodeID;
-			this.NodeType = NodeType;
+			NodeId = nodeId;
+			NodeType = nodeType;
 		}
 	}
 
@@ -30,7 +30,7 @@ namespace Devices
 			}
 			foreach (TreeNode node in current)
 			{
-				if ((((NodeProperty)node.Tag).NodeID == parentNodeId) &&
+				if ((((NodeProperty)node.Tag).NodeId == parentNodeId) &&
 				   ((((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DepartmentNode) ||
 					(((NodeProperty)node.Tag).NodeType == NodeTypeEnum.DeviceComplexParameter)))
 				{                    
@@ -52,17 +52,14 @@ namespace Devices
 		}
 
         //определяет есть ли любой родительский узел для текущего узла(т.е делать ли тек. узел корневым)
-        public static bool ContainsParentAmongChilds(TreeNodeCollection roots, int ParentNodeID)
+        public static bool ContainsParentAmongChilds(TreeNodeCollection roots, int parentNodeId)
         {
             foreach (TreeNode node in roots)
             {
-                if ((((NodeProperty)node.Tag).NodeID == ParentNodeID))
+                if ((((NodeProperty)node.Tag).NodeId == parentNodeId))
                     return true;
-                if (node.Nodes != null)
-                {
-                    if (ContainsParentAmongChilds(node.Nodes, ParentNodeID) == true)
-                        return true;
-                }
+                if (ContainsParentAmongChilds(node.Nodes, parentNodeId))
+                    return true;
             }
             return false;
         }
