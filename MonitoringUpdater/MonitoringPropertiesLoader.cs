@@ -43,6 +43,12 @@ namespace MonitoringUpdater
             var resultMonitoringDevices = new List<MonitoringDevice>();
             foreach (var monitoringDevice in monitoringDevices)
             {
+                // Если произошел сбой при получении какого-либо свойства, то не обновлять статистику по устройству
+                if (monitoringDevice.Properties.Any(p => p.Value == "~0,-3"))
+                {
+                    continue;
+                }
+
                 var resultMonitoringDevice =
                     resultMonitoringDevices.FirstOrDefault(r => r.DeviceName == monitoringDevice.DeviceName);
                 if (resultMonitoringDevice != null)
