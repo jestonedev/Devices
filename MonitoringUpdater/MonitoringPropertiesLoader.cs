@@ -29,7 +29,7 @@ namespace MonitoringUpdater
             var monitoringDevices = new List<MonitoringDevice>();
             foreach (var file in files)
             {
-                var fileParts = file.Split('-');
+                var fileParts = Path.GetFileNameWithoutExtension(file).Split('-');
                 if (fileParts.Length < 2) continue;
                 var computerName = fileParts[1];
                 var fileInfo = new FileInfo(file);
@@ -44,7 +44,7 @@ namespace MonitoringUpdater
             foreach (var monitoringDevice in monitoringDevices)
             {
                 // Если произошел сбой при получении какого-либо свойства, то не обновлять статистику по устройству
-                if (monitoringDevice.Properties.Any(p => p.Value == "~0,-3"))
+                if (monitoringDevice.Properties.Any(p => p.Value == "~0,-3" || p.Value == "~0"))
                 {
                     continue;
                 }
