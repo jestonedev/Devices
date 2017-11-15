@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -77,11 +78,20 @@ namespace MonitoringUpdater
                         {
                             continue;
                         }
-                        properties.Add(new MonitoringProperty
+                        var property = new MonitoringProperty
                         {
                             Name = lineParts[0],
                             Value = value
-                        });
+                        };
+                        if (lineParts[0] == "SysDiskFree")
+                        {
+                            long valueParse;
+                            if (long.TryParse(value, out valueParse))
+                            {
+                                property.Value = Math.Round((double) valueParse/(1024*1024)).ToString(CultureInfo.InvariantCulture);
+                            }
+                        }
+                        properties.Add(property);
                     }
                     else
                     {

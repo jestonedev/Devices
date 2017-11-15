@@ -56,10 +56,17 @@
             this.toolStripButton8 = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
+            this.panel10 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.treeViewDeviceInfo = new System.Windows.Forms.TreeView();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.dataGridViewMonitoring = new System.Windows.Forms.DataGridView();
+            this.PropertyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PropertyValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.UpdateDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBoxPereferial = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -111,20 +118,17 @@
             this.DevicesFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ManualMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.panel9 = new System.Windows.Forms.Panel();
-            this.panel10 = new System.Windows.Forms.Panel();
-            this.dataGridViewMonitoring = new System.Windows.Forms.DataGridView();
-            this.PropertyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PropertyValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.UpdateDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.panel10.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
+            this.panel9.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMonitoring)).BeginInit();
             this.groupBoxPereferial.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -138,10 +142,6 @@
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.panel9.SuspendLayout();
-            this.panel10.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMonitoring)).BeginInit();
             this.SuspendLayout();
             // 
             // treeViewComputers
@@ -406,13 +406,22 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Сетевые узлы";
             // 
+            // panel10
+            // 
+            this.panel10.Controls.Add(this.groupBox3);
+            this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel10.Location = new System.Drawing.Point(0, 210);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(512, 263);
+            this.panel10.TabIndex = 7;
+            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.treeViewDeviceInfo);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(0, 0);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(512, 293);
+            this.groupBox3.Size = new System.Drawing.Size(512, 263);
             this.groupBox3.TabIndex = 4;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Дополнительные характеристики сетевого узла";
@@ -424,7 +433,7 @@
             this.treeViewDeviceInfo.HideSelection = false;
             this.treeViewDeviceInfo.Location = new System.Drawing.Point(3, 16);
             this.treeViewDeviceInfo.Name = "treeViewDeviceInfo";
-            this.treeViewDeviceInfo.Size = new System.Drawing.Size(506, 274);
+            this.treeViewDeviceInfo.Size = new System.Drawing.Size(506, 244);
             this.treeViewDeviceInfo.TabIndex = 1;
             this.treeViewDeviceInfo.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewDeviceInfo_AfterSelect);
             this.treeViewDeviceInfo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.splitContainer1_KeyDown);
@@ -444,6 +453,66 @@
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
             this.toolStripMenuItem4.Size = new System.Drawing.Size(202, 22);
             this.toolStripMenuItem4.Text = "Открыть список заявок";
+            // 
+            // panel9
+            // 
+            this.panel9.Controls.Add(this.groupBox2);
+            this.panel9.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel9.Location = new System.Drawing.Point(0, 473);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(512, 180);
+            this.panel9.TabIndex = 6;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.dataGridViewMonitoring);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox2.Location = new System.Drawing.Point(0, 0);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(512, 180);
+            this.groupBox2.TabIndex = 5;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Мониторинг";
+            // 
+            // dataGridViewMonitoring
+            // 
+            this.dataGridViewMonitoring.AllowUserToAddRows = false;
+            this.dataGridViewMonitoring.AllowUserToDeleteRows = false;
+            this.dataGridViewMonitoring.AllowUserToResizeRows = false;
+            this.dataGridViewMonitoring.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridViewMonitoring.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewMonitoring.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.PropertyName,
+            this.PropertyValue,
+            this.UpdateDate});
+            this.dataGridViewMonitoring.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewMonitoring.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewMonitoring.Name = "dataGridViewMonitoring";
+            this.dataGridViewMonitoring.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewMonitoring.Size = new System.Drawing.Size(506, 161);
+            this.dataGridViewMonitoring.TabIndex = 0;
+            // 
+            // PropertyName
+            // 
+            this.PropertyName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.PropertyName.HeaderText = "Характеристика";
+            this.PropertyName.Name = "PropertyName";
+            this.PropertyName.ReadOnly = true;
+            // 
+            // PropertyValue
+            // 
+            this.PropertyValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.PropertyValue.HeaderText = "Значение";
+            this.PropertyValue.Name = "PropertyValue";
+            this.PropertyValue.ReadOnly = true;
+            // 
+            // UpdateDate
+            // 
+            this.UpdateDate.HeaderText = "Дата обновления";
+            this.UpdateDate.MinimumWidth = 150;
+            this.UpdateDate.Name = "UpdateDate";
+            this.UpdateDate.ReadOnly = true;
+            this.UpdateDate.Width = 150;
             // 
             // groupBoxPereferial
             // 
@@ -955,75 +1024,6 @@
             this.ManualMenuItem.Text = "Руководство пользователя";
             this.ManualMenuItem.Click += new System.EventHandler(this.ManualMenuItem_Click);
             // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.dataGridViewMonitoring);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(0, 0);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(512, 150);
-            this.groupBox2.TabIndex = 5;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Мониторинг";
-            // 
-            // panel9
-            // 
-            this.panel9.Controls.Add(this.groupBox2);
-            this.panel9.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel9.Location = new System.Drawing.Point(0, 503);
-            this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(512, 150);
-            this.panel9.TabIndex = 6;
-            // 
-            // panel10
-            // 
-            this.panel10.Controls.Add(this.groupBox3);
-            this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel10.Location = new System.Drawing.Point(0, 210);
-            this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(512, 293);
-            this.panel10.TabIndex = 7;
-            // 
-            // dataGridViewMonitoring
-            // 
-            this.dataGridViewMonitoring.AllowUserToAddRows = false;
-            this.dataGridViewMonitoring.AllowUserToDeleteRows = false;
-            this.dataGridViewMonitoring.AllowUserToResizeRows = false;
-            this.dataGridViewMonitoring.BackgroundColor = System.Drawing.Color.White;
-            this.dataGridViewMonitoring.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewMonitoring.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.PropertyName,
-            this.PropertyValue,
-            this.UpdateDate});
-            this.dataGridViewMonitoring.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewMonitoring.Location = new System.Drawing.Point(3, 16);
-            this.dataGridViewMonitoring.Name = "dataGridViewMonitoring";
-            this.dataGridViewMonitoring.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewMonitoring.Size = new System.Drawing.Size(506, 131);
-            this.dataGridViewMonitoring.TabIndex = 0;
-            // 
-            // PropertyName
-            // 
-            this.PropertyName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.PropertyName.HeaderText = "Характеристика";
-            this.PropertyName.Name = "PropertyName";
-            this.PropertyName.ReadOnly = true;
-            // 
-            // PropertyValue
-            // 
-            this.PropertyValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.PropertyValue.HeaderText = "Значение";
-            this.PropertyValue.Name = "PropertyValue";
-            this.PropertyValue.ReadOnly = true;
-            // 
-            // UpdateDate
-            // 
-            this.UpdateDate.HeaderText = "Дата обновления";
-            this.UpdateDate.MinimumWidth = 150;
-            this.UpdateDate.Name = "UpdateDate";
-            this.UpdateDate.ReadOnly = true;
-            this.UpdateDate.Width = 150;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1047,8 +1047,12 @@
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.panel10.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.contextMenuStrip2.ResumeLayout(false);
+            this.panel9.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMonitoring)).EndInit();
             this.groupBoxPereferial.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
@@ -1071,10 +1075,6 @@
             this.panel4.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.panel9.ResumeLayout(false);
-            this.panel10.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMonitoring)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

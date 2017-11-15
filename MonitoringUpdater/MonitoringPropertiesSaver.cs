@@ -24,11 +24,22 @@ namespace MonitoringUpdater
                     foreach (var deviceId in devices)
                     {
                         var transaction = connection.BeginTransaction();
+                        DeleteOldAndInvalideProperties(deviceId, connection, transaction);
                         SaveProperties(deviceId, monitoringDevice, connection, transaction);
                         transaction.Commit();
                     }
                 }
             }
+        }
+
+        private static void DeleteOldAndInvalideProperties(int idDevice, SqlConnection connection, SqlTransaction transaction)
+        {
+            const string query = @"DELETE FROM MonitoringProperties
+                    WHERE [ID Device] = @IdDevice AND [Property Value] = '~0,-3' OR [Property Value] = '~0'
+                    OR [Update Date] < DATEADD(DAY, -30, CURRENT_TIMESTAMP)";
+            var command = new SqlCommand(query, connection, transaction);
+            command.Parameters.AddWithValue("@IdDevice", idDevice);
+            command.ExecuteNonQuery();
         }
 
         private static void DeleteProperty(int idDevice, string propertyName, SqlConnection connection, SqlTransaction transaction)
