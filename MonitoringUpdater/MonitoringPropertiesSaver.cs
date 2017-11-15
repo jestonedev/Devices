@@ -24,7 +24,6 @@ namespace MonitoringUpdater
                     foreach (var deviceId in devices)
                     {
                         var transaction = connection.BeginTransaction();
-                        ClearProperties(deviceId, connection, transaction);
                         SaveProperties(deviceId, monitoringDevice, connection, transaction);
                         transaction.Commit();
                     }
@@ -32,12 +31,18 @@ namespace MonitoringUpdater
             }
         }
 
-        private static void ClearProperties(int idDevice, SqlConnection connection, SqlTransaction transaction)
+        private static void DeleteProperty(int idDevice, string propertyName, SqlConnection connection, SqlTransaction transaction)
         {
-            const string query = @"DELETE FROM MonitoringProperties
-                    WHERE [ID Device] = @IdDevice";
+            var query = @"DELETE FROM MonitoringProperties
+                    WHERE [ID Device] = @IdDevice AND [Property Name] = @PropertyName";
+            if (propertyName == null)
+            {
+                query = @"DELETE FROM MonitoringProperties
+                    WHERE [ID Device] = @IdDevice AND [Property Name] IS NULL";
+            }
             var command = new SqlCommand(query, connection, transaction);
             command.Parameters.AddWithValue("@IdDevice", idDevice);
+            command.Parameters.AddWithValue("@PropertyName", (object)propertyName ?? DBNull.Value);
             command.ExecuteNonQuery();
         }
 
@@ -47,6 +52,7 @@ namespace MonitoringUpdater
                     VALUES (@IdDevice, @PropertyName, @PropertyValue, @UpdateDate);";
             foreach (var property in device.Properties)
             {
+                DeleteProperty(idDevice, property.Name, connection, transaction);
                 var command = new SqlCommand(query, connection, transaction);
                 command.Parameters.AddWithValue("@IdDevice", idDevice);
                 command.Parameters.AddWithValue("@PropertyName", (object)property.Name ?? DBNull.Value);

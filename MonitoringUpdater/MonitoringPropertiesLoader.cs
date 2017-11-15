@@ -43,12 +43,6 @@ namespace MonitoringUpdater
             var resultMonitoringDevices = new List<MonitoringDevice>();
             foreach (var monitoringDevice in monitoringDevices)
             {
-                // Если произошел сбой при получении какого-либо свойства, то не обновлять статистику по устройству
-                if (monitoringDevice.Properties.Any(p => p.Value == "~0,-3" || p.Value == "~0"))
-                {
-                    continue;
-                }
-
                 var resultMonitoringDevice =
                     resultMonitoringDevices.FirstOrDefault(r => r.DeviceName == monitoringDevice.DeviceName);
                 if (resultMonitoringDevice != null)
@@ -77,17 +71,28 @@ namespace MonitoringUpdater
                     var lineParts = line.Split(new[] {':'}, 2);
                     if (lineParts.Length == 2)
                     {
+                        // Если произошел сбой при получении какого-либо свойства, то не обновлять статистику по устройству
+                        var value = lineParts[1].Trim();
+                        if (value == "~0,-3" || value == "~0")
+                        {
+                            continue;
+                        }
                         properties.Add(new MonitoringProperty
                         {
                             Name = lineParts[0],
-                            Value = lineParts[1].Trim()
+                            Value = value
                         });
                     }
                     else
                     {
+                        var value = lineParts[0].Trim();
+                        if (value == "~0,-3" || value == "~0")
+                        {
+                            continue;
+                        }
                         properties.Add(new MonitoringProperty
                         {
-                            Value = lineParts[0].Trim()
+                            Value = value
                         });
                     }
                 }
