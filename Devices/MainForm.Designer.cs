@@ -64,9 +64,6 @@
             this.panel9 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dataGridViewMonitoring = new System.Windows.Forms.DataGridView();
-            this.PropertyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PropertyValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.UpdateDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBoxPereferial = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -118,6 +115,9 @@
             this.DevicesFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ManualMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.PropertyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PropertyValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.UpdateDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -491,28 +491,6 @@
             this.dataGridViewMonitoring.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewMonitoring.Size = new System.Drawing.Size(506, 161);
             this.dataGridViewMonitoring.TabIndex = 0;
-            // 
-            // PropertyName
-            // 
-            this.PropertyName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.PropertyName.HeaderText = "Характеристика";
-            this.PropertyName.Name = "PropertyName";
-            this.PropertyName.ReadOnly = true;
-            // 
-            // PropertyValue
-            // 
-            this.PropertyValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.PropertyValue.HeaderText = "Значение";
-            this.PropertyValue.Name = "PropertyValue";
-            this.PropertyValue.ReadOnly = true;
-            // 
-            // UpdateDate
-            // 
-            this.UpdateDate.HeaderText = "Дата обновления";
-            this.UpdateDate.MinimumWidth = 150;
-            this.UpdateDate.Name = "UpdateDate";
-            this.UpdateDate.ReadOnly = true;
-            this.UpdateDate.Width = 150;
             // 
             // groupBoxPereferial
             // 
@@ -1023,6 +1001,28 @@
             this.ManualMenuItem.Size = new System.Drawing.Size(221, 22);
             this.ManualMenuItem.Text = "Руководство пользователя";
             this.ManualMenuItem.Click += new System.EventHandler(this.ManualMenuItem_Click);
+            // 
+            // PropertyName
+            // 
+            this.PropertyName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.PropertyName.HeaderText = "Характеристика";
+            this.PropertyName.Name = "PropertyName";
+            this.PropertyName.ReadOnly = true;
+            // 
+            // PropertyValue
+            // 
+            this.PropertyValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.PropertyValue.HeaderText = "Значение";
+            this.PropertyValue.Name = "PropertyValue";
+            this.PropertyValue.ReadOnly = true;
+            // 
+            // UpdateDate
+            // 
+            this.UpdateDate.HeaderText = "Дата обновления";
+            this.UpdateDate.MinimumWidth = 150;
+            this.UpdateDate.Name = "UpdateDate";
+            this.UpdateDate.ReadOnly = true;
+            this.UpdateDate.Width = 150;
             // 
             // MainForm
             // 

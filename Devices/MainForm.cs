@@ -253,8 +253,8 @@ namespace Devices
                     var propertyName = monitoring[i].Row["Property Name"] == DBNull.Value ? null : (string) monitoring[i].Row["Property Name"];
                     var propertyValue = monitoring[i].Row["Property Value"] == DBNull.Value ? null : (string)monitoring[i].Row["Property Value"];
                     var rowIndex = dataGridViewMonitoring.Rows.Add(
-                        monitoring[i].Row["Display Name"],
-                        propertyValue + " " + monitoring[i].Row["Units"],
+                        monitoring[i].Row["Display Name"] == DBNull.Value ? "" : monitoring[i].Row["Display Name"],
+                        (propertyValue + " " + monitoring[i].Row["Units"]).Trim(),
                         monitoring[i].Row["Update Date"]);
                     var relevantConditions = monitoringConditions.Where(c => c.PropertyName == propertyName).ToList();
                     if (!relevantConditions.Any()) continue;
