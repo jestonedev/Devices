@@ -258,7 +258,7 @@
             // toolStripStatusLabel3
             // 
             this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
-            this.toolStripStatusLabel3.Size = new System.Drawing.Size(824, 20);
+            this.toolStripStatusLabel3.Size = new System.Drawing.Size(855, 20);
             this.toolStripStatusLabel3.Spring = true;
             // 
             // toolStripStatusLabelWarning

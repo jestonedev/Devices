@@ -39,6 +39,12 @@ namespace Devices
                 Spg.DeviceName = _deviceNameCommandLineArg;
             }
             Reload(_deviceNameCommandLineArg != null);
+            if (toolStripStatusLabelWarning.Visible)
+            {
+                toolTipWarning.Show(toolStripStatusLabelWarning.ToolTipText, statusStrip1,
+                    new Point(toolStripStatusLabelWarning.Bounds.Right,
+                        toolStripStatusLabelWarning.Bounds.Top), 5000);
+            }
             toolStripButton6.Checked = _deviceNameCommandLineArg != null;
 		}
 
