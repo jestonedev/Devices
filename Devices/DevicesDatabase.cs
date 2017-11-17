@@ -978,6 +978,64 @@ namespace Devices
             return ds.Tables[0].DefaultView;
         }
 
+
+
+        internal IEnumerable<string> GetMonitoringWarnings()
+        {
+            if (_connection.State != ConnectionState.Open)
+                return new List<string>();
+            var command =
+                new SqlCommand(@"SELECT v.[Property Name] + ': '+CAST(v.Count AS NVARCHAR) AS Warning
+                    FROM (
+                    SELECT 
+                      CASE WHEN mpm.[Display Name] IS NOT NULL 
+                      THEN mpm.[Display Name] ELSE v.[Property Name] END AS [Property Name], 
+                      COUNT(*) AS [Count]
+                    FROM (
+                    SELECT mp.[ID Device], mp.[Property Value], mp.[Property Name]
+                    FROM MonitoringProperties mp INNER JOIN 
+                      MonitoringWarningConditions mwc ON mp.[Property Name] = mwc.[Property Name]
+                    WHERE 
+                      (mwc.[ID Condition Type]  = 1 AND 
+                      CAST(mp.[Property Value] AS DOUBLE PRECISION) > CAST(mwc.[Condition Bound] AS DOUBLE PRECISION)) OR 
+                      (mwc.[ID Condition Type]  = 2 AND 
+                      CAST(mp.[Property Value] AS DOUBLE PRECISION) < CAST(mwc.[Condition Bound] AS DOUBLE PRECISION)) OR 
+                      (mwc.[ID Condition Type]  = 3 AND 
+                      CAST(mp.[Property Value] AS DOUBLE PRECISION) >= CAST(mwc.[Condition Bound] AS DOUBLE PRECISION)) OR 
+                      (mwc.[ID Condition Type]  = 4 AND 
+                      CAST(mp.[Property Value] AS DOUBLE PRECISION) <= CAST(mwc.[Condition Bound] AS DOUBLE PRECISION)) OR 
+                      (mwc.[ID Condition Type]  = 5 AND mp.[Property Value] = mwc.[Condition Bound])
+                    GROUP BY mp.[ID Device], mp.[Property Name], mp.[Property Value]
+                    HAVING COUNT(*) = (SELECT COUNT(*) 
+                      FROM MonitoringWarningConditions mwcl 
+                      WHERE mwcl.[Property Name] = mp.[Property Name])) v 
+                      LEFT JOIN MonitoringPropertiesMeta mpm ON v.[Property Name] = mpm.[Property Name]
+                    GROUP BY CASE WHEN mpm.[Display Name] IS NOT NULL 
+                      THEN mpm.[Display Name] ELSE v.[Property Name] END) v")
+                {
+                    Connection = _connection
+                };
+            SqlDataReader reader;
+            try
+            {
+                reader = command.ExecuteReader();
+            }
+            catch (SqlException e)
+            {
+                MessageBox.Show(@"Не удалось получить список предупреждений мониторинга. " + e.Message, @"Ошибка",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return new List<string>();
+            }
+            var monitoringWarnings = new List<string>();
+            while (reader.Read())
+            {
+                var warning = reader.GetString(0);
+                monitoringWarnings.Add(warning);
+            }
+            reader.Close();
+            return monitoringWarnings;
+        }
+
         /// <summary>
         /// Возвращает все отображаемые свойства из мониторинга
         /// </summary>

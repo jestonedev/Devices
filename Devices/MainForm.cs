@@ -71,7 +71,7 @@ namespace Devices
                 listFull.AddRange(cache);
             }
             while (cache.Count != cacheCount);
-			list = Db.GetDevices(Spg);
+            list = Db.GetDevices(Spg);
 		    TreeNode selectNode = null;
 			foreach (var device in list)
 			{
@@ -90,6 +90,18 @@ namespace Devices
 		    if (treeViewComputers.Nodes.Count > 0)
 		    {
                 treeViewComputers.SelectedNode = selectNode ?? treeViewComputers.Nodes[0];
+            }
+            toolStripStatusLabelDeviceCount.Text = string.Format("Сетевых узлов: {0}", list.Count);
+
+		    var monitoringWarnings = Db.GetMonitoringWarnings().ToList();
+		    if (!monitoringWarnings.Any())
+		    {
+		        toolStripStatusLabelWarning.Visible = false;
+		    }
+		    else
+		    {
+                toolStripStatusLabelWarning.Visible = true;
+                toolStripStatusLabelWarning.ToolTipText = string.Join(Environment.NewLine, monitoringWarnings.ToArray());
 		    }
 		}
 
@@ -703,5 +715,12 @@ namespace Devices
 	            toolStripButton1_Click_1(sender, new EventArgs());
 	        }
 	    }
+
+        private void toolStripStatusLabelWarning_MouseHover(object sender, EventArgs e)
+        {
+            toolTipWarning.Show(toolStripStatusLabelWarning.ToolTipText, statusStrip1,
+                new Point(toolStripStatusLabelWarning.Bounds.Right,
+                    toolStripStatusLabelWarning.Bounds.Top), 5000);
+        }
 	}
 }

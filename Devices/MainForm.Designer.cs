@@ -41,6 +41,9 @@
             this.добавитьToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.удалитьToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabelDeviceCount = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabelWarning = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
@@ -64,6 +67,9 @@
             this.panel9 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dataGridViewMonitoring = new System.Windows.Forms.DataGridView();
+            this.PropertyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PropertyValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.UpdateDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBoxPereferial = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -115,10 +121,9 @@
             this.DevicesFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ManualMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.PropertyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PropertyValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.UpdateDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolTipWarning = new System.Windows.Forms.ToolTip(this.components);
             this.contextMenuStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -233,11 +238,39 @@
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip1.Location = new System.Drawing.Point(0, 708);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabelDeviceCount,
+            this.toolStripStatusLabel3,
+            this.toolStripStatusLabelWarning});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 705);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1008, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1008, 25);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabelDeviceCount
+            // 
+            this.toolStripStatusLabelDeviceCount.Margin = new System.Windows.Forms.Padding(10, 3, 0, 2);
+            this.toolStripStatusLabelDeviceCount.Name = "toolStripStatusLabelDeviceCount";
+            this.toolStripStatusLabelDeviceCount.Size = new System.Drawing.Size(98, 20);
+            this.toolStripStatusLabelDeviceCount.Text = "Сетевых узлов: 0";
+            // 
+            // toolStripStatusLabel3
+            // 
+            this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
+            this.toolStripStatusLabel3.Size = new System.Drawing.Size(824, 20);
+            this.toolStripStatusLabel3.Spring = true;
+            // 
+            // toolStripStatusLabelWarning
+            // 
+            this.toolStripStatusLabelWarning.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripStatusLabelWarning.Image = ((System.Drawing.Image)(resources.GetObject("toolStripStatusLabelWarning.Image")));
+            this.toolStripStatusLabelWarning.Margin = new System.Windows.Forms.Padding(0, 3, 10, 2);
+            this.toolStripStatusLabelWarning.Name = "toolStripStatusLabelWarning";
+            this.toolStripStatusLabelWarning.Size = new System.Drawing.Size(20, 20);
+            this.toolStripStatusLabelWarning.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolStripStatusLabelWarning.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
+            this.toolStripStatusLabelWarning.MouseHover += new System.EventHandler(this.toolStripStatusLabelWarning_MouseHover);
             // 
             // toolStrip1
             // 
@@ -491,6 +524,28 @@
             this.dataGridViewMonitoring.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewMonitoring.Size = new System.Drawing.Size(506, 161);
             this.dataGridViewMonitoring.TabIndex = 0;
+            // 
+            // PropertyName
+            // 
+            this.PropertyName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.PropertyName.HeaderText = "Характеристика";
+            this.PropertyName.Name = "PropertyName";
+            this.PropertyName.ReadOnly = true;
+            // 
+            // PropertyValue
+            // 
+            this.PropertyValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.PropertyValue.HeaderText = "Значение";
+            this.PropertyValue.Name = "PropertyValue";
+            this.PropertyValue.ReadOnly = true;
+            // 
+            // UpdateDate
+            // 
+            this.UpdateDate.HeaderText = "Дата обновления";
+            this.UpdateDate.MinimumWidth = 150;
+            this.UpdateDate.Name = "UpdateDate";
+            this.UpdateDate.ReadOnly = true;
+            this.UpdateDate.Width = 150;
             // 
             // groupBoxPereferial
             // 
@@ -1002,27 +1057,12 @@
             this.ManualMenuItem.Text = "Руководство пользователя";
             this.ManualMenuItem.Click += new System.EventHandler(this.ManualMenuItem_Click);
             // 
-            // PropertyName
+            // toolTipWarning
             // 
-            this.PropertyName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.PropertyName.HeaderText = "Характеристика";
-            this.PropertyName.Name = "PropertyName";
-            this.PropertyName.ReadOnly = true;
-            // 
-            // PropertyValue
-            // 
-            this.PropertyValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.PropertyValue.HeaderText = "Значение";
-            this.PropertyValue.Name = "PropertyValue";
-            this.PropertyValue.ReadOnly = true;
-            // 
-            // UpdateDate
-            // 
-            this.UpdateDate.HeaderText = "Дата обновления";
-            this.UpdateDate.MinimumWidth = 150;
-            this.UpdateDate.Name = "UpdateDate";
-            this.UpdateDate.ReadOnly = true;
-            this.UpdateDate.Width = 150;
+            this.toolTipWarning.AutoPopDelay = 5000;
+            this.toolTipWarning.InitialDelay = 500;
+            this.toolTipWarning.ReshowDelay = 100;
+            this.toolTipWarning.ToolTipTitle = "Мониторинг обнаружил проблемы!";
             // 
             // MainForm
             // 
@@ -1041,6 +1081,8 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.contextMenuStrip1.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -1170,6 +1212,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn PropertyName;
         private System.Windows.Forms.DataGridViewTextBoxColumn PropertyValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn UpdateDate;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelDeviceCount;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelWarning;
+        private System.Windows.Forms.ToolTip toolTipWarning;
 	}
 }
 
